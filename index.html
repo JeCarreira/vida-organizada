@@ -1,161 +1,255 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A Minha Vida Organizada 🌸</title>
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A Minha Vida ✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --rose: #f9d5e5; --rose-dark: #c97a9a; --rose-text: #7a3a55;
-      --lavender: #e8d5f9; --lavender-dark: #a97ac9; --lavender-text: #5a3a7a;
-      --mint: #d5f9e8; --mint-dark: #7ac9a0; --mint-text: #2d6e50;
-      --sky: #d5eef9; --sky-dark: #7ab8c9; --sky-text: #2a5a7a;
-      --peach: #f9e8d5; --peach-dark: #c9a07a; --peach-text: #7a4a2a;
-      --yellow: #fdf5d0; --yellow-dark: #c9b060; --yellow-text: #7a6020;
-      --bg: #fdf8f5; --white: #ffffff; --text: #3a3030; --muted: #8a7a7a;
-      --border: rgba(0,0,0,0.07);
+    *{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#f7f4ef;--white:#ffffff;--card:#fffdf9;
+      --text:#2c2420;--muted:#9a8c85;--border:rgba(0,0,0,0.06);
+      --rose:#f5cdd8;--rose-d:#c47a90;--rose-t:#7a3a50;
+      --lav:#e2d4f0;--lav-d:#9a72c0;--lav-t:#4a2870;
+      --mint:#cef0e0;--mint-d:#5ab885;--mint-t:#1a5c38;
+      --sky:#cce8f5;--sky-d:#5aa0c0;--sky-t:#1a4a65;
+      --peach:#f5e0cc;--peach-d:#c0885a;--peach-t:#6a3a1a;
+      --yellow:#f5f0cc;--yellow-d:#b0a045;--yellow-t:#5a4a10;
+      --sand:#f0e8dc;--sand-d:#c0a880;--sand-t:#6a4820;
+      --sage:#dceadc;--sage-d:#7aaa7a;--sage-t:#2a5a2a;
+      --gold:#e8d5a0;--gold-d:#b09040;--gold-t:#5a4010;
     }
-    body { font-family: 'Georgia', serif; background: var(--bg); min-height: 100vh; }
-
-    /* LOADING */
-    #loading {
-      position: fixed; inset: 0; background: var(--rose);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 999; transition: opacity 0.4s;
-    }
-    #loading h1 { font-size: 28px; color: var(--rose-text); font-style: italic; }
-    #loading p { color: var(--rose-dark); margin-top: 8px; font-size: 14px; }
-    .spinner {
-      width: 36px; height: 36px; border: 3px solid var(--rose-dark);
-      border-top-color: transparent; border-radius: 50%;
-      animation: spin 0.8s linear infinite; margin-bottom: 16px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* NAV */
-    .nav {
-      display: flex; gap: 4px; padding: 14px 16px 0;
-      border-bottom: 1.5px solid var(--border);
-      background: var(--white); flex-wrap: wrap; position: sticky; top: 0; z-index: 10;
-    }
-    .nav-btn {
-      padding: 8px 16px; border-radius: 10px 10px 0 0;
-      border: 1px solid var(--border); border-bottom: none;
-      background: var(--bg); cursor: pointer;
-      font-size: 13px; font-family: inherit; font-weight: 500; color: var(--muted);
-      transition: all 0.2s;
-    }
-    .nav-btn.active { background: var(--white); color: var(--text); border-bottom: 2px solid var(--white); margin-bottom: -1.5px; }
-
-    /* PAGES */
-    .page { display: none; padding: 20px 16px; max-width: 900px; margin: 0 auto; }
-    .page.active { display: block; }
-
-    /* CARDS */
-    .card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 16px; margin-bottom: 14px; }
-    .section-title { font-size: 15px; font-weight: bold; font-style: italic; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
-
-    /* CALENDAR */
-    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .cal-nav { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; cursor: pointer; font-size: 16px; }
-    .cal-month { font-size: 16px; font-weight: bold; font-style: italic; color: var(--rose-text); }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-    .cal-day-name { text-align: center; font-size: 11px; font-weight: bold; color: var(--muted); padding: 4px 0; }
-    .cal-day-wrap { position: relative; display: flex; justify-content: center; }
-    .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; cursor: pointer; transition: all 0.2s; color: var(--text); font-family: inherit; border: none; background: none; width: 100%; }
-    .cal-day:hover { background: var(--rose); }
-    .cal-day.today { background: var(--rose); font-weight: bold; color: var(--rose-text); }
-    .cal-day.selected { background: var(--rose-dark); color: white; font-weight: bold; }
-    .cal-day.other-month { color: #ccc; }
-    .evt-dot { position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: var(--lavender-dark); }
-
-    /* FORMS */
-    .form-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
-    .form-input { flex: 1; min-width: 100px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 13px; background: var(--bg); color: var(--text); }
-    .btn-add { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; background: var(--rose); color: var(--rose-text); font-family: inherit; font-weight: bold; font-size: 13px; transition: all 0.2s; white-space: nowrap; }
-    .btn-add:hover { background: var(--rose-dark); color: white; }
-    .color-pick { display: flex; gap: 6px; align-items: center; }
-    .color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; flex-shrink: 0; }
-    .color-dot.selected, .color-dot:hover { transform: scale(1.2); border-color: var(--muted); }
-
-    /* EVENT TAGS */
-    .event-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 20px; font-size: 12px; margin: 3px; cursor: pointer; font-family: inherit; border: none; }
-
-    /* TASKS */
-    .time-block { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
-    .time-task { flex: 1; padding: 8px 12px; border-radius: 10px; font-size: 13px; line-height: 1.4; display: flex; align-items: center; gap: 6px; }
-    .check-btn { width: 18px; height: 18px; border-radius: 50%; border: 2px solid currentColor; background: none; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: all 0.2s; }
-    .check-btn.done { background: currentColor; }
-    .check-btn.done::after { content: '✓'; color: white; font-size: 10px; }
-    .task-text { flex: 1; }
-    .task-text.done { text-decoration: line-through; opacity: 0.5; }
-
-    /* WEEK */
-    .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-    @media (max-width: 600px) { .week-grid { grid-template-columns: repeat(3, 1fr); } }
-    .week-day { border-radius: 12px; overflow: hidden; }
-    .week-day-header { padding: 8px 6px; text-align: center; font-size: 11px; font-weight: bold; font-style: italic; }
-    .week-day-body { padding: 6px; min-height: 80px; }
-    .week-task { font-size: 10px; padding: 3px 6px; border-radius: 6px; margin-bottom: 3px; line-height: 1.3; cursor: pointer; border: none; width: 100%; text-align: left; font-family: inherit; transition: opacity 0.2s; }
-    .week-task:hover { opacity: 0.75; }
-
-    /* HABITS */
-    .habit-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-    .habit-name { font-size: 13px; font-style: italic; min-width: 120px; flex: 1; }
-    .habit-dots { display: flex; gap: 4px; flex-wrap: wrap; }
-    .habit-dot { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; font-weight: bold; transition: all 0.2s; background: none; font-family: inherit; }
-
-    /* METAS */
-    .meta-card { border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-    .meta-icon { font-size: 20px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; flex-shrink: 0; }
-    .meta-info { flex: 1; }
-    .meta-title { font-size: 14px; font-weight: bold; margin-bottom: 2px; }
-    .meta-sub { font-size: 11px; font-style: italic; }
-    .progress-bar { height: 6px; border-radius: 3px; background: rgba(0,0,0,0.1); margin-top: 6px; overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
-
-    /* NOTES */
-    .note-area { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-family: 'Georgia', serif; font-size: 13px; background: var(--yellow); color: var(--text); line-height: 1.6; resize: vertical; min-height: 90px; }
-
-    /* MOOD */
-    .mood-btn { padding: 8px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--bg); cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.2s; font-style: italic; }
-    .mood-btn.active, .mood-btn:hover { border-color: var(--rose-dark); background: var(--rose); }
-
-    /* BADGE */
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; font-style: italic; margin: 2px; }
-
-    /* SAVE INDICATOR */
-    #save-indicator { position: fixed; bottom: 16px; right: 16px; background: var(--mint); color: var(--mint-text); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-style: italic; opacity: 0; transition: opacity 0.3s; border: 1px solid var(--mint-dark); z-index: 100; }
-    #save-indicator.show { opacity: 1; }
-    .label { font-size: 11px; color: var(--muted); font-weight: bold; letter-spacing: 0.05em; margin-bottom: 6px; }
+    body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;color:var(--text);}
+    h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
+    #loading{position:fixed;inset:0;background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity 0.5s;}
+    #loading h1{font-family:'Playfair Display',serif;font-size:32px;color:var(--sand-t);font-style:italic;}
+    #loading p{color:var(--sand-d);margin-top:8px;font-size:14px;font-weight:300;}
+    .spinner{width:32px;height:32px;border:2px solid var(--sand-d);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 16px;z-index:10;}
+    .sidebar-logo{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--text);margin-bottom:6px;padding:0 8px;}
+    .sidebar-sub{font-size:11px;color:var(--muted);padding:0 8px;margin-bottom:28px;font-weight:300;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--muted);font-weight:400;border:none;background:none;width:100%;text-align:left;transition:all 0.15s;margin-bottom:2px;font-family:'Inter',sans-serif;}
+    .nav-item:hover{background:var(--bg);color:var(--text);}
+    .nav-item.active{background:var(--sand);color:var(--sand-t);font-weight:500;}
+    .nav-icon{font-size:15px;width:20px;text-align:center;}
+    .nav-divider{height:1px;background:var(--border);margin:12px 0;}
+    .main{margin-left:220px;padding:32px 28px;max-width:1080px;}
+    @media(max-width:768px){.sidebar{display:none;}.main{margin-left:0;padding:14px;}.mob-nav{display:flex!important;}}
+    .mob-nav{display:none;gap:4px;padding:10px;background:var(--white);border-bottom:1px solid var(--border);flex-wrap:wrap;position:sticky;top:0;z-index:10;}
+    .mob-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;font-family:inherit;color:var(--muted);}
+    .mob-btn.active{background:var(--sand);color:var(--sand-t);border-color:var(--sand-d);}
+    .page{display:none;}.page.active{display:block;}
+    .card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:16px;}
+    .card-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .pill{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:600px){.grid-2{grid-template-columns:1fr;}}
+    .dash-hero{background:var(--white);border-radius:20px;border:1px solid var(--border);padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden;}
+    .dash-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:var(--rose);opacity:0.3;}
+    .dash-hero::after{content:'';position:absolute;bottom:-60px;right:60px;width:150px;height:150px;border-radius:50%;background:var(--lav);opacity:0.2;}
+    .dash-date{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;}
+    .dash-greeting{font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:var(--text);margin-bottom:6px;}
+    .dash-quote{font-size:13px;color:var(--muted);font-weight:300;font-style:italic;}
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+    @media(max-width:700px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+    .stat-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:16px;}
+    .stat-label{font-size:10px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;}
+    .stat-value{font-family:'Playfair Display',serif;font-size:28px;color:var(--text);}
+    .stat-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+    .dash-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:700px){.dash-2col{grid-template-columns:1fr;}}
+    .upcoming-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+    .upcoming-item:last-child{border:none;}
+    .upcoming-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .mini-bar{height:4px;border-radius:2px;background:var(--border);flex:1;margin:0 10px;overflow:hidden;}
+    .mini-bar-fill{height:100%;}
+    .habit-mini{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+    .habit-mini:last-child{border:none;}
+    .wheel-wrap{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;}
+    @media(max-width:800px){.wheel-wrap{grid-template-columns:1fr;}}
+    .wheel-box{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:24px;text-align:center;}
+    .wheel-avg{font-family:'Playfair Display',serif;font-size:38px;color:var(--text);}
+    .wheel-avg-label{font-size:12px;color:var(--muted);margin-bottom:16px;font-weight:300;}
+    .wheel-actions{display:flex;gap:8px;margin-top:16px;}
+    .btn-primary{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;background:var(--sand);color:var(--sand-t);transition:all 0.2s;}
+    .btn-primary:hover{background:var(--sand-d);color:white;}
+    .btn-secondary{padding:10px 14px;border-radius:10px;border:1px solid var(--border);cursor:pointer;font-family:inherit;font-size:13px;background:var(--card);color:var(--muted);transition:all 0.2s;}
+    .btn-secondary:hover{background:var(--bg);}
+    .area-slider{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:13px 15px;margin-bottom:8px;}
+    .area-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+    .area-name{font-size:13px;font-weight:500;}
+    .area-score{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;}
+    input[type=range]{width:100%;height:4px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:var(--border);}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;cursor:pointer;}
+    .wheel-insight{background:var(--lav);border-radius:14px;padding:14px 16px;margin-top:14px;font-size:13px;color:var(--lav-t);font-style:italic;line-height:1.6;border:1px solid rgba(154,114,192,0.2);}
+    .q-section{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-top:16px;}
+    .q-item{margin-bottom:14px;}
+    .q-label{font-size:13px;color:var(--text);margin-bottom:7px;font-style:italic;}
+    .q-options{display:flex;gap:6px;flex-wrap:wrap;}
+    .q-opt{padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:var(--bg);font-family:inherit;transition:all 0.15s;color:var(--muted);}
+    .q-opt.sel{background:var(--sand);border-color:var(--sand-d);color:var(--sand-t);}
+    .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-top:14px;}
+    .hist-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:14px;cursor:pointer;transition:all 0.2s;}
+    .hist-card:hover{border-color:var(--sand-d);}
+    .hist-date{font-size:11px;color:var(--muted);margin-bottom:5px;}
+    .hist-avg{font-family:'Playfair Display',serif;font-size:22px;color:var(--text);}
+    .hist-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;}
+    .hist-tag{font-size:10px;padding:2px 7px;border-radius:10px;}
+    .form-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
+    .form-input{flex:1;min-width:100px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:var(--bg);color:var(--text);outline:none;}
+    .form-input:focus{border-color:var(--sand-d);}
+    .btn-add{padding:9px 16px;border-radius:10px;border:none;cursor:pointer;background:var(--sand);color:var(--sand-t);font-family:inherit;font-weight:500;font-size:13px;transition:all 0.2s;white-space:nowrap;}
+    .btn-add:hover{background:var(--sand-d);color:white;}
+    .color-pick{display:flex;gap:6px;align-items:center;}
+    .color-dot{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.15s;flex-shrink:0;}
+    .color-dot.selected,.color-dot:hover{transform:scale(1.25);border-color:var(--muted);}
+    .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+    .cal-nav{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:16px;color:var(--muted);}
+    .cal-month{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--text);}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+    .cal-day-name{text-align:center;font-size:10px;font-weight:500;color:var(--muted);padding:4px 0;text-transform:uppercase;letter-spacing:0.05em;}
+    .cal-day-wrap{position:relative;display:flex;justify-content:center;}
+    .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;cursor:pointer;color:var(--text);font-family:inherit;border:none;background:none;width:100%;transition:all 0.15s;}
+    .cal-day:hover{background:var(--sand);}
+    .cal-day.today{background:var(--sand);font-weight:600;color:var(--sand-t);}
+    .cal-day.selected{background:var(--sand-d);color:white;font-weight:600;}
+    .cal-day.other-month{color:#ccc;}
+    .evt-dot{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--rose-d);}
+    .event-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;font-size:12px;margin:3px;cursor:pointer;font-family:inherit;border:none;}
+    .time-task{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;font-size:13px;margin-bottom:6px;}
+    .check-btn{width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.2s;}
+    .check-btn.done{background:currentColor;}
+    .check-btn.done::after{content:'✓';color:white;font-size:9px;}
+    .task-text{flex:1;font-size:13px;}
+    .task-text.done{text-decoration:line-through;opacity:0.4;}
+    .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+    @media(max-width:600px){.week-grid{grid-template-columns:repeat(3,1fr);}}
+    .week-day{border-radius:12px;overflow:hidden;}
+    .week-day-header{padding:8px 6px;text-align:center;font-size:11px;font-weight:500;}
+    .week-day-body{padding:6px;min-height:70px;}
+    .week-task{font-size:10px;padding:3px 7px;border-radius:6px;margin-bottom:3px;line-height:1.4;cursor:pointer;border:none;width:100%;text-align:left;font-family:inherit;}
+    .habit-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+    .habit-nm{font-size:13px;font-style:italic;min-width:110px;flex:1;}
+    .habit-dots{display:flex;gap:3px;flex-wrap:wrap;}
+    .habit-dot{width:24px;height:24px;border-radius:50%;border:1.5px solid;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;font-weight:500;transition:all 0.15s;background:none;font-family:inherit;}
+    .progress-bar{height:5px;border-radius:3px;background:var(--border);overflow:hidden;}
+    .progress-fill{height:100%;border-radius:3px;transition:width 0.4s;}
+    .meta-card{border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
+    .note-area{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:'Playfair Display',serif;font-size:13px;color:var(--text);line-height:1.7;resize:vertical;min-height:90px;background:var(--bg);}
+    .note-area:focus{outline:none;border-color:var(--sand-d);}
+    .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;font-style:italic;margin:2px;}
+    .mood-btn{padding:7px 13px;border-radius:20px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:12px;font-family:inherit;transition:all 0.15s;}
+    .mood-btn.active,.mood-btn:hover{background:var(--rose);border-color:var(--rose-d);color:var(--rose-t);}
+    #save-indicator{position:fixed;bottom:20px;right:20px;background:var(--sage);color:var(--sage-t);padding:8px 16px;border-radius:20px;font-size:12px;font-style:italic;opacity:0;transition:opacity 0.3s;border:1px solid var(--sage-d);z-index:100;}
+    #save-indicator.show{opacity:1;}
+    .slabel{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
   </style>
 </head>
 <body>
 
 <div id="loading">
   <div class="spinner"></div>
-  <h1>A Minha Vida Organizada</h1>
+  <h1>A Minha Vida</h1>
   <p>A carregar os teus dados... 🌸</p>
 </div>
-
 <div id="save-indicator">✨ Guardado!</div>
 
-<div class="nav">
-  <button class="nav-btn active" onclick="showPage('calendario',this)">📅 Calendário</button>
-  <button class="nav-btn" onclick="showPage('diadia',this)">☀️ Dia a Dia</button>
-  <button class="nav-btn" onclick="showPage('semana',this)">🗓 Semana</button>
-  <button class="nav-btn" onclick="showPage('habitos',this)">✨ Hábitos</button>
-  <button class="nav-btn" onclick="showPage('metas',this)">🎯 Metas</button>
-  <button class="nav-btn" onclick="showPage('notas',this)">📝 Notas</button>
+<div class="mob-nav" id="mob-nav">
+  <button class="mob-btn active" onclick="showPage('dashboard',this)">🏠 Início</button>
+  <button class="mob-btn" onclick="showPage('roda',this)">⭕ Roda</button>
+  <button class="mob-btn" onclick="showPage('calendario',this)">📅</button>
+  <button class="mob-btn" onclick="showPage('diadia',this)">☀️</button>
+  <button class="mob-btn" onclick="showPage('semana',this)">🗓</button>
+  <button class="mob-btn" onclick="showPage('habitos',this)">✨</button>
+  <button class="mob-btn" onclick="showPage('metas',this)">🎯</button>
+  <button class="mob-btn" onclick="showPage('notas',this)">📝</button>
+</div>
+
+<div class="sidebar">
+  <div class="sidebar-logo">A Minha Vida ✨</div>
+  <div class="sidebar-sub">o teu espaço organizado</div>
+  <button class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">🏠</span> Dashboard</button>
+  <button class="nav-item" onclick="showPage('roda',this)"><span class="nav-icon">⭕</span> Roda da Vida</button>
+  <div class="nav-divider"></div>
+  <button class="nav-item" onclick="showPage('calendario',this)"><span class="nav-icon">📅</span> Calendário</button>
+  <button class="nav-item" onclick="showPage('diadia',this)"><span class="nav-icon">☀️</span> Dia a Dia</button>
+  <button class="nav-item" onclick="showPage('semana',this)"><span class="nav-icon">🗓</span> Semana</button>
+  <div class="nav-divider"></div>
+  <button class="nav-item" onclick="showPage('habitos',this)"><span class="nav-icon">✨</span> Hábitos</button>
+  <button class="nav-item" onclick="showPage('metas',this)"><span class="nav-icon">🎯</span> Metas</button>
+  <button class="nav-item" onclick="showPage('notas',this)"><span class="nav-icon">📝</span> Notas</button>
+</div>
+
+<div class="main">
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <div class="dash-hero">
+    <div class="dash-date" id="dash-date"></div>
+    <div class="dash-greeting" id="dash-greeting"></div>
+    <div class="dash-quote" id="dash-quote"></div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">Hábitos marcados</div><div class="stat-value" id="stat-habits">—</div><div class="stat-sub">este mês</div></div>
+    <div class="stat-card"><div class="stat-label">Tarefas feitas</div><div class="stat-value" id="stat-tasks">—</div><div class="stat-sub">hoje</div></div>
+    <div class="stat-card"><div class="stat-label">Roda da Vida</div><div class="stat-value" id="stat-wheel">—</div><div class="stat-sub">média atual</div></div>
+    <div class="stat-card"><div class="stat-label">Metas ativas</div><div class="stat-value" id="stat-metas">—</div><div class="stat-sub">em progresso</div></div>
+  </div>
+  <div class="dash-2col">
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--rose-d)"></div> Eventos de hoje</div>
+      <div id="dash-events"><div style="font-size:13px;color:var(--muted);font-style:italic">Sem eventos hoje</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--mint-d)"></div> Hábitos — progresso</div>
+      <div id="dash-habits"><div style="font-size:13px;color:var(--muted);font-style:italic">Sem hábitos ainda</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div> Intenção do dia</div>
+    <textarea class="note-area" id="intencao" placeholder="Hoje quero focar em..." oninput="debounceSave('intencao',this.value)"></textarea>
+  </div>
+</div>
+
+<!-- RODA DA VIDA -->
+<div id="page-roda" class="page">
+  <div style="margin-bottom:20px">
+    <div style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--text)">Roda da Vida</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px;font-weight:300">Avalia cada área de 1 a 10 — descobre onde podes crescer e acompanha a tua evolução</div>
+  </div>
+  <div class="wheel-wrap">
+    <div class="wheel-box">
+      <canvas id="wheelCanvas" width="280" height="280"></canvas>
+      <div style="margin-top:14px"><div class="wheel-avg" id="wheel-avg">—</div><div class="wheel-avg-label">média geral</div></div>
+      <div class="wheel-actions">
+        <button class="btn-primary" onclick="saveWheel()">💾 Guardar registo</button>
+        <button class="btn-secondary" onclick="toggleHistory()">📊 Histórico</button>
+      </div>
+    </div>
+    <div id="wheel-sliders"></div>
+  </div>
+  <div class="wheel-insight" id="wheel-insight"></div>
+
+  <!-- QUESTIONÁRIO -->
+  <div class="q-section">
+    <div style="font-family:'Playfair Display',serif;font-size:18px;font-style:italic;margin-bottom:4px;color:var(--text)">🧘 Questionário de reflexão</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px;font-weight:300">Responde às perguntas e aplica automaticamente à roda</div>
+    <div id="q-body"></div>
+    <button class="btn-primary" style="margin-top:4px;max-width:240px" onclick="applyQ()">Aplicar à roda ✨</button>
+  </div>
+
+  <!-- HISTÓRICO -->
+  <div id="wheel-history" style="display:none;margin-top:20px">
+    <div style="font-family:'Playfair Display',serif;font-size:18px;font-style:italic;margin-bottom:4px;color:var(--text)">📊 Histórico da Roda da Vida</div>
+    <div style="font-size:12px;color:var(--muted);font-weight:300">Clica num registo para ver como estavas nessa data</div>
+    <div class="hist-grid" id="hist-grid"></div>
+  </div>
 </div>
 
 <!-- CALENDÁRIO -->
-<div id="page-calendario" class="page active">
+<div id="page-calendario" class="page">
   <div class="card">
     <div class="cal-header">
       <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
@@ -164,23 +258,21 @@
     </div>
     <div class="cal-grid" id="cal-day-names"></div>
     <div class="cal-grid" id="cal-days"></div>
-    <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
-      <div style="font-size:13px;font-weight:bold;font-style:italic;margin-bottom:8px;color:var(--rose-text)">
-        Adicionar evento — <span id="selected-date-label"></span>
-      </div>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <div style="font-size:13px;font-style:italic;margin-bottom:10px;color:var(--sand-t)">Evento para: <strong id="selected-date-label"></strong></div>
       <div class="form-row">
-        <input id="evt-name" class="form-input" placeholder="Nome do evento..." />
+        <input id="evt-name" class="form-input" placeholder="Nome do evento..."/>
         <input id="evt-time" class="form-input" type="time" style="max-width:100px"/>
       </div>
       <div class="form-row">
-        <span style="font-size:12px;color:var(--muted);font-style:italic">Cor:</span>
+        <span style="font-size:12px;color:var(--muted)">Cor:</span>
         <div class="color-pick" id="color-pick">
           <button class="color-dot selected" style="background:var(--rose)" onclick="selectColor(this,'rose')"></button>
-          <button class="color-dot" style="background:var(--lavender)" onclick="selectColor(this,'lavender')"></button>
+          <button class="color-dot" style="background:var(--lav)" onclick="selectColor(this,'lav')"></button>
           <button class="color-dot" style="background:var(--mint)" onclick="selectColor(this,'mint')"></button>
           <button class="color-dot" style="background:var(--sky)" onclick="selectColor(this,'sky')"></button>
           <button class="color-dot" style="background:var(--peach)" onclick="selectColor(this,'peach')"></button>
-          <button class="color-dot" style="background:var(--yellow)" onclick="selectColor(this,'yellow')"></button>
+          <button class="color-dot" style="background:var(--gold)" onclick="selectColor(this,'gold')"></button>
         </div>
         <button class="btn-add" onclick="addEvent()">+ Adicionar</button>
       </div>
@@ -191,40 +283,40 @@
 
 <!-- DIA A DIA -->
 <div id="page-diadia" class="page">
-  <div class="card" style="background:var(--rose);border:none">
-    <div style="font-size:18px;font-weight:bold;font-style:italic;color:var(--rose-text)" id="today-label"></div>
-    <div style="font-size:12px;color:var(--rose-dark);margin-top:2px" id="today-quote"></div>
+  <div class="card" style="background:var(--sand);border:none">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--sand-t)" id="today-label"></div>
+    <div style="font-size:12px;color:var(--sand-d);margin-top:4px;font-weight:300" id="today-quote2"></div>
   </div>
   <div class="grid-2">
     <div>
       <div class="card">
-        <div class="section-title" style="color:var(--lavender-text)"><div class="dot" style="background:var(--lavender-dark)"></div>Manhã</div>
+        <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div> Manhã</div>
         <div id="manha-tasks"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="manha-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('manha')" />
-          <button class="btn-add" onclick="addTask('manha')" style="padding:6px 10px;font-size:12px">+</button>
+          <input id="manha-input" class="form-input" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')addTask('manha')"/>
+          <button class="btn-add" onclick="addTask('manha')" style="padding:8px 12px">+</button>
         </div>
       </div>
       <div class="card">
-        <div class="section-title" style="color:var(--peach-text)"><div class="dot" style="background:var(--peach-dark)"></div>Tarde</div>
+        <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> Tarde</div>
         <div id="tarde-tasks"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="tarde-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('tarde')" />
-          <button class="btn-add" onclick="addTask('tarde')" style="padding:6px 10px;font-size:12px;background:var(--peach);color:var(--peach-text)">+</button>
+          <input id="tarde-input" class="form-input" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')addTask('tarde')"/>
+          <button class="btn-add" onclick="addTask('tarde')" style="padding:8px 12px">+</button>
         </div>
       </div>
     </div>
     <div>
       <div class="card">
-        <div class="section-title" style="color:var(--sky-text)"><div class="dot" style="background:var(--sky-dark)"></div>Noite</div>
+        <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> Noite</div>
         <div id="noite-tasks"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="noite-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('noite')" />
-          <button class="btn-add" onclick="addTask('noite')" style="padding:6px 10px;font-size:12px;background:var(--sky);color:var(--sky-text)">+</button>
+          <input id="noite-input" class="form-input" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')addTask('noite')"/>
+          <button class="btn-add" onclick="addTask('noite')" style="padding:8px 12px">+</button>
         </div>
       </div>
-      <div class="card" style="background:var(--lavender);border:none">
-        <div class="section-title" style="color:var(--lavender-text)"><div class="dot" style="background:var(--lavender-dark)"></div>Como estou hoje?</div>
+      <div class="card" style="background:var(--rose);border:none">
+        <div class="card-title" style="color:var(--rose-t)"><div class="pill" style="background:var(--rose-d)"></div> Como estou hoje?</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px" id="mood-btns">
           <button class="mood-btn" onclick="setMood(this,'🌸 Ótima')">🌸 Ótima</button>
           <button class="mood-btn" onclick="setMood(this,'😊 Bem')">😊 Bem</button>
@@ -232,54 +324,40 @@
           <button class="mood-btn" onclick="setMood(this,'😔 Cansada')">😔 Cansada</button>
           <button class="mood-btn" onclick="setMood(this,'😩 Difícil')">😩 Difícil</button>
         </div>
-        <div id="mood-note" style="margin-top:8px;font-size:12px;font-style:italic;color:var(--lavender-text)"></div>
+        <div id="mood-note" style="margin-top:8px;font-size:12px;font-style:italic;color:var(--rose-t)"></div>
       </div>
     </div>
-  </div>
-  <div class="card">
-    <div class="section-title" style="color:var(--mint-text)"><div class="dot" style="background:var(--mint-dark)"></div>Intenção do dia</div>
-    <textarea class="note-area" id="intencao" placeholder="Hoje quero focar em..." style="background:var(--mint);min-height:60px" oninput="debounceSave('intencao',this.value)"></textarea>
   </div>
 </div>
 
 <!-- SEMANA -->
 <div id="page-semana" class="page">
   <div class="card" style="overflow-x:auto">
-    <div class="section-title" style="color:var(--lavender-text);margin-bottom:14px">
-      <div class="dot" style="background:var(--lavender-dark)"></div>
-      <span id="week-label">Esta semana</span>
-    </div>
+    <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div><span id="week-label">Esta semana</span></div>
     <div class="week-grid" id="week-grid"></div>
   </div>
   <div class="card">
-    <div class="section-title" style="color:var(--peach-text)"><div class="dot" style="background:var(--peach-dark)"></div>Adicionar à semana</div>
+    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> Adicionar à semana</div>
     <div class="form-row">
       <select id="week-day-sel" class="form-input" style="max-width:120px">
-        <option value="0">Segunda</option><option value="1">Terça</option>
-        <option value="2">Quarta</option><option value="3">Quinta</option>
-        <option value="4">Sexta</option><option value="5">Sábado</option><option value="6">Domingo</option>
+        <option value="0">Segunda</option><option value="1">Terça</option><option value="2">Quarta</option>
+        <option value="3">Quinta</option><option value="4">Sexta</option><option value="5">Sábado</option><option value="6">Domingo</option>
       </select>
-      <input id="week-task-input" class="form-input" placeholder="Tarefa..." onkeydown="if(event.key==='Enter')addWeekTask()" />
+      <input id="week-task-input" class="form-input" placeholder="Tarefa..." onkeydown="if(event.key==='Enter')addWeekTask()"/>
       <div class="color-pick" id="week-color-pick">
-        <button class="color-dot selected" style="background:var(--rose)" onclick="selectWeekColor(this,'rose')"></button>
-        <button class="color-dot" style="background:var(--lavender)" onclick="selectWeekColor(this,'lavender')"></button>
-        <button class="color-dot" style="background:var(--mint)" onclick="selectWeekColor(this,'mint')"></button>
-        <button class="color-dot" style="background:var(--peach)" onclick="selectWeekColor(this,'peach')"></button>
+        <button class="color-dot selected" style="background:var(--rose)" onclick="selWCol(this,'rose')"></button>
+        <button class="color-dot" style="background:var(--lav)" onclick="selWCol(this,'lav')"></button>
+        <button class="color-dot" style="background:var(--mint)" onclick="selWCol(this,'mint')"></button>
+        <button class="color-dot" style="background:var(--peach)" onclick="selWCol(this,'peach')"></button>
       </div>
       <button class="btn-add" onclick="addWeekTask()">+</button>
     </div>
   </div>
   <div class="card" style="background:var(--yellow);border:none">
-    <div class="section-title" style="color:var(--yellow-text)"><div class="dot" style="background:var(--yellow-dark)"></div>Reflexão semanal</div>
-    <div class="grid-2" style="gap:8px">
-      <div>
-        <div class="label" style="color:var(--yellow-text)">O que correu bem ✨</div>
-        <textarea class="note-area" id="semana-bem" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="Escreve aqui..." oninput="debounceSave('semana_bem',this.value)"></textarea>
-      </div>
-      <div>
-        <div class="label" style="color:var(--yellow-text)">O que melhorar 💭</div>
-        <textarea class="note-area" id="semana-melhorar" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="Escreve aqui..." oninput="debounceSave('semana_melhorar',this.value)"></textarea>
-      </div>
+    <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> Reflexão semanal</div>
+    <div class="grid-2" style="gap:10px">
+      <div><div class="slabel">O que correu bem ✨</div><textarea class="note-area" id="semana-bem" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="..." oninput="debounceSave('semana_bem',this.value)"></textarea></div>
+      <div><div class="slabel">O que melhorar 💭</div><textarea class="note-area" id="semana-melhorar" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="..." oninput="debounceSave('semana_melhorar',this.value)"></textarea></div>
     </div>
   </div>
 </div>
@@ -287,44 +365,39 @@
 <!-- HÁBITOS -->
 <div id="page-habitos" class="page">
   <div class="card" style="background:var(--mint);border:none">
-    <div class="section-title" style="color:var(--mint-text)"><div class="dot" style="background:var(--mint-dark)"></div>
-      Rastreador de hábitos — <em id="habit-month-label" style="font-weight:normal;font-style:normal"></em>
-    </div>
+    <div class="card-title" style="color:var(--mint-t)"><div class="pill" style="background:var(--mint-d)"></div> Hábitos — <span id="habit-month-label"></span></div>
     <div id="habits-container"></div>
     <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-      <input id="habit-input" class="form-input" placeholder="Novo hábito..." style="background:rgba(255,255,255,0.7)" onkeydown="if(event.key==='Enter')addHabit()" />
-      <button class="btn-add" onclick="addHabit()" style="background:var(--mint-dark);color:white">+ Hábito</button>
+      <input id="habit-input" class="form-input" placeholder="Novo hábito..." style="background:rgba(255,255,255,0.7)" onkeydown="if(event.key==='Enter')addHabit()"/>
+      <button class="btn-add" onclick="addHabit()" style="background:var(--mint-d);color:white">+ Hábito</button>
     </div>
   </div>
-  <div class="card">
-    <div class="section-title" style="color:var(--rose-text)"><div class="dot" style="background:var(--rose-dark)"></div>Progresso do mês</div>
-    <div id="habit-progress"></div>
-  </div>
+  <div class="card"><div class="card-title"><div class="pill" style="background:var(--rose-d)"></div> Progresso do mês</div><div id="habit-progress"></div></div>
 </div>
 
 <!-- METAS -->
 <div id="page-metas" class="page">
-  <div class="card" style="background:linear-gradient(135deg,var(--lavender),var(--rose));border:none">
-    <div style="font-size:16px;font-weight:bold;font-style:italic;color:var(--lavender-text)">🎯 As minhas metas</div>
-    <div style="font-size:12px;color:var(--lavender-dark);margin-top:4px;font-style:italic">Sonhos com prazo tornam-se objetivos</div>
+  <div class="card" style="background:var(--lav);border:none;margin-bottom:16px">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--lav-t)">🎯 As minhas metas</div>
+    <div style="font-size:12px;color:var(--lav-d);margin-top:4px;font-weight:300">Sonhos com prazo tornam-se objetivos</div>
   </div>
   <div id="metas-list"></div>
   <div class="card">
-    <div class="section-title" style="color:var(--sky-text)"><div class="dot" style="background:var(--sky-dark)"></div>Nova meta</div>
+    <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> Nova meta</div>
     <div class="form-row">
-      <input id="meta-emoji" class="form-input" placeholder="🌟" style="max-width:52px;text-align:center" />
-      <input id="meta-titulo" class="form-input" placeholder="Meta..." />
-      <input id="meta-prazo" class="form-input" placeholder="Prazo / detalhes" />
+      <input id="meta-emoji" class="form-input" placeholder="🌟" style="max-width:52px;text-align:center"/>
+      <input id="meta-titulo" class="form-input" placeholder="A minha meta..."/>
+      <input id="meta-prazo" class="form-input" placeholder="Prazo / detalhes"/>
     </div>
     <div class="form-row">
-      <span style="font-size:12px;color:var(--muted);font-style:italic">Progresso:</span>
-      <input type="range" id="meta-progress" min="0" max="100" value="0" style="flex:1" oninput="document.getElementById('meta-progress-val').textContent=this.value+'%'" />
-      <span id="meta-progress-val" style="font-size:12px;font-weight:bold;min-width:30px">0%</span>
+      <span style="font-size:12px;color:var(--muted)">Progresso:</span>
+      <input type="range" id="meta-progress" min="0" max="100" value="0" style="flex:1" oninput="document.getElementById('mpv').textContent=this.value+'%'"/>
+      <span id="mpv" style="font-size:12px;font-weight:500;min-width:32px">0%</span>
       <div class="color-pick" id="meta-color-pick">
-        <button class="color-dot selected" style="background:var(--rose)" onclick="selectMetaColor(this,'rose')"></button>
-        <button class="color-dot" style="background:var(--lavender)" onclick="selectMetaColor(this,'lavender')"></button>
-        <button class="color-dot" style="background:var(--mint)" onclick="selectMetaColor(this,'mint')"></button>
-        <button class="color-dot" style="background:var(--peach)" onclick="selectMetaColor(this,'peach')"></button>
+        <button class="color-dot selected" style="background:var(--rose)" onclick="selMCol(this,'rose')"></button>
+        <button class="color-dot" style="background:var(--lav)" onclick="selMCol(this,'lav')"></button>
+        <button class="color-dot" style="background:var(--mint)" onclick="selMCol(this,'mint')"></button>
+        <button class="color-dot" style="background:var(--peach)" onclick="selMCol(this,'peach')"></button>
       </div>
       <button class="btn-add" onclick="addMeta()">+ Adicionar</button>
     </div>
@@ -335,482 +408,282 @@
 <div id="page-notas" class="page">
   <div class="grid-2">
     <div class="card" style="background:var(--yellow);border:none">
-      <div class="section-title" style="color:var(--yellow-text)"><div class="dot" style="background:var(--yellow-dark)"></div>Diário livre</div>
+      <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> Diário livre</div>
       <textarea class="note-area" id="diario" style="background:rgba(255,255,255,0.6);min-height:200px" placeholder="Escreve livremente... ✨" oninput="debounceSave('diario',this.value)"></textarea>
     </div>
-    <div class="card" style="background:var(--lavender);border:none">
-      <div class="section-title" style="color:var(--lavender-text)"><div class="dot" style="background:var(--lavender-dark)"></div>Gratidão</div>
+    <div class="card" style="background:var(--lav);border:none">
+      <div class="card-title" style="color:var(--lav-t)"><div class="pill" style="background:var(--lav-d)"></div> Gratidão</div>
       <textarea class="note-area" id="gratidao" style="background:rgba(255,255,255,0.6);min-height:200px" placeholder="Hoje sou grata por...&#10;&#10;1.&#10;2.&#10;3." oninput="debounceSave('gratidao',this.value)"></textarea>
     </div>
   </div>
   <div class="card" style="background:var(--mint);border:none">
-    <div class="section-title" style="color:var(--mint-text)"><div class="dot" style="background:var(--mint-dark)"></div>Lista de desejos e ideias</div>
+    <div class="card-title" style="color:var(--mint-t)"><div class="pill" style="background:var(--mint-d)"></div> Desejos e ideias</div>
     <textarea class="note-area" id="desejos" style="background:rgba(255,255,255,0.6);min-height:100px" placeholder="Quero aprender...&#10;Quero visitar..." oninput="debounceSave('desejos',this.value)"></textarea>
   </div>
   <div class="card">
-    <div class="section-title" style="color:var(--peach-text)"><div class="dot" style="background:var(--peach-dark)"></div>Afirmações positivas</div>
+    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> Afirmações positivas</div>
     <div style="display:flex;flex-wrap:wrap;gap:6px" id="afirmacoes"></div>
     <div style="display:flex;gap:6px;margin-top:10px">
-      <input id="afirm-input" class="form-input" placeholder="Nova afirmação..." onkeydown="if(event.key==='Enter')addAfirmacao()" />
+      <input id="afirm-input" class="form-input" placeholder="Nova afirmação..." onkeydown="if(event.key==='Enter')addAfirmacao()"/>
       <button class="btn-add" onclick="addAfirmacao()">+</button>
     </div>
   </div>
 </div>
 
+</div>
+
 <script>
-// ═══════════════════════════════
-// SUPABASE CONFIG
-// ═══════════════════════════════
-const SUPABASE_URL = 'https://uoaokjxojqhrhugqfgpe.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_UfUQmGlYUihxQJZGEa585Q_btnEzYGG';
-const USER_ID = 'utilizador_principal';
+const SUPABASE_URL='https://uoaokjxojqhrhugqfgpe.supabase.co';
+const SUPABASE_KEY='sb_publishable_UfUQmGlYUihxQJZGEa585Q_btnEzYGG';
+const USER_ID='utilizador_principal';
+const H={'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'return=representation'};
+const API=SUPABASE_URL+'/rest/v1/';
+async function dbGet(t,f={}){let q=API+t+'?select=*';for(const[k,v]of Object.entries(f))q+=`&${k}=eq.${encodeURIComponent(v)}`;q+='&order=created_at.asc';const r=await fetch(q,{headers:H});return r.ok?r.json():[];}
+async function dbInsert(t,row){const r=await fetch(API+t,{method:'POST',headers:H,body:JSON.stringify(row)});const d=await r.json();return Array.isArray(d)?d[0]:d;}
+async function dbUpdate(t,id,row){await fetch(API+t+'?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify(row)});}
+async function dbDelete(t,f={}){let q=API+t+'?';q+=Object.entries(f).map(([k,v])=>`${k}=eq.${encodeURIComponent(v)}`).join('&');await fetch(q,{method:'DELETE',headers:H});}
+async function dbUpsert(t,row,c){const r=await fetch(API+t+'?on_conflict='+c,{method:'POST',headers:{...H,'Prefer':'resolution=merge-duplicates,return=representation'},body:JSON.stringify(row)});const d=await r.json();return Array.isArray(d)?d[0]:d;}
 
-// Helper REST API — substitui o SDK
-const H = { 'Content-Type':'application/json', 'apikey': SUPABASE_KEY, 'Authorization':'Bearer '+SUPABASE_KEY, 'Prefer':'return=representation' };
-const API = SUPABASE_URL + '/rest/v1/';
-
-async function dbGet(table, filters={}) {
-  let q = API + table + '?select=*';
-  for (const [k,v] of Object.entries(filters)) q += `&${k}=eq.${encodeURIComponent(v)}`;
-  q += '&order=created_at.asc';
-  const r = await fetch(q, { headers: H });
-  return r.ok ? r.json() : [];
-}
-async function dbInsert(table, row) {
-  const r = await fetch(API + table, { method:'POST', headers: H, body: JSON.stringify(row) });
-  const data = await r.json();
-  return Array.isArray(data) ? data[0] : data;
-}
-async function dbUpdate(table, id, row) {
-  await fetch(API + table + '?id=eq.' + id, { method:'PATCH', headers: H, body: JSON.stringify(row) });
-}
-async function dbDelete(table, filters={}) {
-  let q = API + table + '?';
-  q += Object.entries(filters).map(([k,v]) => `${k}=eq.${encodeURIComponent(v)}`).join('&');
-  await fetch(q, { method:'DELETE', headers: H });
-}
-async function dbUpsert(table, row, conflictCol) {
-  const r = await fetch(API + table + '?on_conflict=' + conflictCol, {
-    method:'POST', headers: {...H, 'Prefer':'resolution=merge-duplicates,return=representation'},
-    body: JSON.stringify(row)
-  });
-  const data = await r.json();
-  return Array.isArray(data) ? data[0] : data;
-}
-
-// ═══════════════════════════════
-// STATE
-// ═══════════════════════════════
-const COLORS = {
-  rose:    { bg:'var(--rose)',    text:'var(--rose-text)',    dark:'var(--rose-dark)'    },
-  lavender:{ bg:'var(--lavender)',text:'var(--lavender-text)',dark:'var(--lavender-dark)'},
-  mint:    { bg:'var(--mint)',    text:'var(--mint-text)',    dark:'var(--mint-dark)'    },
-  sky:     { bg:'var(--sky)',     text:'var(--sky-text)',     dark:'var(--sky-dark)'     },
-  peach:   { bg:'var(--peach)',   text:'var(--peach-text)',   dark:'var(--peach-dark)'   },
-  yellow:  { bg:'var(--yellow)',  text:'var(--yellow-text)',  dark:'var(--yellow-dark)'  },
-};
-const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const WEEK_DAYS  = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
-const QUOTES     = ['Cada dia é uma nova página 🌸','Pequenos passos, grandes conquistas ✨','Acredita em ti 🌿','Hoje é sempre o melhor dia 💛','Vai ao teu ritmo, mas vai 🌊','O progresso não para 🌺'];
-const AFIRM_DEFAULT = ['Sou capaz 🌸','Mereço o melhor ✨','Estou a crescer 🌿','Sou amada 💛','O meu tempo virá 🌊'];
-
-let state = {
-  calYear: 0, calMonth: 0, selectedDate: null, selectedColor: 'rose',
-  weekColor: 'rose', metaColor: 'rose',
-  events: {}, tasks: {manha:[],tarde:[],noite:[]},
-  weekTasks: [[],[],[],[],[],[],[]],
-  habits: [], metas: [], afirmacoes: [],
+const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const WDAYS=['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+const QUOTES=['Cada dia é uma nova página 🌸','Pequenos passos, grandes conquistas ✨','Acredita em ti 🌿','Hoje é sempre o melhor dia 💛','Vai ao teu ritmo, mas vai 🌊','O progresso não para 🌺','A tua vida é a tua obra de arte 🎨'];
+const AFIRM0=['Sou capaz 🌸','Mereço o melhor ✨','Estou a crescer 🌿','Sou amada 💛','O meu tempo virá 🌊'];
+const AREAS=[
+  {key:'saude',    label:'Saúde',           color:'#5ab885',light:'#cef0e0'},
+  {key:'carreira', label:'Carreira',        color:'#5aa0c0',light:'#cce8f5'},
+  {key:'dinheiro', label:'Dinheiro',        color:'#b09040',light:'#f5f0cc'},
+  {key:'relac',    label:'Relacionamentos', color:'#c47a90',light:'#f5cdd8'},
+  {key:'familia',  label:'Família',         color:'#9a72c0',light:'#e2d4f0'},
+  {key:'lazer',    label:'Lazer',           color:'#c0885a',light:'#f5e0cc'},
+  {key:'desenvolv',label:'Desenvolvimento', color:'#7aaa7a',light:'#dceadc'},
+  {key:'espirito', label:'Espiritualidade', color:'#c0a880',light:'#f0e8dc'},
+];
+const QS=[
+  {a:'saude',    q:'Como está a tua energia e saúde física?',     o:['Excelente','Boa','Razoável','Fraca','Muito fraca']},
+  {a:'carreira', q:'Estás satisfeita com o teu trabalho/estudos?',o:['Muito satisfeita','Satisfeita','Neutro','Insatisfeita','Muito insatisfeita']},
+  {a:'dinheiro', q:'Como está a tua situação financeira?',        o:['Ótima','Estável','Com desafios','Difícil','Muito difícil']},
+  {a:'relac',    q:'Como estão os teus relacionamentos afetivos?', o:['Maravilhosos','Bons','Ok','Com tensão','Difíceis']},
+  {a:'familia',  q:'Como está a harmonia familiar?',              o:['Excelente','Boa','Razoável','Com conflitos','Muito difícil']},
+  {a:'lazer',    q:'Tens tempo para o que te alegra?',            o:['Sempre','Muitas vezes','Às vezes','Raramente','Nunca']},
+  {a:'desenvolv',q:'Estás a aprender e crescer como pessoa?',     o:['Muito','Bastante','Um pouco','Pouco','Nada']},
+  {a:'espirito', q:'Sentes paz interior e propósito?',            o:['Sempre','Muitas vezes','Às vezes','Raramente','Nunca']},
+];
+const CM={
+  rose:{bg:'var(--rose)',text:'var(--rose-t)',dark:'var(--rose-d)'},
+  lav:{bg:'var(--lav)',text:'var(--lav-t)',dark:'var(--lav-d)'},
+  mint:{bg:'var(--mint)',text:'var(--mint-t)',dark:'var(--mint-d)'},
+  sky:{bg:'var(--sky)',text:'var(--sky-t)',dark:'var(--sky-d)'},
+  peach:{bg:'var(--peach)',text:'var(--peach-t)',dark:'var(--peach-d)'},
+  gold:{bg:'var(--gold)',text:'var(--gold-t)',dark:'var(--gold-d)'},
+  yellow:{bg:'var(--yellow)',text:'var(--yellow-t)',dark:'var(--yellow-d)'},
 };
 
-let saveTimers = {};
-function showSaved() {
-  const el = document.getElementById('save-indicator');
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
-}
-function debounceSave(key, value) {
-  clearTimeout(saveTimers[key]);
-  saveTimers[key] = setTimeout(() => saveNote(key, value), 1000);
-}
+let S={
+  calYear:0,calMonth:0,selDate:null,selColor:'rose',wColor:'rose',mColor:'rose',
+  events:{},tasks:{manha:[],tarde:[],noite:[]},weekTasks:[[],[],[],[],[],[],[]],
+  habits:[],metas:[],afirm:[],
+  wheel:{saude:5,carreira:5,dinheiro:5,relac:5,familia:5,lazer:5,desenvolv:5,espirito:5},
+  wheelHist:[],qAns:{},
+};
+let timers={};
+function showSaved(){const e=document.getElementById('save-indicator');e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
+function debounceSave(k,v){clearTimeout(timers[k]);timers[k]=setTimeout(()=>saveNote(k,v),1000);}
 
-// ═══════════════════════════════
-// SUPABASE: LOAD ALL
-// ═══════════════════════════════
-async function loadAll() {
-  const todayStr = new Date().toISOString().split('T')[0];
-
-  const [notes, events, tasks, wtasks, habits, metas, afirm] = await Promise.all([
-    dbGet('notes', { user_id: USER_ID }),
-    dbGet('events', { user_id: USER_ID }),
-    dbGet('tasks', { user_id: USER_ID, date: todayStr }),
-    dbGet('week_tasks', { user_id: USER_ID, week_key: getWeekKey() }),
-    dbGet('habits', { user_id: USER_ID }),
-    dbGet('metas', { user_id: USER_ID }),
-    dbGet('afirmacoes', { user_id: USER_ID }),
+async function loadAll(){
+  const today=new Date().toISOString().split('T')[0];
+  const[notes,events,tasks,wt,habits,metas,afirm,wh]=await Promise.all([
+    dbGet('notes',{user_id:USER_ID}),dbGet('events',{user_id:USER_ID}),
+    dbGet('tasks',{user_id:USER_ID,date:today}),dbGet('week_tasks',{user_id:USER_ID,week_key:getWK()}),
+    dbGet('habits',{user_id:USER_ID}),dbGet('metas',{user_id:USER_ID}),
+    dbGet('afirmacoes',{user_id:USER_ID}),dbGet('wheel_history',{user_id:USER_ID}),
   ]);
+  (notes||[]).forEach(n=>{const el=document.getElementById(n.key.replace(/_/g,'-'));if(el)el.value=n.value||'';if(n.key==='wheel_scores'){try{S.wheel=JSON.parse(n.value);}catch(e){}}});
+  (events||[]).forEach(e=>{if(!S.events[e.date])S.events[e.date]=[];S.events[e.date].push({id:e.id,name:e.name,time:e.time,color:e.color});});
+  (tasks||[]).forEach(t=>{if(S.tasks[t.period])S.tasks[t.period].push({id:t.id,text:t.text,done:t.done});});
+  (wt||[]).forEach(t=>{if(!S.weekTasks[t.day_index])S.weekTasks[t.day_index]=[];S.weekTasks[t.day_index].push({id:t.id,text:t.text,color:t.color});});
+  for(const h of(habits||[])){const hd=await dbGet('habit_days',{habit_id:h.id});const days={};(hd||[]).forEach(d=>days[d.day]=true);S.habits.push({id:h.id,name:h.name,color:h.color,days});}
+  if(metas)S.metas=metas.map(m=>({id:m.id,emoji:m.emoji,titulo:m.titulo,prazo:m.prazo,progress:m.progress,color:m.color}));
+  if(afirm&&afirm.length>0)S.afirm=afirm.map(a=>({id:a.id,text:a.text,color:a.color}));
+  else{const c=['rose','lav','mint','peach','sky'];S.afirm=AFIRM0.map((t,i)=>({text:t,color:c[i]}));}
+  S.wheelHist=(wh||[]).map(w=>({id:w.id,date:w.date,scores:JSON.parse(w.scores||'{}')}));
+}
+async function saveNote(k,v){await dbUpsert('notes',{user_id:USER_ID,key:k,value:v},'user_id,key');showSaved();}
 
-  (notes||[]).forEach(n => {
-    const el = document.getElementById(n.key.replace(/_/g,'-'));
-    if (el) el.value = n.value || '';
-  });
-
-  (events||[]).forEach(e => {
-    if (!state.events[e.date]) state.events[e.date] = [];
-    state.events[e.date].push({ id: e.id, name: e.name, time: e.time, color: e.color });
-  });
-
-  (tasks||[]).forEach(t => {
-    if (state.tasks[t.period]) state.tasks[t.period].push({ id: t.id, text: t.text, done: t.done });
-  });
-
-  (wtasks||[]).forEach(t => {
-    if (!state.weekTasks[t.day_index]) state.weekTasks[t.day_index] = [];
-    state.weekTasks[t.day_index].push({ id: t.id, text: t.text, color: t.color });
-  });
-
-  for (const h of (habits||[])) {
-    const hdays = await dbGet('habit_days', { habit_id: h.id });
-    const days = {};
-    (hdays||[]).forEach(d => days[d.day] = true);
-    state.habits.push({ id: h.id, name: h.name, color: h.color, days });
-  }
-
-  if (metas) state.metas = metas.map(m => ({ id: m.id, emoji: m.emoji, titulo: m.titulo, prazo: m.prazo, progress: m.progress, color: m.color }));
-
-  if (afirm && afirm.length > 0) {
-    state.afirmacoes = afirm.map(a => ({ id: a.id, text: a.text, color: a.color }));
-  } else {
-    const cols = ['rose','lavender','mint','peach','sky'];
-    state.afirmacoes = AFIRM_DEFAULT.map((t,i) => ({ text: t, color: cols[i] }));
-  }
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item,.mob-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(id==='dashboard')updateDash();
 }
 
-async function saveNote(key, value) {
-  await dbUpsert('notes', { user_id: USER_ID, key, value }, 'user_id,key');
-  showSaved();
+// DASHBOARD
+function updateDash(){
+  const now=new Date();
+  const ds=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  document.getElementById('dash-date').textContent=ds[now.getDay()]+', '+now.getDate()+' de '+MONTHS[now.getMonth()]+' '+now.getFullYear();
+  const h=now.getHours();document.getElementById('dash-greeting').textContent=h<12?'Bom dia ☀️':h<18?'Boa tarde 🌤️':'Boa noite 🌙';
+  document.getElementById('dash-quote').textContent=QUOTES[now.getDate()%QUOTES.length];
+  document.getElementById('stat-habits').textContent=S.habits.reduce((a,h)=>a+Object.keys(h.days).length,0);
+  document.getElementById('stat-tasks').textContent=[...S.tasks.manha,...S.tasks.tarde,...S.tasks.noite].filter(t=>t.done).length;
+  document.getElementById('stat-wheel').textContent=(AREAS.reduce((a,ar)=>a+(S.wheel[ar.key]||5),0)/8).toFixed(1);
+  document.getElementById('stat-metas').textContent=S.metas.length;
+  const todayK=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
+  const evts=S.events[todayK]||[];
+  document.getElementById('dash-events').innerHTML=evts.length?evts.map(e=>{const c=CM[e.color]||CM.rose;return`<div class="upcoming-item"><div class="upcoming-dot" style="background:${c.dark}"></div><span style="font-size:13px">${e.name}</span>${e.time?`<span style="font-size:11px;color:var(--muted);margin-left:auto">${e.time}</span>`:''}</div>`;}).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic">Sem eventos hoje</div>';
+  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  document.getElementById('dash-habits').innerHTML=S.habits.length?S.habits.slice(0,5).map(h=>{const pct=Math.round(Object.keys(h.days).length/dim*100);const c=CM[h.color]||CM.mint;return`<div class="habit-mini"><span style="font-size:13px;flex:1">${h.name}</span><div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;background:${c.dark};height:100%;border-radius:2px"></div></div><span style="font-size:12px;font-weight:500;color:${c.dark}">${pct}%</span></div>`;}).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic">Sem hábitos ainda</div>';
 }
 
-// ═══════════════════════════════
-// NAV
-// ═══════════════════════════════
-function showPage(id, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  if (btn) btn.classList.add('active');
+// WHEEL
+function renderSliders(){
+  document.getElementById('wheel-sliders').innerHTML=AREAS.map(a=>`
+    <div class="area-slider">
+      <div class="area-top">
+        <span class="area-name" style="color:${a.color}">${a.label}</span>
+        <span class="area-score" style="color:${a.color}" id="sc-${a.key}">${S.wheel[a.key]||5}</span>
+      </div>
+      <input type="range" min="1" max="10" value="${S.wheel[a.key]||5}" style="accent-color:${a.color}" oninput="updArea('${a.key}',+this.value)"/>
+    </div>`).join('');
 }
-
-// ═══════════════════════════════
-// CALENDAR
-// ═══════════════════════════════
-function renderCal() {
-  const { calYear: y, calMonth: m } = state;
-  document.getElementById('cal-month-label').textContent = MONTHS_PT[m] + ' ' + y;
-  document.getElementById('cal-day-names').innerHTML = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(d => `<div class="cal-day-name">${d}</div>`).join('');
-  const first = new Date(y, m, 1).getDay();
-  const dim = new Date(y, m+1, 0).getDate();
-  const today = new Date();
-  let html = '';
-  for (let i = 0; i < first; i++) html += '<div class="cal-day-wrap"><button class="cal-day other-month"></button></div>';
-  for (let d = 1; d <= dim; d++) {
-    const key = y + '-' + m + '-' + d;
-    const isToday = today.getDate()===d && today.getMonth()===m && today.getFullYear()===y;
-    const isSel = state.selectedDate === key;
-    const hasEvt = state.events[key] && state.events[key].length > 0;
-    html += `<div class="cal-day-wrap"><button class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="selectDate(${y},${m},${d})">${d}</button>${hasEvt?'<div class="evt-dot"></div>':''}</div>`;
-  }
-  document.getElementById('cal-days').innerHTML = html;
-  renderEvents();
+function updArea(k,v){S.wheel[k]=v;document.getElementById('sc-'+k).textContent=v;drawWheel();updInsight();debounceSave('wheel_scores',JSON.stringify(S.wheel));}
+function drawWheel(){
+  const cv=document.getElementById('wheelCanvas'),ctx=cv.getContext('2d');
+  const cx=140,cy=140,r=110,n=8;ctx.clearRect(0,0,280,280);
+  for(let i=10;i>=1;i--){ctx.beginPath();AREAS.forEach((a,j)=>{const ang=(j/n)*Math.PI*2-Math.PI/2,rr=(i/10)*r;j===0?ctx.moveTo(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr):ctx.lineTo(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr);});ctx.closePath();ctx.strokeStyle=i%2===0?'rgba(0,0,0,0.06)':'rgba(0,0,0,0.03)';ctx.lineWidth=1;ctx.stroke();}
+  for(let j=0;j<n;j++){const ang=(j/n)*Math.PI*2-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);ctx.strokeStyle='rgba(0,0,0,0.08)';ctx.lineWidth=1;ctx.stroke();}
+  ctx.beginPath();AREAS.forEach((a,j)=>{const ang=(j/n)*Math.PI*2-Math.PI/2,rr=((S.wheel[a.key]||5)/10)*r;j===0?ctx.moveTo(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr):ctx.lineTo(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr);});ctx.closePath();ctx.fillStyle='rgba(180,140,200,0.2)';ctx.fill();ctx.strokeStyle='rgba(154,114,192,0.6)';ctx.lineWidth=2;ctx.stroke();
+  AREAS.forEach((a,j)=>{const ang=(j/n)*Math.PI*2-Math.PI/2,rr=((S.wheel[a.key]||5)/10)*r;ctx.beginPath();ctx.arc(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr,5,0,Math.PI*2);ctx.fillStyle=a.color;ctx.fill();});
+  ctx.font='500 10px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  AREAS.forEach((a,j)=>{const ang=(j/n)*Math.PI*2-Math.PI/2,lr=r+20;ctx.fillStyle=a.color;ctx.fillText(a.label,cx+Math.cos(ang)*lr,cy+Math.sin(ang)*lr);});
+  const avg=AREAS.reduce((s,a)=>s+(S.wheel[a.key]||5),0)/8;document.getElementById('wheel-avg').textContent=avg.toFixed(1);
 }
-function selectDate(y,m,d) {
-  state.selectedDate = y+'-'+m+'-'+d;
-  document.getElementById('selected-date-label').textContent = d + ' de ' + MONTHS_PT[m];
-  renderCal();
+function updInsight(){
+  const sorted=[...AREAS].sort((a,b)=>(S.wheel[a.key]||5)-(S.wheel[b.key]||5));
+  const lo=sorted[0],hi=sorted[sorted.length-1];
+  const avg=AREAS.reduce((s,a)=>s+(S.wheel[a.key]||5),0)/8;
+  let msg=avg>=8?`A tua vida está muito equilibrada! O teu ponto forte é <strong>${hi.label}</strong> ✨`:avg>=6?`Estás num bom caminho! Dá mais atenção a <strong>${lo.label}</strong> (${S.wheel[lo.key]}/10) — pequenas ações diárias transformam tudo 🌱`:`A área mais desafiante é <strong>${lo.label}</strong> (${S.wheel[lo.key]}/10). Um passo de cada vez, sem pressa 🌸`;
+  document.getElementById('wheel-insight').innerHTML='💡 '+msg;
 }
-function changeMonth(dir) {
-  state.calMonth += dir;
-  if (state.calMonth > 11) { state.calMonth = 0; state.calYear++; }
-  if (state.calMonth < 0)  { state.calMonth = 11; state.calYear--; }
-  renderCal();
+async function saveWheel(){
+  const date=new Date().toISOString().split('T')[0],scores=JSON.stringify(S.wheel);
+  const row=await dbInsert('wheel_history',{user_id:USER_ID,date,scores});
+  if(row&&row.id){S.wheelHist.push({id:row.id,date,scores:S.wheel});renderHist();}
+  await dbUpsert('notes',{user_id:USER_ID,key:'wheel_scores',value:scores},'user_id,key');
+  showSaved();alert('Registo guardado! ✨ Clica em "Histórico" para ver a tua evolução.');
 }
-function selectColor(el, color) {
-  document.querySelectorAll('#color-pick .color-dot').forEach(d => d.classList.remove('selected'));
-  el.classList.add('selected'); state.selectedColor = color;
-}
-async function addEvent() {
-  const name = document.getElementById('evt-name').value.trim();
-  const time = document.getElementById('evt-time').value;
-  if (!name || !state.selectedDate) return;
-  const data = await dbInsert('events', { user_id: USER_ID, date: state.selectedDate, name, time, color: state.selectedColor });
-  if (!state.events[state.selectedDate]) state.events[state.selectedDate] = [];
-  state.events[state.selectedDate].push({ id: data.id, name, time, color: state.selectedColor });
-  document.getElementById('evt-name').value = '';
-  showSaved(); renderCal();
-}
-function renderEvents() {
-  const list = state.events[state.selectedDate] || [];
-  document.getElementById('events-list').innerHTML = list.map((e,i) => {
-    const c = COLORS[e.color] || COLORS.rose;
-    return `<button class="event-tag" style="background:${c.bg};color:${c.text}" onclick="removeEvent('${e.id}','${state.selectedDate}',${i})">
-      ${e.time?`<em style="font-size:10px">${e.time}</em>`:''} ${e.name} <span>×</span></button>`;
+function toggleHistory(){const el=document.getElementById('wheel-history');el.style.display=el.style.display==='none'?'block':'none';if(el.style.display==='block')renderHist();}
+function renderHist(){
+  const g=document.getElementById('hist-grid');
+  if(!S.wheelHist.length){g.innerHTML='<div style="font-size:13px;color:var(--muted);font-style:italic">Sem registos ainda. Guarda a tua primeira roda!</div>';return;}
+  g.innerHTML=[...S.wheelHist].reverse().map(h=>{
+    const sc=typeof h.scores==='string'?JSON.parse(h.scores):h.scores;
+    const avg=(AREAS.reduce((s,a)=>s+(sc[a.key]||5),0)/8).toFixed(1);
+    const top=[...AREAS].sort((a,b)=>(sc[b.key]||5)-(sc[a.key]||5)).slice(0,3);
+    const safeScores=JSON.stringify(sc).replace(/"/g,'&quot;');
+    return`<div class="hist-card" onclick='loadHist(${safeScores})'><div class="hist-date">${h.date}</div><div class="hist-avg">${avg}<span style="font-size:12px;color:var(--muted)"> / 10</span></div><div class="hist-tags">${top.map(a=>`<span class="hist-tag" style="background:${a.light};color:${a.color}">${a.label}</span>`).join('')}</div></div>`;
   }).join('');
 }
-async function removeEvent(id, date, i) {
-  await dbDelete('events', { id });
-  state.events[date].splice(i, 1);
-  showSaved(); renderCal();
+function loadHist(sc){S.wheel=sc;renderSliders();drawWheel();updInsight();}
+function renderQ(){
+  document.getElementById('q-body').innerHTML=QS.map((q,qi)=>`
+    <div class="q-item">
+      <div class="q-label">${qi+1}. ${q.q}</div>
+      <div class="q-options">${q.o.map((o,oi)=>`<button class="q-opt" onclick="selQ(this,'${q.a}',${10-oi*2})">${o}</button>`).join('')}</div>
+    </div>`).join('');
 }
+function selQ(el,area,score){el.closest('.q-options').querySelectorAll('.q-opt').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');S.qAns[area]=score;}
+function applyQ(){let n=0;for(const[a,v]of Object.entries(S.qAns)){S.wheel[a]=v;n++;}if(!n){alert('Responde pelo menos a uma pergunta!');return;}renderSliders();drawWheel();updInsight();debounceSave('wheel_scores',JSON.stringify(S.wheel));alert(`${n} área(s) atualizada(s) ✨`);}
 
-// ═══════════════════════════════
+// CALENDAR
+function renderCal(){
+  const{calYear:y,calMonth:m}=S;
+  document.getElementById('cal-month-label').textContent=MONTHS[m]+' '+y;
+  document.getElementById('cal-day-names').innerHTML=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+  const first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),now=new Date();
+  let html='';
+  for(let i=0;i<first;i++)html+='<div class="cal-day-wrap"><button class="cal-day other-month"></button></div>';
+  for(let d=1;d<=dim;d++){const k=y+'-'+m+'-'+d,isT=now.getDate()===d&&now.getMonth()===m&&now.getFullYear()===y,iS=S.selDate===k,hE=S.events[k]&&S.events[k].length>0;html+=`<div class="cal-day-wrap"><button class="cal-day${isT?' today':''}${iS?' selected':''}" onclick="selDate(${y},${m},${d})">${d}</button>${hE?'<div class="evt-dot"></div>':''}</div>`;}
+  document.getElementById('cal-days').innerHTML=html;renderEvts();
+}
+function selDate(y,m,d){S.selDate=y+'-'+m+'-'+d;document.getElementById('selected-date-label').textContent=d+' de '+MONTHS[m];renderCal();}
+function changeMonth(dir){S.calMonth+=dir;if(S.calMonth>11){S.calMonth=0;S.calYear++;}if(S.calMonth<0){S.calMonth=11;S.calYear--;}renderCal();}
+function selectColor(el,c){document.querySelectorAll('#color-pick .color-dot').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');S.selColor=c;}
+async function addEvent(){
+  const name=document.getElementById('evt-name').value.trim(),time=document.getElementById('evt-time').value;
+  if(!name||!S.selDate)return;
+  const data=await dbInsert('events',{user_id:USER_ID,date:S.selDate,name,time,color:S.selColor});
+  if(!S.events[S.selDate])S.events[S.selDate]=[];S.events[S.selDate].push({id:data.id,name,time,color:S.selColor});
+  document.getElementById('evt-name').value='';showSaved();renderCal();
+}
+function renderEvts(){const list=S.events[S.selDate]||[];document.getElementById('events-list').innerHTML=list.map((e,i)=>{const c=CM[e.color]||CM.rose;return`<button class="event-tag" style="background:${c.bg};color:${c.text}" onclick="rmEvent('${e.id}','${S.selDate}',${i})">${e.time?`<em style="font-size:10px">${e.time}</em>`:''} ${e.name} ×</button>`;}).join('');}
+async function rmEvent(id,date,i){await dbDelete('events',{id});S.events[date].splice(i,1);showSaved();renderCal();}
+
 // DAY
-// ═══════════════════════════════
-function renderDay() {
-  const now = new Date();
-  const ds = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-  document.getElementById('today-label').textContent = ds[now.getDay()] + ', ' + now.getDate() + ' de ' + MONTHS_PT[now.getMonth()];
-  document.getElementById('today-quote').textContent = QUOTES[now.getDate() % QUOTES.length];
+function renderDay(){
+  const now=new Date(),ds=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  document.getElementById('today-label').textContent=ds[now.getDay()]+', '+now.getDate()+' de '+MONTHS[now.getMonth()];
+  document.getElementById('today-quote2').textContent=QUOTES[now.getDate()%QUOTES.length];
   ['manha','tarde','noite'].forEach(renderTasks);
 }
-function renderTasks(period) {
-  const cols = { manha:'lavender', tarde:'peach', noite:'sky' };
-  const c = COLORS[cols[period]];
-  document.getElementById(period+'-tasks').innerHTML = state.tasks[period].map((t,i) =>
-    `<div class="time-block"><div class="time-task" style="background:${c.bg};color:${c.text}">
-      <button class="check-btn${t.done?' done':''}" style="color:${c.dark};border-color:${c.dark}" onclick="toggleTask('${period}',${i},'${t.id}',${!t.done})"></button>
-      <span class="task-text${t.done?' done':''}">${t.text}</span>
-      <button onclick="removeTask('${period}',${i},'${t.id}')" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:14px;padding:0">×</button>
-    </div></div>`).join('');
+function renderTasks(p){
+  const cols={manha:'lav',tarde:'peach',noite:'sky'},c=CM[cols[p]];
+  document.getElementById(p+'-tasks').innerHTML=S.tasks[p].map((t,i)=>`<div class="time-task" style="background:${c.bg};color:${c.text}"><button class="check-btn${t.done?' done':''}" style="color:${c.dark};border-color:${c.dark}" onclick="togTask('${p}',${i},'${t.id}',${!t.done})"></button><span class="task-text${t.done?' done':''}">${t.text}</span><button onclick="rmTask('${p}',${i},'${t.id}')" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:14px;padding:0">×</button></div>`).join('');
 }
-async function addTask(period) {
-  const inp = document.getElementById(period+'-input');
-  const text = inp.value.trim(); if (!text) return;
-  const todayStr = new Date().toISOString().split('T')[0];
-  const data = await dbInsert('tasks', { user_id: USER_ID, date: todayStr, period, text, done: false });
-  state.tasks[period].push({ id: data.id, text, done: false });
-  inp.value = ''; showSaved(); renderTasks(period);
-}
-async function toggleTask(period, i, id, done) {
-  await dbUpdate('tasks', id, { done });
-  state.tasks[period][i].done = done; showSaved(); renderTasks(period);
-}
-async function removeTask(period, i, id) {
-  await dbDelete('tasks', { id });
-  state.tasks[period].splice(i,1); showSaved(); renderTasks(period);
-}
-async function setMood(btn, mood) {
-  document.querySelectorAll('#mood-btns .mood-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const todayStr = new Date().toISOString().split('T')[0];
-  await dbUpsert('notes', { user_id: USER_ID, key: 'mood_'+todayStr, value: mood }, 'user_id,key');
-  document.getElementById('mood-note').textContent = 'Humor registado: ' + mood;
-  showSaved();
-}
+async function addTask(p){const inp=document.getElementById(p+'-input'),text=inp.value.trim();if(!text)return;const today=new Date().toISOString().split('T')[0];const data=await dbInsert('tasks',{user_id:USER_ID,date:today,period:p,text,done:false});S.tasks[p].push({id:data.id,text,done:false});inp.value='';showSaved();renderTasks(p);}
+async function togTask(p,i,id,done){await dbUpdate('tasks',id,{done});S.tasks[p][i].done=done;showSaved();renderTasks(p);}
+async function rmTask(p,i,id){await dbDelete('tasks',{id});S.tasks[p].splice(i,1);showSaved();renderTasks(p);}
+async function setMood(btn,mood){document.querySelectorAll('#mood-btns .mood-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const today=new Date().toISOString().split('T')[0];await dbUpsert('notes',{user_id:USER_ID,key:'mood_'+today,value:mood},'user_id,key');document.getElementById('mood-note').textContent='Humor registado: '+mood;showSaved();}
 
-// ═══════════════════════════════
 // WEEK
-// ═══════════════════════════════
-function getWeekKey() {
-  const now = new Date(); const day = now.getDay();
-  const mon = new Date(now); mon.setDate(now.getDate() - (day===0?6:day-1));
-  return mon.toISOString().split('T')[0];
+function getWK(){const now=new Date(),day=now.getDay(),mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));return mon.toISOString().split('T')[0];}
+function renderWeek(){
+  const now=new Date(),day=now.getDay(),mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));
+  const dc=['rose','lav','mint','peach','sky','yellow','lav'];
+  let html='';
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const isT=d.toDateString()===now.toDateString(),c=CM[dc[i]];html+=`<div class="week-day" style="background:${c.bg}"><div class="week-day-header" style="color:${c.text}${isT?';border-bottom:2px solid '+c.dark:''}">${WDAYS[i].slice(0,3)}<br><strong>${d.getDate()}</strong></div><div class="week-day-body">${(S.weekTasks[i]||[]).map((t,ti)=>{const tc=CM[t.color||dc[i]];return`<button class="week-task" style="background:${tc.bg};color:${tc.text}" onclick="rmWTask(${i},${ti},'${t.id}')">${t.text} ×</button>`;}).join('')}</div></div>`;}
+  document.getElementById('week-grid').innerHTML=html;
+  const end=new Date(mon);end.setDate(mon.getDate()+6);
+  document.getElementById('week-label').textContent=mon.getDate()+' '+MONTHS[mon.getMonth()].slice(0,3)+' – '+end.getDate()+' '+MONTHS[end.getMonth()].slice(0,3);
 }
-function renderWeek() {
-  const now = new Date(); const day = now.getDay();
-  const mon = new Date(now); mon.setDate(now.getDate() - (day===0?6:day-1));
-  const dayColors = ['rose','lavender','mint','peach','sky','yellow','lavender'];
-  let html = '';
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(mon); d.setDate(mon.getDate()+i);
-    const isToday = d.toDateString() === now.toDateString();
-    const c = COLORS[dayColors[i]];
-    html += `<div class="week-day" style="background:${c.bg}">
-      <div class="week-day-header" style="color:${c.text}${isToday?';border-bottom:2px solid '+c.dark:''}">
-        ${WEEK_DAYS[i].slice(0,3)}<br><strong>${d.getDate()}</strong>
-      </div>
-      <div class="week-day-body">
-        ${(state.weekTasks[i]||[]).map((t,ti) => {
-          const tc = COLORS[t.color||dayColors[i]];
-          return `<button class="week-task" style="background:${tc.bg};color:${tc.text}" onclick="removeWeekTask(${i},${ti},'${t.id}')">${t.text} ×</button>`;
-        }).join('')}
-      </div>
-    </div>`;
-  }
-  document.getElementById('week-grid').innerHTML = html;
-  const end = new Date(mon); end.setDate(mon.getDate()+6);
-  document.getElementById('week-label').textContent = mon.getDate()+' '+MONTHS_PT[mon.getMonth()].slice(0,3)+' – '+end.getDate()+' '+MONTHS_PT[end.getMonth()].slice(0,3);
-}
-function selectWeekColor(el, color) {
-  document.querySelectorAll('#week-color-pick .color-dot').forEach(d => d.classList.remove('selected'));
-  el.classList.add('selected'); state.weekColor = color;
-}
-async function addWeekTask() {
-  const dayIdx = parseInt(document.getElementById('week-day-sel').value);
-  const text = document.getElementById('week-task-input').value.trim(); if (!text) return;
-  const data = await dbInsert('week_tasks', { user_id: USER_ID, week_key: getWeekKey(), day_index: dayIdx, text, color: state.weekColor });
-  if (!state.weekTasks[dayIdx]) state.weekTasks[dayIdx] = [];
-  state.weekTasks[dayIdx].push({ id: data.id, text, color: state.weekColor });
-  document.getElementById('week-task-input').value = ''; showSaved(); renderWeek();
-}
-async function removeWeekTask(dayIdx, taskIdx, id) {
-  await dbDelete('week_tasks', { id });
-  state.weekTasks[dayIdx].splice(taskIdx,1); showSaved(); renderWeek();
-}
+function selWCol(el,c){document.querySelectorAll('#week-color-pick .color-dot').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');S.wColor=c;}
+async function addWeekTask(){const dayIdx=parseInt(document.getElementById('week-day-sel').value),text=document.getElementById('week-task-input').value.trim();if(!text)return;const data=await dbInsert('week_tasks',{user_id:USER_ID,week_key:getWK(),day_index:dayIdx,text,color:S.wColor});if(!S.weekTasks[dayIdx])S.weekTasks[dayIdx]=[];S.weekTasks[dayIdx].push({id:data.id,text,color:S.wColor});document.getElementById('week-task-input').value='';showSaved();renderWeek();}
+async function rmWTask(di,ti,id){await dbDelete('week_tasks',{id});S.weekTasks[di].splice(ti,1);showSaved();renderWeek();}
 
-// ═══════════════════════════════
 // HABITS
-// ═══════════════════════════════
-function renderHabits() {
-  const now = new Date();
-  const dim = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-  document.getElementById('habit-month-label').textContent = MONTHS_PT[now.getMonth()];
-  document.getElementById('habits-container').innerHTML = state.habits.map((h,hi) => {
-    const c = COLORS[h.color];
-    let dots = '';
-    for (let d = 1; d <= dim; d++) {
-      const done = h.days[d];
-      dots += `<button class="habit-dot" style="border-color:${c.dark};color:${c.text};background:${done?c.bg:'transparent'}" onclick="toggleHabit(${hi},${d})">${done?'✓':d}</button>`;
-    }
-    return `<div class="habit-row">
-      <div class="habit-name" style="color:${c.text}"><em>${h.name}</em></div>
-      <div class="habit-dots">${dots}</div>
-      <button onclick="removeHabit(${hi},'${h.id}')" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:16px">×</button>
-    </div>`;
-  }).join('');
-  document.getElementById('habit-progress').innerHTML = state.habits.map(h => {
-    const dim2 = new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).getDate();
-    const pct = Math.round(Object.keys(h.days).length / dim2 * 100);
-    const c = COLORS[h.color];
-    return `<div style="margin-bottom:10px">
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
-        <span style="font-style:italic;color:${c.text}">${h.name}</span>
-        <span style="font-weight:bold;color:${c.text}">${pct}%</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${c.dark}"></div></div>
-    </div>`;
-  }).join('');
+function renderHabits(){
+  const now=new Date(),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  document.getElementById('habit-month-label').textContent=MONTHS[now.getMonth()];
+  document.getElementById('habits-container').innerHTML=S.habits.map((h,hi)=>{const c=CM[h.color]||CM.mint;let dots='';for(let d=1;d<=dim;d++){const done=h.days[d];dots+=`<button class="habit-dot" style="border-color:${c.dark};color:${c.text};background:${done?c.bg:'transparent'}" onclick="togHabit(${hi},${d})">${done?'✓':d}</button>`;}return`<div class="habit-row"><div class="habit-nm" style="color:${c.text}"><em>${h.name}</em></div><div class="habit-dots">${dots}</div><button onclick="rmHabit(${hi},'${h.id}')" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:16px">×</button></div>`;}).join('');
+  document.getElementById('habit-progress').innerHTML=S.habits.map(h=>{const dim2=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate(),pct=Math.round(Object.keys(h.days).length/dim2*100),c=CM[h.color]||CM.mint;return`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="font-style:italic;color:${c.text}">${h.name}</span><span style="font-weight:500;color:${c.text}">${pct}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${c.dark}"></div></div></div>`;}).join('');
 }
-async function toggleHabit(hi, d) {
-  const h = state.habits[hi];
-  if (h.days[d]) {
-    await dbDelete('habit_days', { habit_id: h.id, day: d });
-    delete h.days[d];
-  } else {
-    await dbInsert('habit_days', { habit_id: h.id, day: d });
-    h.days[d] = true;
-  }
-  showSaved(); renderHabits();
-}
-async function addHabit() {
-  const name = document.getElementById('habit-input').value.trim(); if (!name) return;
-  const cols = ['rose','lavender','mint','sky','peach'];
-  const color = cols[state.habits.length % cols.length];
-  const data = await dbInsert('habits', { user_id: USER_ID, name, color });
-  state.habits.push({ id: data.id, name, color, days: {} });
-  document.getElementById('habit-input').value = ''; showSaved(); renderHabits();
-}
-async function removeHabit(hi, id) {
-  await dbDelete('habit_days', { habit_id: id });
-  await dbDelete('habits', { id });
-  state.habits.splice(hi,1); showSaved(); renderHabits();
-}
+async function togHabit(hi,d){const h=S.habits[hi];if(h.days[d]){await dbDelete('habit_days',{habit_id:h.id,day:d});delete h.days[d];}else{await dbInsert('habit_days',{habit_id:h.id,day:d});h.days[d]=true;}showSaved();renderHabits();}
+async function addHabit(){const name=document.getElementById('habit-input').value.trim();if(!name)return;const cols=['mint','lav','rose','sky','peach'],color=cols[S.habits.length%cols.length];const data=await dbInsert('habits',{user_id:USER_ID,name,color});S.habits.push({id:data.id,name,color,days:{}});document.getElementById('habit-input').value='';showSaved();renderHabits();}
+async function rmHabit(hi,id){await dbDelete('habit_days',{habit_id:id});await dbDelete('habits',{id});S.habits.splice(hi,1);showSaved();renderHabits();}
 
-// ═══════════════════════════════
 // METAS
-// ═══════════════════════════════
-function renderMetas() {
-  document.getElementById('metas-list').innerHTML = state.metas.map((m,i) => {
-    const c = COLORS[m.color];
-    return `<div class="meta-card" style="background:${c.bg}">
-      <div class="meta-icon">${m.emoji}</div>
-      <div class="meta-info">
-        <div class="meta-title" style="color:${c.text}">${m.titulo}</div>
-        <div class="meta-sub" style="color:${c.dark}">${m.prazo}</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${m.progress}%;background:${c.dark}"></div></div>
-        <div style="font-size:10px;color:${c.text};margin-top:2px">${m.progress}% concluído</div>
-      </div>
-      <button onclick="removeMeta(${i},'${m.id}')" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:18px">×</button>
-    </div>`;
-  }).join('');
-}
-function selectMetaColor(el, color) {
-  document.querySelectorAll('#meta-color-pick .color-dot').forEach(d => d.classList.remove('selected'));
-  el.classList.add('selected'); state.metaColor = color;
-}
-async function addMeta() {
-  const emoji = document.getElementById('meta-emoji').value.trim() || '🌟';
-  const titulo = document.getElementById('meta-titulo').value.trim(); if (!titulo) return;
-  const prazo = document.getElementById('meta-prazo').value.trim() || '';
-  const progress = parseInt(document.getElementById('meta-progress').value);
-  const data = await dbInsert('metas', { user_id: USER_ID, emoji, titulo, prazo, progress, color: state.metaColor });
-  state.metas.push({ id: data.id, emoji, titulo, prazo, progress, color: state.metaColor });
-  document.getElementById('meta-emoji').value = '';
-  document.getElementById('meta-titulo').value = '';
-  document.getElementById('meta-prazo').value = '';
-  document.getElementById('meta-progress').value = 0;
-  document.getElementById('meta-progress-val').textContent = '0%';
-  showSaved(); renderMetas();
-}
-async function removeMeta(i, id) {
-  await dbDelete('metas', { id });
-  state.metas.splice(i,1); showSaved(); renderMetas();
-}
+function renderMetas(){document.getElementById('metas-list').innerHTML=S.metas.map((m,i)=>{const c=CM[m.color]||CM.lav;return`<div class="meta-card" style="background:${c.bg}"><div style="font-size:22px">${m.emoji}</div><div style="flex:1"><div style="font-weight:500;font-size:14px;color:${c.text}">${m.titulo}</div><div style="font-size:11px;font-style:italic;color:${c.dark}">${m.prazo}</div><div class="progress-bar" style="margin-top:6px"><div class="progress-fill" style="width:${m.progress}%;background:${c.dark}"></div></div><div style="font-size:10px;color:${c.text};margin-top:2px">${m.progress}% concluído</div></div><button onclick="rmMeta(${i},'${m.id}')" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:18px">×</button></div>`;}).join('');}
+function selMCol(el,c){document.querySelectorAll('#meta-color-pick .color-dot').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');S.mColor=c;}
+async function addMeta(){const emoji=document.getElementById('meta-emoji').value.trim()||'🌟',titulo=document.getElementById('meta-titulo').value.trim();if(!titulo)return;const prazo=document.getElementById('meta-prazo').value.trim()||'',progress=parseInt(document.getElementById('meta-progress').value);const data=await dbInsert('metas',{user_id:USER_ID,emoji,titulo,prazo,progress,color:S.mColor});S.metas.push({id:data.id,emoji,titulo,prazo,progress,color:S.mColor});document.getElementById('meta-emoji').value='';document.getElementById('meta-titulo').value='';document.getElementById('meta-prazo').value='';document.getElementById('meta-progress').value=0;document.getElementById('mpv').textContent='0%';showSaved();renderMetas();}
+async function rmMeta(i,id){await dbDelete('metas',{id});S.metas.splice(i,1);showSaved();renderMetas();}
 
-// ═══════════════════════════════
 // AFIRMAÇÕES
-// ═══════════════════════════════
-function renderAfirmacoes() {
-  const cols = ['rose','lavender','mint','peach','sky'];
-  document.getElementById('afirmacoes').innerHTML = state.afirmacoes.map((a,i) => {
-    const c = COLORS[a.color || cols[i%cols.length]];
-    return `<span class="badge" style="background:${c.bg};color:${c.text};cursor:pointer" onclick="removeAfirmacao(${i},'${a.id||''}','${a.text}')">${a.text} ×</span>`;
-  }).join('');
-}
-async function addAfirmacao() {
-  const text = document.getElementById('afirm-input').value.trim(); if (!text) return;
-  const cols = ['rose','lavender','mint','peach','sky'];
-  const color = cols[state.afirmacoes.length % cols.length];
-  const data = await dbInsert('afirmacoes', { user_id: USER_ID, text, color });
-  state.afirmacoes.push({ id: data.id, text, color });
-  document.getElementById('afirm-input').value = ''; showSaved(); renderAfirmacoes();
-}
-async function removeAfirmacao(i, id, text) {
-  if (id) await dbDelete('afirmacoes', { id });
-  state.afirmacoes.splice(i,1); showSaved(); renderAfirmacoes();
-}
+function renderAfirm(){const c=['rose','lav','mint','peach','sky'];document.getElementById('afirmacoes').innerHTML=S.afirm.map((a,i)=>{const cm=CM[a.color||c[i%c.length]];return`<span class="badge" style="background:${cm.bg};color:${cm.text};cursor:pointer" onclick="rmAfirm(${i},'${a.id||''}')">${a.text} ×</span>`;}).join('');}
+async function addAfirmacao(){const text=document.getElementById('afirm-input').value.trim();if(!text)return;const c=['rose','lav','mint','peach','sky'],color=c[S.afirm.length%c.length];const data=await dbInsert('afirmacoes',{user_id:USER_ID,text,color});S.afirm.push({id:data.id,text,color});document.getElementById('afirm-input').value='';showSaved();renderAfirm();}
+async function rmAfirm(i,id){if(id)await dbDelete('afirmacoes',{id});S.afirm.splice(i,1);showSaved();renderAfirm();}
 
-// ═══════════════════════════════
 // INIT
-// ═══════════════════════════════
-async function init() {
-  const now = new Date();
-  state.calYear = now.getFullYear();
-  state.calMonth = now.getMonth();
-  state.selectedDate = now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
-  document.getElementById('selected-date-label').textContent = now.getDate() + ' de ' + MONTHS_PT[now.getMonth()];
-
-  try {
-    await loadAll();
-  } catch(e) {
-    document.querySelector('#loading p').textContent = '⚠️ Erro ao ligar ao Supabase. Verifica se as tabelas foram criadas.';
-    document.querySelector('#loading p').style.color = '#c97a9a';
-    console.error('Supabase error:', e);
-    setTimeout(() => {
-      document.getElementById('loading').style.opacity = '0';
-      setTimeout(() => document.getElementById('loading').style.display = 'none', 400);
-    }, 3000);
-  }
-
-  document.getElementById('loading').style.opacity = '0';
-  setTimeout(() => document.getElementById('loading').style.display = 'none', 400);
-
-  renderCal();
-  renderDay();
-  renderWeek();
-  renderHabits();
-  renderMetas();
-  renderAfirmacoes();
+async function init(){
+  const now=new Date();
+  S.calYear=now.getFullYear();S.calMonth=now.getMonth();
+  S.selDate=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
+  document.getElementById('selected-date-label').textContent=now.getDate()+' de '+MONTHS[now.getMonth()];
+  try{await loadAll();}catch(e){console.error(e);}
+  document.getElementById('loading').style.opacity='0';
+  setTimeout(()=>document.getElementById('loading').style.display='none',400);
+  renderCal();renderDay();renderWeek();renderHabits();renderMetas();renderAfirm();
+  renderSliders();drawWheel();updInsight();renderQ();renderHist();updateDash();
 }
-
 init();
 </script>
 </body>
