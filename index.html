@@ -777,17 +777,19 @@ function debounceSave(k,v){clearTimeout(timers[k]);timers[k]=setTimeout(()=>save
 
 async function loadAll(){
   const today=new Date().toISOString().split('T')[0];
-  const[notes,events,tasks,wt,habits,metas,afirm,wh,allHabitDays]=await Promise.all([
-    dbGet('notes',{user_id:USER_ID}),
-    dbGet('events',{user_id:USER_ID}),
-    dbGet('tasks',{user_id:USER_ID,date:today}),
-    dbGet('week_tasks',{user_id:USER_ID,week_key:getWK()}),
-    dbGet('habits',{user_id:USER_ID}),
-    dbGet('metas',{user_id:USER_ID}),
-    dbGet('afirmacoes',{user_id:USER_ID}),
-    dbGet('wheel_history',{user_id:USER_ID}),
-    dbGet('habit_days',{}),
+  const timeout=(p,ms=4000)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms))]);
+  
+  const[notes,events,tasks,wt,habits,metas,afirm,wh]=await Promise.all([
+    timeout(dbGet('notes',{user_id:USER_ID})).catch(()=>[]),
+    timeout(dbGet('events',{user_id:USER_ID})).catch(()=>[]),
+    timeout(dbGet('tasks',{user_id:USER_ID,date:today})).catch(()=>[]),
+    timeout(dbGet('week_tasks',{user_id:USER_ID,week_key:getWK()})).catch(()=>[]),
+    timeout(dbGet('habits',{user_id:USER_ID})).catch(()=>[]),
+    timeout(dbGet('metas',{user_id:USER_ID})).catch(()=>[]),
+    timeout(dbGet('afirmacoes',{user_id:USER_ID})).catch(()=>[]),
+    timeout(dbGet('wheel_history',{user_id:USER_ID})).catch(()=>[]),
   ]);
+
   (notes||[]).forEach(n=>{
     const el=document.getElementById(n.key.replace(/_/g,'-'));
     if(el)el.value=n.value||'';
@@ -797,11 +799,16 @@ async function loadAll(){
   (events||[]).forEach(e=>{if(!S.events[e.date])S.events[e.date]=[];S.events[e.date].push({id:e.id,name:e.name,time:e.time,color:e.color});});
   (tasks||[]).forEach(t=>{if(S.tasks[t.period])S.tasks[t.period].push({id:t.id,text:t.text,done:t.done});});
   (wt||[]).forEach(t=>{if(!S.weekTasks[t.day_index])S.weekTasks[t.day_index]=[];S.weekTasks[t.day_index].push({id:t.id,text:t.text,color:t.color});});
-  (habits||[]).forEach(h=>{
-    const days={};
-    (allHabitDays||[]).filter(d=>d.habit_id===h.id).forEach(d=>days[d.day]=true);
+
+  // Load habit days in parallel (not sequential)
+  const habitDayResults=await Promise.all(
+    (habits||[]).map(h=>timeout(dbGet('habit_days',{habit_id:h.id})).catch(()=>[]))
+  );
+  (habits||[]).forEach((h,i)=>{
+    const days={};(habitDayResults[i]||[]).forEach(d=>days[d.day]=true);
     S.habits.push({id:h.id,name:h.name,color:h.color,days});
   });
+
   if(metas)S.metas=metas.map(m=>({id:m.id,emoji:m.emoji,titulo:m.titulo,prazo:m.prazo,progress:m.progress,color:m.color}));
   if(afirm&&afirm.length>0)S.afirm=afirm.map(a=>({id:a.id,text:a.text,color:a.color}));
   else{const c=['rose','lav','mint','peach','sky'];S.afirm=AFIRM0.map((t,i)=>({text:t,color:c[i]}));}
