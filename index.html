@@ -168,6 +168,9 @@
   <button class="mob-btn" onclick="showPage('habitos',this)">✨</button>
   <button class="mob-btn" onclick="showPage('metas',this)">🎯</button>
   <button class="mob-btn" onclick="showPage('notas',this)">📝</button>
+  <button class="mob-btn" onclick="showPage('bemestar',this)">🌿</button>
+  <button class="mob-btn" onclick="showPage('financas',this)">💰</button>
+  <button class="mob-btn" onclick="showPage('sonhos',this)">🌠</button>
 </div>
 
 <div class="sidebar">
@@ -183,6 +186,9 @@
   <button class="nav-item" onclick="showPage('habitos',this)"><span class="nav-icon">✨</span> Hábitos</button>
   <button class="nav-item" onclick="showPage('metas',this)"><span class="nav-icon">🎯</span> Metas</button>
   <button class="nav-item" onclick="showPage('notas',this)"><span class="nav-icon">📝</span> Notas</button>
+  <button class="nav-item" onclick="showPage('bemestar',this)"><span class="nav-icon">🌿</span> Bem-estar</button>
+  <button class="nav-item" onclick="showPage('financas',this)"><span class="nav-icon">💰</span> Finanças</button>
+  <button class="nav-item" onclick="showPage('sonhos',this)"><span class="nav-icon">🌠</span> Sonhos & Visão</button>
 </div>
 
 <div class="main">
@@ -463,16 +469,6 @@
 
 <!-- NOTAS -->
 <div id="page-notas" class="page">
-  <div class="grid-2">
-    <div class="card" style="background:var(--yellow);border:none">
-      <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> Diário livre</div>
-      <textarea class="note-area" id="diario" style="background:rgba(255,255,255,0.6);min-height:200px" placeholder="Escreve livremente... ✨" oninput="debounceSave('diario',this.value)"></textarea>
-    </div>
-    <div class="card" style="background:var(--lav);border:none">
-      <div class="card-title" style="color:var(--lav-t)"><div class="pill" style="background:var(--lav-d)"></div> Gratidão</div>
-      <textarea class="note-area" id="gratidao" style="background:rgba(255,255,255,0.6);min-height:200px" placeholder="Hoje sou grata por...&#10;&#10;1.&#10;2.&#10;3." oninput="debounceSave('gratidao',this.value)"></textarea>
-    </div>
-  </div>
   <div class="card" style="background:var(--mint);border:none">
     <div class="card-title" style="color:var(--mint-t)"><div class="pill" style="background:var(--mint-d)"></div> Desejos e ideias</div>
     <textarea class="note-area" id="desejos" style="background:rgba(255,255,255,0.6);min-height:100px" placeholder="Quero aprender...&#10;Quero visitar..." oninput="debounceSave('desejos',this.value)"></textarea>
@@ -487,9 +483,232 @@
   </div>
 </div>
 
+<!-- BEM-ESTAR -->
+<div id="page-bemestar" class="page">
+  <div class="card" style="background:var(--mint);border:none;margin-bottom:16px">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--mint-t)">🌿 Bem-estar & Autocuidado</div>
+    <div style="font-size:13px;color:var(--mint-d);margin-top:4px;font-weight:300">Cuida do teu corpo e da tua mente — cada pequeno gesto conta</div>
+  </div>
+  <div class="grid-2">
+    <!-- ÁGUA -->
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> 💧 Água hoje</div>
+      <div style="text-align:center;margin-bottom:12px">
+        <div style="font-family:'Playfair Display',serif;font-size:42px;color:var(--sky-d)" id="water-count">0</div>
+        <div style="font-size:12px;color:var(--muted)">copos de 250ml</div>
+        <div style="font-size:12px;color:var(--sky-d);margin-top:4px" id="water-pct">0% do objetivo (8 copos)</div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:12px" id="water-cups"></div>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button onclick="addWater()" class="btn-add" style="background:var(--sky);color:var(--sky-t)">+ Copo</button>
+        <button onclick="resetWater()" style="padding:9px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted)">Reset</button>
+      </div>
+    </div>
+    <!-- SONO -->
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div> 😴 Sono de ontem</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Deitei</div>
+          <input type="time" id="sleep-bed" class="form-input" style="max-width:100px" onchange="calcSleep()"/>
+        </div>
+        <div style="font-size:24px;color:var(--muted)">→</div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Acordei</div>
+          <input type="time" id="sleep-wake" class="form-input" style="max-width:100px" onchange="calcSleep()"/>
+        </div>
+      </div>
+      <div style="text-align:center;padding:12px;background:var(--lav);border-radius:12px">
+        <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--lav-t)" id="sleep-hours">—</div>
+        <div style="font-size:12px;color:var(--lav-d)" id="sleep-quality">horas de sono</div>
+      </div>
+      <textarea class="note-area" id="sono-nota" placeholder="Como foi o teu sono? Sonhaste com algo?" style="margin-top:10px;min-height:60px" oninput="debounceSave('sono_nota',this.value)"></textarea>
+    </div>
+  </div>
+
+  <!-- ROTINA DO DIA COM HORÁRIOS -->
+  <div class="card">
+    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> 🕐 Rotina com horários</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">Planeia o teu dia hora a hora</div>
+    <div id="rotina-blocks"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <input type="time" id="rotina-hora" class="form-input" style="max-width:90px"/>
+      <input id="rotina-task" class="form-input" placeholder="O que vais fazer..." onkeydown="if(event.key==='Enter')addRotina()"/>
+      <select id="rotina-cat" class="form-input" style="max-width:120px">
+        <option value="trabalho">💼 Trabalho</option>
+        <option value="saude">💚 Saúde</option>
+        <option value="casa">🏡 Casa</option>
+        <option value="pessoal">🌸 Pessoal</option>
+        <option value="lazer">✨ Lazer</option>
+      </select>
+      <button class="btn-add" onclick="addRotina()">+</button>
+    </div>
+  </div>
+
+  <!-- AUTOCUIDADO CHECKLIST -->
+  <div class="card" style="background:var(--rose);border:none">
+    <div class="card-title" style="color:var(--rose-t)"><div class="pill" style="background:var(--rose-d)"></div> 🌸 Checklist de autocuidado</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="autocuidado-list"></div>
+  </div>
+
+  <!-- RASTREADOR LEITURAS/FILMES -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--gold-d)"></div> 📚 Leituras</div>
+      <div id="livros-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <input id="livro-input" class="form-input" placeholder="Livro ou artigo..." onkeydown="if(event.key==='Enter')addLivro()"/>
+        <button class="btn-add" onclick="addLivro()" style="padding:8px 12px">+</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> 🎬 Filmes & Séries</div>
+      <div id="filmes-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <input id="filme-input" class="form-input" placeholder="Filme ou série..." onkeydown="if(event.key==='Enter')addFilme()"/>
+        <button class="btn-add" onclick="addFilme()" style="padding:8px 12px;background:var(--sky);color:var(--sky-t)">+</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<script>
+<!-- FINANÇAS -->
+<div id="page-financas" class="page">
+  <div class="card" style="background:var(--gold);border:none;margin-bottom:16px">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--gold-t)">💰 Controlo Financeiro</div>
+    <div style="font-size:13px;color:var(--gold-d);margin-top:4px;font-weight:300">Acompanha as tuas finanças com clareza e sem stress</div>
+  </div>
+
+  <!-- RESUMO MÊS -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+    <div class="stat-card" style="border-top:3px solid var(--mint-d)">
+      <div class="stat-label">Entradas</div>
+      <div class="stat-value" style="color:var(--mint-d)" id="fin-entradas">0€</div>
+      <div class="stat-sub" id="fin-mes-label">este mês</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--rose-d)">
+      <div class="stat-label">Saídas</div>
+      <div class="stat-value" style="color:var(--rose-d)" id="fin-saidas">0€</div>
+      <div class="stat-sub">este mês</div>
+    </div>
+    <div class="stat-card" style="border-top:3px solid var(--lav-d)">
+      <div class="stat-label">Saldo</div>
+      <div class="stat-value" id="fin-saldo">0€</div>
+      <div class="stat-sub">diferença</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- ADICIONAR TRANSAÇÃO -->
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--mint-d)"></div> Nova transação</div>
+      <div class="form-row">
+        <select id="fin-tipo" class="form-input" style="max-width:110px" onchange="this.style.color=this.value==='entrada'?'var(--mint-t)':'var(--rose-t)'">
+          <option value="entrada">✅ Entrada</option>
+          <option value="saida">❌ Saída</option>
+        </select>
+        <input id="fin-desc" class="form-input" placeholder="Descrição..."/>
+      </div>
+      <div class="form-row">
+        <input id="fin-valor" class="form-input" type="number" placeholder="Valor (€)" min="0" step="0.01" style="max-width:140px"/>
+        <select id="fin-cat" class="form-input">
+          <option>🏠 Casa</option><option>🍽️ Alimentação</option><option>👗 Roupa</option>
+          <option>🚗 Transporte</option><option>💊 Saúde</option><option>📚 Educação</option>
+          <option>✨ Lazer</option><option>💰 Poupança</option><option>💼 Trabalho</option><option>📦 Outro</option>
+        </select>
+        <button class="btn-add" onclick="addFinanca()">+ Adicionar</button>
+      </div>
+    </div>
+
+    <!-- METAS FINANCEIRAS -->
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--gold-d)"></div> 🎯 Metas financeiras</div>
+      <div id="fin-metas-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+        <input id="fin-meta-desc" class="form-input" placeholder="Meta (ex: Fundo emergência)"/>
+        <input id="fin-meta-valor" class="form-input" type="number" placeholder="€ objetivo" style="max-width:110px"/>
+        <button class="btn-add" onclick="addFinMeta()" style="padding:8px 12px">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTA TRANSAÇÕES -->
+  <div class="card">
+    <div class="card-title"><div class="pill" style="background:var(--sand-d)"></div> Histórico do mês</div>
+    <div id="fin-lista"></div>
+  </div>
+</div>
+
+<!-- SONHOS & VISÃO -->
+<div id="page-sonhos" class="page">
+  <div class="card" style="background:linear-gradient(135deg,var(--lav),var(--peach));border:none;margin-bottom:16px">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--lav-t)">🌠 Sonhos & Visão de Vida</div>
+    <div style="font-size:13px;color:var(--lav-d);margin-top:4px;font-weight:300">O teu espaço para sonhar grande e criar a vida que queres</div>
+  </div>
+
+  <!-- CARTA DA VIDA DOS SONHOS -->
+  <div class="card" style="background:var(--yellow);border:none">
+    <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> ✉️ Carta da vida dos sonhos</div>
+    <div style="font-size:12px;color:var(--yellow-d);margin-bottom:10px;font-style:italic">Escreve como seria a tua vida perfeita — sem limites, sem filtros</div>
+    <textarea class="note-area" id="carta-sonhos" style="background:rgba(255,255,255,0.6);min-height:180px" placeholder="Querida eu do futuro...&#10;&#10;A minha vida dos sonhos parece-se com isto:&#10;Eu acordo todas as manhãs e...&#10;&#10;O meu trabalho é...&#10;A minha casa é...&#10;As minhas relações são...&#10;Eu sinto-me..." oninput="debounceSave('carta_sonhos',this.value)"></textarea>
+  </div>
+
+  <!-- BUCKET LIST -->
+  <div class="card">
+    <div class="card-title"><div class="pill" style="background:var(--rose-d)"></div> 🪣 Bucket List</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">Tudo o que queres fazer antes de... já não lembrar de fazer 🌸</div>
+    <div id="bucket-list"></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <select id="bucket-cat" class="form-input" style="max-width:130px">
+        <option value="viagem">✈️ Viagem</option>
+        <option value="experiencia">🎢 Experiência</option>
+        <option value="aprender">📚 Aprender</option>
+        <option value="conquistar">🏆 Conquistar</option>
+        <option value="dar">💝 Dar/Ajudar</option>
+        <option value="outro">🌸 Outro</option>
+      </select>
+      <input id="bucket-input" class="form-input" placeholder="Algo que quero fazer na vida..." onkeydown="if(event.key==='Enter')addBucket()"/>
+      <button class="btn-add" onclick="addBucket()">+</button>
+    </div>
+  </div>
+
+  <!-- VISÃO ANUAL -->
+  <div class="card" style="background:var(--lav);border:none">
+    <div class="card-title" style="color:var(--lav-t)"><div class="pill" style="background:var(--lav-d)"></div> 📅 Grandes momentos do ano</div>
+    <div style="font-size:12px;color:var(--lav-d);margin-bottom:12px;font-style:italic">Datas, eventos e marcos importantes que queres registar</div>
+    <div id="visao-anual-list"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <input type="date" id="visao-data" class="form-input" style="max-width:140px"/>
+      <input id="visao-evento" class="form-input" placeholder="Evento ou marco importante..."/>
+      <button class="btn-add" onclick="addVisaoAnual()">+</button>
+    </div>
+  </div>
+
+  <!-- PALAVRAS DO ANO / INTENÇÕES -->
+  <div class="card">
+    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> 💫 As minhas palavras do ano</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">3 palavras que guiam o teu ano — o teu norte</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px" id="palavras-ano"></div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <input id="palavra-input" class="form-input" placeholder="Uma palavra (ex: Coragem, Leveza, Foco...)" onkeydown="if(event.key==='Enter')addPalavra()"/>
+      <button class="btn-add" onclick="addPalavra()">+</button>
+    </div>
+  </div>
+
+  <!-- NOTAS SECÇÃO -->
+  <div class="grid-2">
+    <div class="card" style="background:var(--lav);border:none">
+      <div class="card-title" style="color:var(--lav-t)"><div class="pill" style="background:var(--lav-d)"></div> Gratidão</div>
+      <textarea class="note-area" id="gratidao" style="background:rgba(255,255,255,0.6);min-height:160px" placeholder="Hoje sou grata por...&#10;&#10;1.&#10;2.&#10;3." oninput="debounceSave('gratidao',this.value)"></textarea>
+    </div>
+    <div class="card" style="background:var(--yellow);border:none">
+      <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> Diário livre</div>
+      <textarea class="note-area" id="diario" style="background:rgba(255,255,255,0.6);min-height:160px" placeholder="Escreve livremente... ✨" oninput="debounceSave('diario',this.value)"></textarea>
+    </div>
+  </div>
+</div>
+
+</div>
 const SUPABASE_URL='https://uoaokjxojqhrhugqfgpe.supabase.co';
 const SUPABASE_KEY='sb_publishable_UfUQmGlYUihxQJZGEa585Q_btnEzYGG';
 const USER_ID='utilizador_principal';
@@ -573,6 +792,7 @@ async function loadAll(){
   if(afirm&&afirm.length>0)S.afirm=afirm.map(a=>({id:a.id,text:a.text,color:a.color}));
   else{const c=['rose','lav','mint','peach','sky'];S.afirm=AFIRM0.map((t,i)=>({text:t,color:c[i]}));}
   S.wheelHist=(wh||[]).map(w=>({id:w.id,date:w.date,scores:JSON.parse(w.scores||'{}')}));
+  return notes||[];
 }
 async function saveNote(k,v){await dbUpsert('notes',{user_id:USER_ID,key:k,value:v},'user_id,key');showSaved();}
 
@@ -799,17 +1019,229 @@ function renderAfirm(){const c=['rose','lav','mint','peach','sky'];document.getE
 async function addAfirmacao(){const text=document.getElementById('afirm-input').value.trim();if(!text)return;const c=['rose','lav','mint','peach','sky'],color=c[S.afirm.length%c.length];const data=await dbInsert('afirmacoes',{user_id:USER_ID,text,color});S.afirm.push({id:data.id,text,color});document.getElementById('afirm-input').value='';showSaved();renderAfirm();}
 async function rmAfirm(i,id){if(id)await dbDelete('afirmacoes',{id});S.afirm.splice(i,1);showSaved();renderAfirm();}
 
+// ═══════════════════════════════════════
+// BEM-ESTAR — ÁGUA
+// ═══════════════════════════════════════
+const AUTOCUIDADO_ITEMS=['🧴 Cuidar da pele','💊 Tomar vitaminas','🧘 Meditar','🚶 Caminhar','📵 Tempo sem ecrãs','📖 Ler algo bom','🛁 Banho relaxante','🌿 Tempo na natureza','💤 Dormir cedo','🎵 Ouvir música','✍️ Escrever no diário','🌸 Fazer algo por prazer'];
+
+function renderWater(){
+  const n=S.water||0;
+  document.getElementById('water-count').textContent=n;
+  const pct=Math.round((n/8)*100);
+  document.getElementById('water-pct').textContent=`${Math.min(pct,100)}% do objetivo (8 copos)`;
+  document.getElementById('water-cups').innerHTML=Array.from({length:8},(_,i)=>`<div style="font-size:22px;cursor:pointer;opacity:${i<n?1:0.25}" onclick="setWater(${i+1})">💧</div>`).join('');
+}
+function addWater(){S.water=(S.water||0)+1;if(S.water>8)S.water=8;renderWater();debounceSave('water_today',String(S.water));}
+function setWater(n){S.water=n;renderWater();debounceSave('water_today',String(S.water));}
+function resetWater(){S.water=0;renderWater();debounceSave('water_today','0');}
+
+function calcSleep(){
+  const bed=document.getElementById('sleep-bed').value;
+  const wake=document.getElementById('sleep-wake').value;
+  if(!bed||!wake)return;
+  let [bh,bm]=bed.split(':').map(Number);
+  let [wh,wm]=wake.split(':').map(Number);
+  let mins=(wh*60+wm)-(bh*60+bm);
+  if(mins<0)mins+=24*60;
+  const hrs=(mins/60).toFixed(1);
+  const quality=mins>=480?'😴 Excelente (8h+)':mins>=420?'😊 Boa (7h)':mins>=360?'😐 Razoável (6h)':'😔 Insuficiente';
+  document.getElementById('sleep-hours').textContent=hrs+'h';
+  document.getElementById('sleep-quality').textContent=quality;
+  debounceSave('sleep_bed',bed);debounceSave('sleep_wake',wake);
+}
+
+function renderAutocuidado(){
+  const done=S.autocuidado||[];
+  document.getElementById('autocuidado-list').innerHTML=AUTOCUIDADO_ITEMS.map((item,i)=>{
+    const isDone=done.includes(i);
+    return`<div onclick="togAutocuidado(${i})" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;background:${isDone?'var(--mint)':'var(--bg)'};transition:all 0.2s">
+      <span style="font-size:18px;${isDone?'':'filter:grayscale(1);opacity:0.5'}">${item.split(' ')[0]}</span>
+      <span style="font-size:12px;color:${isDone?'var(--mint-t)':'var(--muted)'};${isDone?'font-weight:500':''}">${item.slice(item.indexOf(' ')+1)}</span>
+      ${isDone?'<span style="margin-left:auto;font-size:14px">✓</span>':''}
+    </div>`;
+  }).join('');
+}
+function togAutocuidado(i){
+  if(!S.autocuidado)S.autocuidado=[];
+  const idx=S.autocuidado.indexOf(i);
+  if(idx>=0)S.autocuidado.splice(idx,1);else S.autocuidado.push(i);
+  renderAutocuidado();debounceSave('autocuidado',JSON.stringify(S.autocuidado));
+}
+
+// ROTINA COM HORÁRIOS
+function renderRotina(){
+  const r=S.rotina||[];
+  const catColors={trabalho:'sky',saude:'mint',casa:'peach',pessoal:'rose',lazer:'lav'};
+  document.getElementById('rotina-blocks').innerHTML=r.length?[...r].sort((a,b)=>a.hora.localeCompare(b.hora)).map((item,i)=>{
+    const c=CM[catColors[item.cat]||'sand'];
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:${c.bg};margin-bottom:6px">
+      <span style="font-size:12px;font-weight:600;color:${c.dark};min-width:40px">${item.hora}</span>
+      <span style="font-size:13px;color:${c.text};flex:1">${item.text}</span>
+      <button onclick="rmRotina(${i})" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:14px">×</button>
+    </div>`;
+  }).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:8px 0">Adiciona tarefas com horário para planeares o teu dia</div>';
+}
+function addRotina(){
+  const hora=document.getElementById('rotina-hora').value;
+  const text=document.getElementById('rotina-task').value.trim();
+  const cat=document.getElementById('rotina-cat').value;
+  if(!text||!hora)return;
+  if(!S.rotina)S.rotina=[];
+  S.rotina.push({hora,text,cat});
+  document.getElementById('rotina-task').value='';
+  renderRotina();debounceSave('rotina',JSON.stringify(S.rotina));
+}
+function rmRotina(i){S.rotina.splice(i,1);renderRotina();debounceSave('rotina',JSON.stringify(S.rotina));}
+
+// LEITURAS E FILMES
+function renderLivros(){
+  const list=S.livros||[];
+  document.getElementById('livros-list').innerHTML=list.map((l,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:14px;cursor:pointer" onclick="togLivro(${i})">${l.done?'✅':'📖'}</span>
+      <span style="font-size:13px;flex:1;${l.done?'text-decoration:line-through;opacity:0.5':''}">${l.text}</span>
+      <button onclick="rmLivro(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:13px">×</button>
+    </div>`).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona livros que queres ler</div>';
+}
+function addLivro(){const text=document.getElementById('livro-input').value.trim();if(!text)return;if(!S.livros)S.livros=[];S.livros.push({text,done:false});document.getElementById('livro-input').value='';renderLivros();debounceSave('livros',JSON.stringify(S.livros));}
+function togLivro(i){S.livros[i].done=!S.livros[i].done;renderLivros();debounceSave('livros',JSON.stringify(S.livros));}
+function rmLivro(i){S.livros.splice(i,1);renderLivros();debounceSave('livros',JSON.stringify(S.livros));}
+
+function renderFilmes(){
+  const list=S.filmes||[];
+  document.getElementById('filmes-list').innerHTML=list.map((f,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:14px;cursor:pointer" onclick="togFilme(${i})">${f.done?'✅':'🎬'}</span>
+      <span style="font-size:13px;flex:1;${f.done?'text-decoration:line-through;opacity:0.5':''}">${f.text}</span>
+      <button onclick="rmFilme(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:13px">×</button>
+    </div>`).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona filmes e séries</div>';
+}
+function addFilme(){const text=document.getElementById('filme-input').value.trim();if(!text)return;if(!S.filmes)S.filmes=[];S.filmes.push({text,done:false});document.getElementById('filme-input').value='';renderFilmes();debounceSave('filmes',JSON.stringify(S.filmes));}
+function togFilme(i){S.filmes[i].done=!S.filmes[i].done;renderFilmes();debounceSave('filmes',JSON.stringify(S.filmes));}
+function rmFilme(i){S.filmes.splice(i,1);renderFilmes();debounceSave('filmes',JSON.stringify(S.filmes));}
+
+// ═══════════════════════════════════════
+// FINANÇAS
+// ═══════════════════════════════════════
+function renderFinancas(){
+  const now=new Date();
+  const mes=now.getFullYear()+'-'+(now.getMonth()+1);
+  document.getElementById('fin-mes-label').textContent=MONTHS[now.getMonth()];
+  const trans=(S.financas||[]).filter(f=>f.data&&f.data.startsWith(mes));
+  const entradas=trans.filter(f=>f.tipo==='entrada').reduce((s,f)=>s+f.valor,0);
+  const saidas=trans.filter(f=>f.tipo==='saida').reduce((s,f)=>s+f.valor,0);
+  const saldo=entradas-saidas;
+  document.getElementById('fin-entradas').textContent=entradas.toFixed(2)+'€';
+  document.getElementById('fin-saidas').textContent=saidas.toFixed(2)+'€';
+  const saldoEl=document.getElementById('fin-saldo');
+  saldoEl.textContent=(saldo>=0?'+':'')+saldo.toFixed(2)+'€';
+  saldoEl.style.color=saldo>=0?'var(--mint-d)':'var(--rose-d)';
+  document.getElementById('fin-lista').innerHTML=trans.length?[...trans].reverse().map((f,i)=>{
+    const isEnt=f.tipo==='entrada';
+    return`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:18px">${isEnt?'✅':'❌'}</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${f.desc}</div><div style="font-size:11px;color:var(--muted)">${f.cat} · ${f.data}</div></div>
+      <span style="font-weight:600;color:${isEnt?'var(--mint-d)':'var(--rose-d)'}">${isEnt?'+':'−'}${f.valor.toFixed(2)}€</span>
+      <button onclick="rmFinanca(${S.financas.indexOf(f)})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:14px">×</button>
+    </div>`;
+  }).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:16px 0;text-align:center">Sem transações este mês</div>';
+  renderFinMetas();
+}
+function addFinanca(){
+  const tipo=document.getElementById('fin-tipo').value;
+  const desc=document.getElementById('fin-desc').value.trim();
+  const valor=parseFloat(document.getElementById('fin-valor').value);
+  const cat=document.getElementById('fin-cat').value;
+  if(!desc||isNaN(valor)||valor<=0)return;
+  const data=new Date().toISOString().split('T')[0];
+  if(!S.financas)S.financas=[];
+  S.financas.push({tipo,desc,valor,cat,data});
+  document.getElementById('fin-desc').value='';document.getElementById('fin-valor').value='';
+  renderFinancas();debounceSave('financas',JSON.stringify(S.financas));showSaved();
+}
+function rmFinanca(i){S.financas.splice(i,1);renderFinancas();debounceSave('financas',JSON.stringify(S.financas));}
+
+function renderFinMetas(){
+  const list=S.finMetas||[];
+  document.getElementById('fin-metas-list').innerHTML=list.map((m,i)=>{
+    const pct=Math.min(Math.round((m.atual/m.objetivo)*100),100);
+    return`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="font-style:italic">${m.desc}</span><span style="font-weight:500;color:var(--gold-d)">${m.atual.toFixed(0)}€ / ${m.objetivo.toFixed(0)}€</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:var(--gold-d)"></div></div><div style="display:flex;gap:4px;margin-top:4px"><input type="number" placeholder="Adicionar €" style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:11px" onchange="addToFinMeta(${i},+this.value);this.value=''"/><button onclick="rmFinMeta(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:13px">×</button></div></div>`;
+  }).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona uma meta de poupança</div>';
+}
+function addFinMeta(){const desc=document.getElementById('fin-meta-desc').value.trim(),objetivo=parseFloat(document.getElementById('fin-meta-valor').value);if(!desc||isNaN(objetivo))return;if(!S.finMetas)S.finMetas=[];S.finMetas.push({desc,objetivo,atual:0});document.getElementById('fin-meta-desc').value='';document.getElementById('fin-meta-valor').value='';renderFinMetas();debounceSave('fin_metas',JSON.stringify(S.finMetas));}
+function addToFinMeta(i,v){if(!v||v<=0)return;S.finMetas[i].atual+=v;renderFinMetas();debounceSave('fin_metas',JSON.stringify(S.finMetas));}
+function rmFinMeta(i){S.finMetas.splice(i,1);renderFinMetas();debounceSave('fin_metas',JSON.stringify(S.finMetas));}
+
+// ═══════════════════════════════════════
+// SONHOS & VISÃO
+// ═══════════════════════════════════════
+const BUCKET_ICONS={viagem:'✈️',experiencia:'🎢',aprender:'📚',conquistar:'🏆',dar:'💝',outro:'🌸'};
+function renderBucket(){
+  const list=S.bucket||[];
+  document.getElementById('bucket-list').innerHTML=list.length?list.map((b,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:${b.done?'var(--mint)':'var(--bg)'};margin-bottom:6px;transition:all 0.2s">
+      <span style="font-size:18px;cursor:pointer" onclick="togBucket(${i})">${b.done?'✅':BUCKET_ICONS[b.cat]||'🌸'}</span>
+      <span style="font-size:13px;flex:1;${b.done?'text-decoration:line-through;opacity:0.5;color:var(--mint-t)':''}">${b.text}</span>
+      <button onclick="rmBucket(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:14px">×</button>
+    </div>`).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:8px 0">A tua bucket list está vazia — sonha grande! 🌸</div>';
+}
+function addBucket(){const text=document.getElementById('bucket-input').value.trim(),cat=document.getElementById('bucket-cat').value;if(!text)return;if(!S.bucket)S.bucket=[];S.bucket.push({text,cat,done:false});document.getElementById('bucket-input').value='';renderBucket();debounceSave('bucket',JSON.stringify(S.bucket));}
+function togBucket(i){S.bucket[i].done=!S.bucket[i].done;renderBucket();debounceSave('bucket',JSON.stringify(S.bucket));}
+function rmBucket(i){S.bucket.splice(i,1);renderBucket();debounceSave('bucket',JSON.stringify(S.bucket));}
+
+function renderVisaoAnual(){
+  const list=(S.visaoAnual||[]).sort((a,b)=>a.data.localeCompare(b.data));
+  document.getElementById('visao-anual-list').innerHTML=list.length?list.map((v,i)=>{
+    const d=new Date(v.data);const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(154,114,192,0.2)">
+      <div style="text-align:center;background:var(--lav-d);color:white;border-radius:8px;padding:4px 8px;min-width:44px"><div style="font-size:10px">${months[d.getMonth()]}</div><div style="font-size:16px;font-weight:600">${d.getDate()}</div></div>
+      <span style="font-size:13px;flex:1">${v.evento}</span>
+      <button onclick="rmVisao(${i})" style="border:none;background:none;cursor:pointer;color:var(--lav-d);font-size:14px">×</button>
+    </div>`;
+  }).join(''):'<div style="font-size:13px;color:var(--lav-d);font-style:italic;padding:8px 0">Adiciona os teus marcos e eventos do ano</div>';
+}
+function addVisaoAnual(){const data=document.getElementById('visao-data').value,evento=document.getElementById('visao-evento').value.trim();if(!data||!evento)return;if(!S.visaoAnual)S.visaoAnual=[];S.visaoAnual.push({data,evento});document.getElementById('visao-evento').value='';renderVisaoAnual();debounceSave('visao_anual',JSON.stringify(S.visaoAnual));}
+function rmVisao(i){S.visaoAnual.splice(i,1);renderVisaoAnual();debounceSave('visao_anual',JSON.stringify(S.visaoAnual));}
+
+function renderPalavras(){
+  const list=S.palavras||[];
+  const cols=['rose','lav','mint','peach','sky','gold'];
+  document.getElementById('palavras-ano').innerHTML=list.map((p,i)=>{const c=CM[cols[i%cols.length]];return`<div style="padding:12px 20px;border-radius:20px;background:${c.bg};cursor:pointer;text-align:center" onclick="rmPalavra(${i})"><div style="font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:${c.text}">${p}</div><div style="font-size:10px;color:${c.dark};margin-top:2px">clica para remover</div></div>`;}).join('')||'<div style="font-size:13px;color:var(--muted);font-style:italic">Escolhe até 3 palavras que guiam o teu ano</div>';
+}
+function addPalavra(){const text=document.getElementById('palavra-input').value.trim();if(!text)return;if(!S.palavras)S.palavras=[];if(S.palavras.length>=3){alert('Máximo de 3 palavras — escolhe com cuidado! 🌸');return;}S.palavras.push(text);document.getElementById('palavra-input').value='';renderPalavras();debounceSave('palavras_ano',JSON.stringify(S.palavras));}
+function rmPalavra(i){S.palavras.splice(i,1);renderPalavras();debounceSave('palavras_ano',JSON.stringify(S.palavras));}
+
+// ═══════════════════════════════════════
+// LOAD LOCAL EXTRAS FROM NOTES
+// ═══════════════════════════════════════
+function loadLocalExtras(notes){
+  const keys={water_today:'water',autocuidado:'autocuidado',rotina:'rotina',livros:'livros',filmes:'filmes',financas:'financas',fin_metas:'finMetas',bucket:'bucket',visao_anual:'visaoAnual',palavras_ano:'palavras'};
+  (notes||[]).forEach(n=>{
+    if(keys[n.key]){try{S[keys[n.key]]=JSON.parse(n.value);}catch(e){if(n.key==='water_today')S.water=parseInt(n.value)||0;}}
+    if(n.key==='sleep_bed'&&document.getElementById('sleep-bed'))document.getElementById('sleep-bed').value=n.value||'';
+    if(n.key==='sleep_wake'&&document.getElementById('sleep-wake'))document.getElementById('sleep-wake').value=n.value||'';
+  });
+}
+
 // INIT
 async function init(){
   const now=new Date();
   S.calYear=now.getFullYear();S.calMonth=now.getMonth();
   S.selDate=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
   document.getElementById('selected-date-label').textContent=now.getDate()+' de '+MONTHS[now.getMonth()];
-  try{await loadAll();}catch(e){console.error(e);}
+  let notes=[];
+  try{
+    const loaded=await loadAll();
+    notes=loaded||[];
+  }catch(e){console.error(e);}
+  loadLocalExtras(notes);
   document.getElementById('loading').style.opacity='0';
   setTimeout(()=>document.getElementById('loading').style.display='none',400);
   renderCal();renderDay();renderWeek();renderHabits();renderMetas();renderAfirm();
   renderSliders();drawWheel();updInsight();renderQ();updateDash();
+  renderWater();renderAutocuidado();renderRotina();renderLivros();renderFilmes();
+  renderFinancas();renderBucket();renderVisaoAnual();renderPalavras();
+  if(document.getElementById('sleep-bed').value)calcSleep();
 }
 init();
 </script>
