@@ -777,17 +777,31 @@ function debounceSave(k,v){clearTimeout(timers[k]);timers[k]=setTimeout(()=>save
 
 async function loadAll(){
   const today=new Date().toISOString().split('T')[0];
-  const[notes,events,tasks,wt,habits,metas,afirm,wh]=await Promise.all([
-    dbGet('notes',{user_id:USER_ID}),dbGet('events',{user_id:USER_ID}),
-    dbGet('tasks',{user_id:USER_ID,date:today}),dbGet('week_tasks',{user_id:USER_ID,week_key:getWK()}),
-    dbGet('habits',{user_id:USER_ID}),dbGet('metas',{user_id:USER_ID}),
-    dbGet('afirmacoes',{user_id:USER_ID}),dbGet('wheel_history',{user_id:USER_ID}),
+  const[notes,events,tasks,wt,habits,metas,afirm,wh,allHabitDays]=await Promise.all([
+    dbGet('notes',{user_id:USER_ID}),
+    dbGet('events',{user_id:USER_ID}),
+    dbGet('tasks',{user_id:USER_ID,date:today}),
+    dbGet('week_tasks',{user_id:USER_ID,week_key:getWK()}),
+    dbGet('habits',{user_id:USER_ID}),
+    dbGet('metas',{user_id:USER_ID}),
+    dbGet('afirmacoes',{user_id:USER_ID}),
+    dbGet('wheel_history',{user_id:USER_ID}),
+    dbGet('habit_days',{}),
   ]);
-  (notes||[]).forEach(n=>{const el=document.getElementById(n.key.replace(/_/g,'-'));if(el)el.value=n.value||'';if(n.key==='wheel_scores'){try{S.wheel=JSON.parse(n.value);}catch(e){}}if(n.key==='plano_actions'){try{S.planoActions=JSON.parse(n.value);}catch(e){}}});
+  (notes||[]).forEach(n=>{
+    const el=document.getElementById(n.key.replace(/_/g,'-'));
+    if(el)el.value=n.value||'';
+    if(n.key==='wheel_scores'){try{S.wheel=JSON.parse(n.value);}catch(e){}}
+    if(n.key==='plano_actions'){try{S.planoActions=JSON.parse(n.value);}catch(e){}}
+  });
   (events||[]).forEach(e=>{if(!S.events[e.date])S.events[e.date]=[];S.events[e.date].push({id:e.id,name:e.name,time:e.time,color:e.color});});
   (tasks||[]).forEach(t=>{if(S.tasks[t.period])S.tasks[t.period].push({id:t.id,text:t.text,done:t.done});});
   (wt||[]).forEach(t=>{if(!S.weekTasks[t.day_index])S.weekTasks[t.day_index]=[];S.weekTasks[t.day_index].push({id:t.id,text:t.text,color:t.color});});
-  for(const h of(habits||[])){const hd=await dbGet('habit_days',{habit_id:h.id});const days={};(hd||[]).forEach(d=>days[d.day]=true);S.habits.push({id:h.id,name:h.name,color:h.color,days});}
+  (habits||[]).forEach(h=>{
+    const days={};
+    (allHabitDays||[]).filter(d=>d.habit_id===h.id).forEach(d=>days[d.day]=true);
+    S.habits.push({id:h.id,name:h.name,color:h.color,days});
+  });
   if(metas)S.metas=metas.map(m=>({id:m.id,emoji:m.emoji,titulo:m.titulo,prazo:m.prazo,progress:m.progress,color:m.color}));
   if(afirm&&afirm.length>0)S.afirm=afirm.map(a=>({id:a.id,text:a.text,color:a.color}));
   else{const c=['rose','lav','mint','peach','sky'];S.afirm=AFIRM0.map((t,i)=>({text:t,color:c[i]}));}
@@ -1228,20 +1242,32 @@ async function init(){
   const now=new Date();
   S.calYear=now.getFullYear();S.calMonth=now.getMonth();
   S.selDate=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
-  document.getElementById('selected-date-label').textContent=now.getDate()+' de '+MONTHS[now.getMonth()];
-  let notes=[];
+  const sdEl=document.getElementById('selected-date-label');
+  if(sdEl)sdEl.textContent=now.getDate()+' de '+MONTHS[now.getMonth()];
+
+  // Always hide loading after 5s max, even if Supabase is slow
+  const hideLoading=()=>{
+    const el=document.getElementById('loading');
+    if(el){el.style.opacity='0';setTimeout(()=>el.style.display='none',400);}
+  };
+  const safetyTimer=setTimeout(hideLoading,5000);
+
   try{
-    const loaded=await loadAll();
-    notes=loaded||[];
-  }catch(e){console.error(e);}
-  loadLocalExtras(notes);
-  document.getElementById('loading').style.opacity='0';
-  setTimeout(()=>document.getElementById('loading').style.display='none',400);
+    const notes=await loadAll();
+    loadLocalExtras(notes||[]);
+  }catch(e){
+    console.error('Load error:',e);
+    loadLocalExtras([]);
+  }
+
+  clearTimeout(safetyTimer);
+  hideLoading();
+
   renderCal();renderDay();renderWeek();renderHabits();renderMetas();renderAfirm();
   renderSliders();drawWheel();updInsight();renderQ();updateDash();
   renderWater();renderAutocuidado();renderRotina();renderLivros();renderFilmes();
   renderFinancas();renderBucket();renderVisaoAnual();renderPalavras();
-  if(document.getElementById('sleep-bed').value)calcSleep();
+  try{if(document.getElementById('sleep-bed').value)calcSleep();}catch(e){}
 }
 init();
 </script>
