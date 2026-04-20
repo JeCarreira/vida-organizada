@@ -700,9 +700,83 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- A MINHA CASA -->
+  <!-- BANHO PREMIUM -->
+  <div class="card" style="background:var(--golden);border:none">
+    <div class="card-title" style="color:var(--cocoa)"><div class="pill" style="background:var(--caramel)"></div> 🛁 Ritual do Banho Premium</div>
+    <div style="font-size:12px;color:var(--cocoa-l);margin-bottom:12px;font-style:italic">O banho não é só higiene — é um momento teu. Marca o que fizeste hoje.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="banho-list"></div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <input id="banho-inp" class="form-input" placeholder="Ex: Esfoliação, máscara de cabelo..." style="background:rgba(255,255,255,0.7)" onkeydown="if(event.key==='Enter')addBanho()"/>
+      <button onclick="addBanho()" class="btn-add">+</button>
+    </div>
+  </div>
+
+  <!-- CORPO & UNHAS -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--caramel)"></div> 🧴 Corpo & Hidratação</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic">Cuidados diários e semanais com o corpo</div>
+      <div id="corpo-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <input id="corpo-inp" class="form-input" placeholder="Ex: Hidratante corporal, protetor solar..." onkeydown="if(event.key==='Enter')addCorpo()"/>
+        <button onclick="addCorpo()" class="btn-add" style="padding:8px 12px">+</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--wine)"></div> 💅 Unhas & Sobrancelhas</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic">Agenda de manutenção</div>
+      <div id="unhas-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <select id="unhas-freq" class="form-input" style="max-width:120px">
+          <option value="semanal">Semanal</option>
+          <option value="quinzenal">Quinzenal</option>
+          <option value="mensal">Mensal</option>
+        </select>
+        <input id="unhas-inp" class="form-input" placeholder="Ex: Verniz, cutículas, sobrancelhas..." onkeydown="if(event.key==='Enter')addUnhas()"/>
+        <button onclick="addUnhas()" class="btn-add" style="padding:8px 12px">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPLEMENTOS + DESAFIO -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><div class="pill" style="background:var(--olive)"></div> 💊 Suplementos & Vitaminas</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic">Regista o que tomas diariamente</div>
+      <div id="suplem-list"></div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <input id="suplem-inp" class="form-input" placeholder="Ex: Vitamina D, colágeno, ferro..." onkeydown="if(event.key==='Enter')addSuplem()"/>
+        <button onclick="addSuplem()" class="btn-add" style="padding:8px 12px">+</button>
+      </div>
+    </div>
+    <div class="card" style="background:var(--wine);border:none">
+      <div class="card-title" style="color:#fdf9f4"><div class="pill" style="background:rgba(255,255,255,0.4)"></div> 🎯 Desafio Glow Up</div>
+      <div style="font-size:12px;color:rgba(253,249,244,0.75);margin-bottom:12px">Quantos dias consecutivos a cuidares de ti?</div>
+      <div style="text-align:center;margin-bottom:12px">
+        <div style="font-family:'Playfair Display',serif;font-size:52px;color:#fdf9f4;line-height:1" id="desafio-count">0</div>
+        <div style="font-size:12px;color:rgba(253,249,244,0.7);margin-top:4px">dias seguidos ✨</div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button onclick="addDesafioDia()" style="padding:9px 20px;border-radius:10px;border:none;cursor:pointer;background:rgba(255,255,255,0.2);color:#fdf9f4;font-family:inherit;font-size:13px;font-weight:500">+ Marcar hoje</button>
+        <button onclick="resetDesafio()" style="padding:9px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.3);cursor:pointer;background:none;color:rgba(253,249,244,0.7);font-family:inherit;font-size:12px">Reset</button>
+      </div>
+      <div style="font-size:11px;color:rgba(253,249,244,0.6);text-align:center;margin-top:8px;font-style:italic" id="desafio-ultima"></div>
+    </div>
+  </div>
+
+  <!-- ROTINA NOTURNA BELEZA -->
+  <div class="card">
+    <div class="card-title"><div class="pill" style="background:var(--cocoa)"></div> 🌙 Rotina Noturna de Beleza</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">O que fazes antes de dormir para acordares radiante</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px" id="night-beauty-list"></div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <input id="night-inp" class="form-input" placeholder="Ex: Dupla limpeza, creme contorno de olhos..." onkeydown="if(event.key==='Enter')addNightBeauty()"/>
+      <button onclick="addNightBeauty()" class="btn-add">+</button>
+    </div>
+  </div>
+
+</div>
 <div id="page-casa" class="page">
   <div style="background:linear-gradient(135deg,var(--sand),var(--peach));border-radius:20px;padding:28px 32px;margin-bottom:20px">
     <div style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--sand-t)">🏡 A Minha Casa</div>
@@ -1446,8 +1520,116 @@ function togLimpezaMensal(i){S.limpezaMensal[i].done=!S.limpezaMensal[i].done;de
 function rmLimpezaMensal(i){S.limpezaMensal.splice(i,1);debounceSave('limpeza_mensal',JSON.stringify(S.limpezaMensal));renderLimpezaMensal();}
 
 // ═══════════════════════════════════════
-// SONHOS & VISÃO
+// BANHO PREMIUM
 // ═══════════════════════════════════════
+const BANHO_DEFAULT=['🧼 Esfoliação do corpo','💆 Máscara de cabelo','🪥 Lavar bem o couro cabeludo','🧴 Condicionador','💅 Cuidar das cutículas','🦵 Raspar/depilar','🌸 Aromaterapia/vela'];
+function renderBanho(){
+  const today=new Date().toISOString().split('T')[0];
+  const items=S.banho||BANHO_DEFAULT;
+  const done=S.banhoDone&&S.banhoDone[today]||[];
+  document.getElementById('banho-list').innerHTML=items.map((item,i)=>{
+    const isDone=done.includes(i);
+    return`<div onclick="togBanho(${i})" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;background:${isDone?'var(--caramel)':'rgba(255,255,255,0.5)'};transition:all 0.2s">
+      <span style="font-size:15px">${isDone?'✅':'⬜'}</span>
+      <span style="font-size:12px;${isDone?'color:#fdf9f4;text-decoration:line-through;opacity:0.8':''}">${item}</span>
+      <button onclick="event.stopPropagation();rmBanho(${i})" style="border:none;background:none;cursor:pointer;color:var(--cocoa-l);font-size:11px;margin-left:auto">×</button>
+    </div>`;
+  }).join('');
+}
+function togBanho(i){const today=new Date().toISOString().split('T')[0];if(!S.banhoDone)S.banhoDone={};if(!S.banhoDone[today])S.banhoDone[today]=[];const idx=S.banhoDone[today].indexOf(i);if(idx>=0)S.banhoDone[today].splice(idx,1);else S.banhoDone[today].push(i);debounceSave('banho_done',JSON.stringify(S.banhoDone));renderBanho();}
+function addBanho(){const text=document.getElementById('banho-inp').value.trim();if(!text)return;if(!S.banho)S.banho=[...BANHO_DEFAULT];S.banho.push(text);document.getElementById('banho-inp').value='';debounceSave('banho',JSON.stringify(S.banho));renderBanho();}
+function rmBanho(i){if(!S.banho)S.banho=[...BANHO_DEFAULT];S.banho.splice(i,1);debounceSave('banho',JSON.stringify(S.banho));renderBanho();}
+
+// CORPO
+const CORPO_DEFAULT=['🧴 Hidratante corporal (corpo inteiro)','☀️ Protetor solar nos braços e decote','💆 Massagem anti-celulite','🌿 Óleo seco nas pernas'];
+function renderCorpo(){
+  const list=S.corpo||CORPO_DEFAULT;
+  const today=new Date().toISOString().split('T')[0];
+  const done=S.corpoDone&&S.corpoDone[today]||[];
+  document.getElementById('corpo-list').innerHTML=list.map((item,i)=>{
+    const isDone=done.includes(i);
+    return`<div onclick="togCorpo(${i})" style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer">
+      <span style="font-size:14px">${isDone?'✅':'⬜'}</span>
+      <span style="font-size:12px;flex:1;${isDone?'text-decoration:line-through;opacity:0.5':''}">${item}</span>
+      <button onclick="event.stopPropagation();rmCorpo(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:11px">×</button>
+    </div>`;
+  }).join('');
+}
+function togCorpo(i){const today=new Date().toISOString().split('T')[0];if(!S.corpoDone)S.corpoDone={};if(!S.corpoDone[today])S.corpoDone[today]=[];const idx=S.corpoDone[today].indexOf(i);if(idx>=0)S.corpoDone[today].splice(idx,1);else S.corpoDone[today].push(i);debounceSave('corpo_done',JSON.stringify(S.corpoDone));renderCorpo();}
+function addCorpo(){const text=document.getElementById('corpo-inp').value.trim();if(!text)return;if(!S.corpo)S.corpo=[...CORPO_DEFAULT];S.corpo.push(text);document.getElementById('corpo-inp').value='';debounceSave('corpo',JSON.stringify(S.corpo));renderCorpo();}
+function rmCorpo(i){if(!S.corpo)S.corpo=[...CORPO_DEFAULT];S.corpo.splice(i,1);debounceSave('corpo',JSON.stringify(S.corpo));renderCorpo();}
+
+// UNHAS
+function renderUnhas(){
+  const list=S.unhas||[];
+  const freqColors={semanal:'#7a9860',quinzenal:'#84592B',mensal:'#743014'};
+  document.getElementById('unhas-list').innerHTML=list.map((u,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:10px;padding:2px 8px;border-radius:10px;color:white;background:${freqColors[u.freq]||'#84592B'};font-weight:500">${u.freq}</span>
+      <span style="font-size:12px;flex:1">${u.text}</span>
+      <button onclick="togUnha(${i})" style="border:none;background:none;cursor:pointer;font-size:14px">${u.done?'✅':'⬜'}</button>
+      <button onclick="rmUnha(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px">×</button>
+    </div>`).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona os teus cuidados de unhas e sobrancelhas</div>';
+}
+function addUnhas(){const freq=document.getElementById('unhas-freq').value,text=document.getElementById('unhas-inp').value.trim();if(!text)return;if(!S.unhas)S.unhas=[];S.unhas.push({freq,text,done:false});document.getElementById('unhas-inp').value='';debounceSave('unhas',JSON.stringify(S.unhas));renderUnhas();}
+function togUnha(i){S.unhas[i].done=!S.unhas[i].done;debounceSave('unhas',JSON.stringify(S.unhas));renderUnhas();}
+function rmUnha(i){S.unhas.splice(i,1);debounceSave('unhas',JSON.stringify(S.unhas));renderUnhas();}
+
+// SUPLEMENTOS
+function renderSuplem(){
+  const list=S.suplem||[];
+  const today=new Date().toISOString().split('T')[0];
+  const done=S.suplemDone&&S.suplemDone[today]||[];
+  document.getElementById('suplem-list').innerHTML=list.map((s,i)=>{
+    const isDone=done.includes(i);
+    return`<div onclick="togSuplem(${i})" style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer">
+      <span style="font-size:14px">${isDone?'✅':'⬜'}</span>
+      <span style="font-size:12px;flex:1;${isDone?'text-decoration:line-through;opacity:0.5':''}">${s}</span>
+      <button onclick="event.stopPropagation();rmSuplem(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px">×</button>
+    </div>`;
+  }).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona os teus suplementos diários</div>';
+}
+function togSuplem(i){const today=new Date().toISOString().split('T')[0];if(!S.suplemDone)S.suplemDone={};if(!S.suplemDone[today])S.suplemDone[today]=[];const idx=S.suplemDone[today].indexOf(i);if(idx>=0)S.suplemDone[today].splice(idx,1);else S.suplemDone[today].push(i);debounceSave('suplem_done',JSON.stringify(S.suplemDone));renderSuplem();}
+function addSuplem(){const text=document.getElementById('suplem-inp').value.trim();if(!text)return;if(!S.suplem)S.suplem=[];S.suplem.push(text);document.getElementById('suplem-inp').value='';debounceSave('suplem',JSON.stringify(S.suplem));renderSuplem();}
+function rmSuplem(i){S.suplem.splice(i,1);debounceSave('suplem',JSON.stringify(S.suplem));renderSuplem();}
+
+// DESAFIO GLOW UP
+function renderDesafio(){
+  document.getElementById('desafio-count').textContent=S.desafioDias||0;
+  if(S.desafioUltima){const d=new Date(S.desafioUltima);document.getElementById('desafio-ultima').textContent='Último registo: '+d.getDate()+'/'+(d.getMonth()+1);}
+}
+function addDesafioDia(){
+  const today=new Date().toISOString().split('T')[0];
+  if(S.desafioUltima===today){alert('Já marcaste hoje! Volta amanhã ✨');return;}
+  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  const yStr=yesterday.toISOString().split('T')[0];
+  if(S.desafioUltima!==yStr&&S.desafioDias>0){
+    if(!confirm('Perdeste a sequência! Queres recomeçar do zero?'))return;
+    S.desafioDias=0;
+  }
+  S.desafioDias=(S.desafioDias||0)+1;S.desafioUltima=today;
+  debounceSave('desafio',JSON.stringify({dias:S.desafioDias,ultima:S.desafioUltima}));renderDesafio();showSaved();
+}
+function resetDesafio(){if(!confirm('Tens a certeza que queres resetar o desafio?'))return;S.desafioDias=0;S.desafioUltima=null;debounceSave('desafio',JSON.stringify({dias:0,ultima:null}));renderDesafio();}
+
+// ROTINA NOTURNA DE BELEZA
+const NIGHT_DEFAULT=['🧼 Dupla limpeza','💧 Tónico','🌙 Sérum de noite','👁️ Creme contorno de olhos','🧴 Hidratante noturno','💋 Bálsamo de lábios','🦷 Fio dentário'];
+function renderNightBeauty(){
+  const today=new Date().toISOString().split('T')[0];
+  const items=S.nightBeauty||NIGHT_DEFAULT;
+  const done=S.nightDone&&S.nightDone[today]||[];
+  document.getElementById('night-beauty-list').innerHTML=items.map((item,i)=>{
+    const isDone=done.includes(i);
+    return`<div onclick="togNight(${i})" style="display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:10px;cursor:pointer;background:${isDone?'var(--cocoa)':'var(--bg)'};transition:all 0.2s">
+      <span style="font-size:14px">${isDone?'✅':'⬜'}</span>
+      <span style="font-size:11px;${isDone?'color:#fdf9f4;text-decoration:line-through;opacity:0.7':''}">${item}</span>
+      <button onclick="event.stopPropagation();rmNight(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:10px;margin-left:auto">×</button>
+    </div>`;
+  }).join('');
+}
+function togNight(i){const today=new Date().toISOString().split('T')[0];if(!S.nightDone)S.nightDone={};if(!S.nightDone[today])S.nightDone[today]=[];const idx=S.nightDone[today].indexOf(i);if(idx>=0)S.nightDone[today].splice(idx,1);else S.nightDone[today].push(i);debounceSave('night_done',JSON.stringify(S.nightDone));renderNightBeauty();}
+function addNightBeauty(){const text=document.getElementById('night-inp').value.trim();if(!text)return;if(!S.nightBeauty)S.nightBeauty=[...NIGHT_DEFAULT];S.nightBeauty.push(text);document.getElementById('night-inp').value='';debounceSave('night_beauty',JSON.stringify(S.nightBeauty));renderNightBeauty();}
+function rmNight(i){if(!S.nightBeauty)S.nightBeauty=[...NIGHT_DEFAULT];S.nightBeauty.splice(i,1);debounceSave('night_beauty',JSON.stringify(S.nightBeauty));renderNightBeauty();}
 const BUCKET_ICONS={viagem:'✈️',experiencia:'🎢',aprender:'📚',conquistar:'🏆',dar:'💝',outro:'🌸'};
 function renderBucket(){
   const list=S.bucket||[];
@@ -1496,9 +1678,13 @@ function loadLocalExtras(notes){
     treino_feito:'treinoFeito',estilo_quero:'estiloQuero',desenvolv2:'desenvolv2',
     casa_diaria:'casaDiaria',casa_diaria_feita:'casaDiariaFeita',
     rotina_casa:'rotinaCasa',limpeza_semanal:'limpezaSemanal',limpeza_mensal:'limpezaMensal',
+    banho:'banho',banho_done:'banhoDone',corpo:'corpo',corpo_done:'corpoDone',
+    unhas:'unhas',suplem:'suplem',suplem_done:'suplemDone',
+    night_beauty:'nightBeauty',night_done:'nightDone',
   };
   (notes||[]).forEach(n=>{
     if(keys[n.key]){try{S[keys[n.key]]=JSON.parse(n.value);}catch(e){if(n.key==='water_today')S.water=parseInt(n.value)||0;}}
+    if(n.key==='desafio'){try{const d=JSON.parse(n.value);S.desafioDias=d.dias;S.desafioUltima=d.ultima;}catch(e){}}
     if(n.key==='sleep_bed'&&document.getElementById('sleep-bed'))document.getElementById('sleep-bed').value=n.value||'';
     if(n.key==='sleep_wake'&&document.getElementById('sleep-wake'))document.getElementById('sleep-wake').value=n.value||'';
   });
@@ -1536,6 +1722,7 @@ async function init(){
   renderBucket();renderVisaoAnual();renderPalavras();
   renderSkincare();renderCabelo();renderTreinoSemana();renderEstiloQuero();renderDesenv();
   renderCasaDiaria();renderRotinaCasa();renderLimpezaSemana();renderLimpezaMensal();
+  renderBanho();renderCorpo();renderUnhas();renderSuplem();renderDesafio();renderNightBeauty();
   try{if(document.getElementById('sleep-bed').value)calcSleep();}catch(e){}
 }
 init();
