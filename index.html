@@ -8,17 +8,35 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     :root{
-      --bg:#f7f4ef;--white:#ffffff;--card:#fffdf9;
-      --text:#2c2420;--muted:#9a8c85;--border:rgba(0,0,0,0.06);
-      --rose:#f5cdd8;--rose-d:#c47a90;--rose-t:#7a3a50;
-      --lav:#e2d4f0;--lav-d:#9a72c0;--lav-t:#4a2870;
-      --mint:#cef0e0;--mint-d:#5ab885;--mint-t:#1a5c38;
-      --sky:#cce8f5;--sky-d:#5aa0c0;--sky-t:#1a4a65;
-      --peach:#f5e0cc;--peach-d:#c0885a;--peach-t:#6a3a1a;
-      --yellow:#f5f0cc;--yellow-d:#b0a045;--yellow-t:#5a4a10;
-      --sand:#f0e8dc;--sand-d:#c0a880;--sand-t:#6a4820;
-      --sage:#dceadc;--sage-d:#7aaa7a;--sage-t:#2a5a2a;
-      --gold:#e8d5a0;--gold-d:#b09040;--gold-t:#5a4010;
+      /* ── Paleta Outono ── */
+      --bg:#f5f0e8;--white:#fdf9f4;--card:#faf6ef;
+      --text:#2a1f14;--muted:#8c7b6a;--border:rgba(68,45,28,0.1);
+
+      /* Cowhide Cocoa — castanho escuro principal */
+      --cocoa:#442D1C;--cocoa-l:#7a5c40;--cocoa-ll:#c4a882;
+
+      /* Spiced Wine — bordô/vinho */
+      --wine:#743014;--wine-l:#a05030;--wine-ll:#d4937a;
+
+      /* Toasted Caramel — caramelo quente */
+      --caramel:#84592B;--caramel-l:#b07840;--caramel-ll:#dbb88a;
+
+      /* Olive Harvest — verde oliva */
+      --olive:#9D9167;--olive-l:#b8aa88;--olive-ll:#e0d8c4;
+
+      /* Golden Batter — creme dourado */
+      --golden:#E8D1A7;--golden-l:#c4a870;--golden-t:#5a3e18;
+
+      /* Aliases para manter compatibilidade com o código existente */
+      --rose:var(--golden);--rose-d:var(--caramel);--rose-t:var(--cocoa);
+      --lav:#d4c4b0;--lav-d:var(--caramel-l);--lav-t:var(--cocoa);
+      --mint:#c8d4b8;--mint-d:#7a9860;--mint-t:#2a3c18;
+      --sky:#c4d0d8;--sky-d:#6888a0;--sky-t:#1c3040;
+      --peach:#e4c4a0;--peach-d:var(--caramel);--peach-t:var(--cocoa);
+      --yellow:var(--golden);--yellow-d:var(--golden-l);--yellow-t:var(--golden-t);
+      --sand:var(--golden);--sand-d:var(--caramel);--sand-t:var(--cocoa);
+      --sage:#c4c8a8;--sage-d:#889870;--sage-t:#283818;
+      --gold:var(--golden);--gold-d:var(--golden-l);--gold-t:var(--golden-t);
     }
     body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;color:var(--text);}
     h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
@@ -31,27 +49,27 @@
     .sidebar-logo{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--text);margin-bottom:6px;padding:0 8px;}
     .sidebar-sub{font-size:11px;color:var(--muted);padding:0 8px;margin-bottom:28px;font-weight:300;}
     .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--muted);font-weight:400;border:none;background:none;width:100%;text-align:left;transition:all 0.15s;margin-bottom:2px;font-family:'Inter',sans-serif;}
-    .nav-item:hover{background:var(--bg);color:var(--text);}
-    .nav-item.active{background:var(--sand);color:var(--sand-t);font-weight:500;}
+    .nav-item:hover{background:var(--golden);color:var(--cocoa);}
+    .nav-item.active{background:var(--wine);color:#fdf9f4;font-weight:500;}
     .nav-icon{font-size:15px;width:20px;text-align:center;}
     .nav-divider{height:1px;background:var(--border);margin:12px 0;}
     .main{margin-left:220px;padding:32px 28px;max-width:1080px;}
     @media(max-width:768px){.sidebar{display:none;}.main{margin-left:0;padding:14px;}.mob-nav{display:flex!important;}}
     .mob-nav{display:none;gap:4px;padding:10px;background:var(--white);border-bottom:1px solid var(--border);flex-wrap:wrap;position:sticky;top:0;z-index:10;}
     .mob-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;font-family:inherit;color:var(--muted);}
-    .mob-btn.active{background:var(--sand);color:var(--sand-t);border-color:var(--sand-d);}
+    .mob-btn.active{background:var(--wine);color:#fdf9f4;border-color:var(--wine-l);}
     .page{display:none;}.page.active{display:block;}
     .card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:16px;}
     .card-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
     .pill{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
     @media(max-width:600px){.grid-2{grid-template-columns:1fr;}}
-    .dash-hero{background:var(--white);border-radius:20px;border:1px solid var(--border);padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden;}
-    .dash-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:var(--rose);opacity:0.3;}
-    .dash-hero::after{content:'';position:absolute;bottom:-60px;right:60px;width:150px;height:150px;border-radius:50%;background:var(--lav);opacity:0.2;}
-    .dash-date{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;}
-    .dash-greeting{font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:var(--text);margin-bottom:6px;}
-    .dash-quote{font-size:13px;color:var(--muted);font-weight:300;font-style:italic;}
+    .dash-hero{background:linear-gradient(135deg,var(--caramel) 0%,var(--wine) 100%);border-radius:20px;border:none;padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden;}
+    .dash-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.08);}
+    .dash-hero::after{content:'';position:absolute;bottom:-60px;right:60px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);}
+    .dash-date{font-size:11px;color:rgba(253,249,244,0.7);font-weight:300;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;}
+    .dash-greeting{font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:#fdf9f4;margin-bottom:6px;}
+    .dash-quote{font-size:13px;color:rgba(253,249,244,0.75);font-weight:300;font-style:italic;}
     .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
     @media(max-width:700px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
     .stat-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:16px;}
@@ -73,8 +91,8 @@
     .wheel-avg{font-family:'Playfair Display',serif;font-size:38px;color:var(--text);}
     .wheel-avg-label{font-size:12px;color:var(--muted);margin-bottom:16px;font-weight:300;}
     .wheel-actions{display:flex;gap:8px;margin-top:16px;}
-    .btn-primary{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;background:var(--sand);color:var(--sand-t);transition:all 0.2s;}
-    .btn-primary:hover{background:var(--sand-d);color:white;}
+    .btn-primary{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;background:var(--wine);color:#fdf9f4;transition:all 0.2s;}
+    .btn-primary:hover{background:var(--cocoa);}
     .btn-secondary{padding:10px 14px;border-radius:10px;border:1px solid var(--border);cursor:pointer;font-family:inherit;font-size:13px;background:var(--card);color:var(--muted);transition:all 0.2s;}
     .btn-secondary:hover{background:var(--bg);}
     .area-slider{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:13px 15px;margin-bottom:8px;}
@@ -100,23 +118,23 @@
     .form-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
     .form-input{flex:1;min-width:100px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:var(--bg);color:var(--text);outline:none;}
     .form-input:focus{border-color:var(--sand-d);}
-    .btn-add{padding:9px 16px;border-radius:10px;border:none;cursor:pointer;background:var(--sand);color:var(--sand-t);font-family:inherit;font-weight:500;font-size:13px;transition:all 0.2s;white-space:nowrap;}
-    .btn-add:hover{background:var(--sand-d);color:white;}
+    .btn-add{padding:9px 16px;border-radius:10px;border:none;cursor:pointer;background:var(--wine);color:#fdf9f4;font-family:inherit;font-weight:500;font-size:13px;transition:all 0.2s;white-space:nowrap;}
+    .btn-add:hover{background:var(--cocoa);color:#fdf9f4;}
     .color-pick{display:flex;gap:6px;align-items:center;}
     .color-dot{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.15s;flex-shrink:0;}
-    .color-dot.selected,.color-dot:hover{transform:scale(1.25);border-color:var(--muted);}
+    .color-dot.selected,.color-dot:hover{transform:scale(1.25);border-color:var(--cocoa);}
     .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
     .cal-nav{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:16px;color:var(--muted);}
-    .cal-month{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--text);}
+    .cal-month{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--cocoa);}
     .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
     .cal-day-name{text-align:center;font-size:10px;font-weight:500;color:var(--muted);padding:4px 0;text-transform:uppercase;letter-spacing:0.05em;}
     .cal-day-wrap{position:relative;display:flex;justify-content:center;}
     .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;cursor:pointer;color:var(--text);font-family:inherit;border:none;background:none;width:100%;transition:all 0.15s;}
-    .cal-day:hover{background:var(--sand);}
-    .cal-day.today{background:var(--sand);font-weight:600;color:var(--sand-t);}
-    .cal-day.selected{background:var(--sand-d);color:white;font-weight:600;}
+    .cal-day:hover{background:var(--golden);}
+    .cal-day.today{background:var(--caramel);font-weight:600;color:#fdf9f4;}
+    .cal-day.selected{background:var(--wine);color:#fdf9f4;font-weight:600;}
     .cal-day.other-month{color:#ccc;}
-    .evt-dot{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--rose-d);}
+    .evt-dot{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--wine);}
     .event-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;font-size:12px;margin:3px;cursor:pointer;font-family:inherit;border:none;}
     .time-task{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;font-size:13px;margin-bottom:6px;}
     .check-btn{width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.2s;}
@@ -142,11 +160,11 @@
     .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;font-style:italic;margin:2px;}
     .mood-btn{padding:7px 13px;border-radius:20px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:12px;font-family:inherit;transition:all 0.15s;}
     .mood-btn.active,.mood-btn:hover{background:var(--rose);border-color:var(--rose-d);color:var(--rose-t);}
-    #save-indicator{position:fixed;bottom:20px;right:20px;background:var(--sage);color:var(--sage-t);padding:8px 16px;border-radius:20px;font-size:12px;font-style:italic;opacity:0;transition:opacity 0.3s;border:1px solid var(--sage-d);z-index:100;}
+    #save-indicator{position:fixed;bottom:20px;right:20px;background:var(--caramel);color:#fdf9f4;padding:8px 16px;border-radius:20px;font-size:12px;font-style:italic;opacity:0;transition:opacity 0.3s;border:1px solid var(--caramel-l);z-index:100;}
     #save-indicator.show{opacity:1;}
     .slabel{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
-    .rtab{padding:8px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.25);cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;color:var(--lav-t);transition:all 0.2s;}
-    .rtab.active{background:white;color:var(--lav-t);border-color:white;}
+    .rtab{padding:8px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.25);cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;color:var(--cocoa);transition:all 0.2s;}
+    .rtab.active{background:var(--wine);color:#fdf9f4;border-color:var(--wine);}
     .rtab-content{}
   </style>
 </head>
@@ -230,10 +248,10 @@
 <div id="page-roda" class="page">
 
   <!-- HERO -->
-  <div style="background:linear-gradient(135deg,var(--lav),var(--rose));border-radius:20px;padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden">
+  <div style="background:linear-gradient(135deg,var(--caramel),var(--cocoa));border-radius:20px;padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden">
     <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.15)"></div>
-    <div style="font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:var(--lav-t)">Roda da Vida ⭕</div>
-    <div style="font-size:13px;color:var(--lav-d);margin-top:6px;font-weight:300;max-width:500px;line-height:1.6">
+    <div style="font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:#fdf9f4">Roda da Vida ⭕</div>
+    <div style="font-size:13px;color:rgba(253,249,244,0.75);margin-top:6px;font-weight:300;max-width:500px;line-height:1.6">
       A tua roda da vida é o espelho da tua realidade agora. Avalia cada área de 1 a 10, descobre onde crescer, cria um plano de ação e acompanha a tua evolução ao longo do tempo.
     </div>
     <!-- TABS -->
@@ -579,10 +597,10 @@
 <!-- FINANÇAS -->
 <!-- GLOW UP -->
 <div id="page-glowup" class="page">
-  <div style="background:linear-gradient(135deg,var(--rose),var(--lav));border-radius:20px;padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.15)"></div>
-    <div style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--rose-t)">💅 O Meu Glow Up</div>
-    <div style="font-size:13px;color:var(--rose-d);margin-top:6px;font-weight:300;line-height:1.6">A tua evolução — física, mental e emocional. Porque és mãe, és dona de casa, <em>e também és mulher.</em></div>
+  <div style="background:linear-gradient(135deg,var(--wine),var(--cocoa));border-radius:20px;padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.08)"></div>
+    <div style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:#fdf9f4">💅 O Meu Glow Up</div>
+    <div style="font-size:13px;color:rgba(253,249,244,0.75);margin-top:6px;font-weight:300;line-height:1.6">A tua evolução — física, mental e emocional. Porque és mãe, és dona de casa, <em>e também és mulher.</em></div>
   </div>
 
   <div class="grid-2">
@@ -848,14 +866,14 @@ const WDAYS=['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
 const QUOTES=['Cada dia é uma nova página 🌸','Pequenos passos, grandes conquistas ✨','Acredita em ti 🌿','Hoje é sempre o melhor dia 💛','Vai ao teu ritmo, mas vai 🌊','O progresso não para 🌺','A tua vida é a tua obra de arte 🎨'];
 const AFIRM0=['Sou capaz 🌸','Mereço o melhor ✨','Estou a crescer 🌿','Sou amada 💛','O meu tempo virá 🌊'];
 const AREAS=[
-  {key:'saude',    icon:'💚',label:'Saúde',           color:'#5ab885',light:'#cef0e0',desc:'O teu corpo, energia, sono, alimentação e bem-estar físico e mental.'},
-  {key:'carreira', icon:'💼',label:'Carreira',        color:'#5aa0c0',light:'#cce8f5',desc:'O teu trabalho, estudos, propósito profissional e satisfação no que fazes.'},
-  {key:'dinheiro', icon:'💛',label:'Finanças',        color:'#b09040',light:'#f5f0cc',desc:'A tua relação com o dinheiro, poupanças, dívidas e segurança financeira.'},
-  {key:'relac',    icon:'💗',label:'Relacionamentos', color:'#c47a90',light:'#f5cdd8',desc:'Os teus relacionamentos afetivos, amor próprio e vida amorosa.'},
-  {key:'familia',  icon:'🏡',label:'Família',         color:'#9a72c0',light:'#e2d4f0',desc:'A qualidade das tuas relações familiares, harmonia e suporte familiar.'},
-  {key:'lazer',    icon:'🌸',label:'Lazer & Alegria', color:'#c0885a',light:'#f5e0cc',desc:'O tempo que dedicas ao que te alegra, hobbies, descanso e diversão.'},
-  {key:'desenvolv',icon:'🌱',label:'Desenvolvimento', color:'#7aaa7a',light:'#dceadc',desc:'O teu crescimento pessoal, aprendizagem, hábitos e autoconhecimento.'},
-  {key:'espirito', icon:'✨',label:'Espiritualidade', color:'#c0a880',light:'#f0e8dc',desc:'A tua paz interior, propósito de vida, fé, meditação ou conexão contigo.'},
+  {key:'saude',    icon:'💚',label:'Saúde',           color:'#7a9860',light:'#d4e4c8',desc:'O teu corpo, energia, sono, alimentação e bem-estar físico e mental.'},
+  {key:'carreira', icon:'💼',label:'Carreira',        color:'#743014',light:'#e4c0a8',desc:'O teu trabalho, estudos, propósito profissional e satisfação no que fazes.'},
+  {key:'dinheiro', icon:'💛',label:'Finanças',        color:'#84592B',light:'#e8d0a8',desc:'A tua relação com o dinheiro, poupanças, dívidas e segurança financeira.'},
+  {key:'relac',    icon:'💗',label:'Relacionamentos', color:'#9D7050',light:'#e0c8a8',desc:'Os teus relacionamentos afetivos, amor próprio e vida amorosa.'},
+  {key:'familia',  icon:'🏡',label:'Família',         color:'#442D1C',light:'#c4a882',desc:'A qualidade das tuas relações familiares, harmonia e suporte familiar.'},
+  {key:'lazer',    icon:'🌸',label:'Lazer & Alegria', color:'#9D9167',light:'#e0d8c4',desc:'O tempo que dedicas ao que te alegra, hobbies, descanso e diversão.'},
+  {key:'desenvolv',icon:'🌱',label:'Desenvolvimento', color:'#5a7840',light:'#c8dca8',desc:'O teu crescimento pessoal, aprendizagem, hábitos e autoconhecimento.'},
+  {key:'espirito', icon:'✨',label:'Espiritualidade', color:'#6888a0',light:'#c4d4e4',desc:'A tua paz interior, propósito de vida, fé, meditação ou conexão contigo.'},
 ];
 const DEEP_QS={
   saude:['Como está o teu nível de energia ao longo do dia? (1=exausto, 10=cheio de vitalidade)','Estás a dormir bem e o suficiente? (1=muito mal, 10=muito bem)','Como avalias a tua alimentação e hidratação? (1=muito má, 10=excelente)','Praticas atividade física com regularidade? (1=nunca, 10=sempre)','Como está o teu bem-estar emocional e mental? (1=muito mal, 10=excelente)'],
@@ -878,13 +896,13 @@ const AREA_TIPS={
   espirito:['Meditar 5min pela manhã','Escrever 3 gratidões por dia','Passar tempo na natureza','Praticar silêncio intencional','Ler sobre espiritualidade','Fazer 1 oração ou intenção diária','Ajudar alguém sem esperar nada','Praticar o desapego'],
 };
 const CM={
-  rose:{bg:'var(--rose)',text:'var(--rose-t)',dark:'var(--rose-d)'},
-  lav:{bg:'var(--lav)',text:'var(--lav-t)',dark:'var(--lav-d)'},
-  mint:{bg:'var(--mint)',text:'var(--mint-t)',dark:'var(--mint-d)'},
-  sky:{bg:'var(--sky)',text:'var(--sky-t)',dark:'var(--sky-d)'},
-  peach:{bg:'var(--peach)',text:'var(--peach-t)',dark:'var(--peach-d)'},
-  gold:{bg:'var(--gold)',text:'var(--gold-t)',dark:'var(--gold-d)'},
-  yellow:{bg:'var(--yellow)',text:'var(--yellow-t)',dark:'var(--yellow-d)'},
+  rose:{bg:'#e8d0b8',text:'#442D1C',dark:'#84592B'},
+  lav:{bg:'#d4c4b0',text:'#3a2818',dark:'#7a5c40'},
+  mint:{bg:'#c8d4b8',text:'#283818',dark:'#5a7840'},
+  sky:{bg:'#c4d0d8',text:'#1c3040',dark:'#6888a0'},
+  peach:{bg:'#e4c4a0',text:'#442D1C',dark:'#84592B'},
+  gold:{bg:'#E8D1A7',text:'#5a3e18',dark:'#a07030'},
+  yellow:{bg:'#E8D1A7',text:'#5a3e18',dark:'#a07030'},
 };
 
 let S={
