@@ -402,81 +402,135 @@
 
 <!-- DIA A DIA -->
 <div id="page-diadia" class="page">
-  <div class="card" style="background:var(--sand);border:none">
-    <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--sand-t)" id="today-label"></div>
-    <div style="font-size:12px;color:var(--sand-d);margin-top:4px;font-weight:300" id="today-quote2"></div>
+
+  <!-- HEADER do dia com navegação -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onclick="changeDay(-1)" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted)">‹</button>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--cocoa)" id="diadia-date-label"></div>
+        <div style="font-size:11px;color:var(--muted)" id="diadia-day-name"></div>
+      </div>
+      <button onclick="changeDay(1)" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted)">›</button>
+      <button onclick="goTodayDia()" style="padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:12px;color:var(--muted);font-family:inherit">Hoje</button>
+    </div>
+    <div id="diadia-mood-strip" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="mood-btn" onclick="setMood(this,'🌸 Ótima')">🌸 Ótima</button>
+      <button class="mood-btn" onclick="setMood(this,'😊 Bem')">😊 Bem</button>
+      <button class="mood-btn" onclick="setMood(this,'😐 Ok')">😐 Ok</button>
+      <button class="mood-btn" onclick="setMood(this,'😔 Cansada')">😔 Cansada</button>
+      <button class="mood-btn" onclick="setMood(this,'😩 Difícil')">😩 Difícil</button>
+    </div>
   </div>
+
+  <!-- EVENTOS DO DIA (vêm do calendário) -->
+  <div id="diadia-events-strip" style="margin-bottom:12px"></div>
+
+  <!-- BLOCOS HORÁRIO COMPLETO -->
   <div class="grid-2">
     <div>
-      <div class="card">
-        <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div> Manhã</div>
+      <!-- TIMELINE -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div id="timeline-blocks"></div>
+        <!-- Adicionar bloco de horário -->
+        <div style="padding:14px;border-top:1px solid var(--border)">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Adicionar ao horário</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <input type="time" id="rotina-hora" class="form-input" style="max-width:90px"/>
+            <input id="rotina-task" class="form-input" placeholder="Tarefa ou evento..." onkeydown="if(event.key==='Enter')addRotina()"/>
+            <select id="rotina-cat" class="form-input" style="max-width:110px">
+              <option value="trabalho">💼 Trabalho</option>
+              <option value="saude">💚 Saúde</option>
+              <option value="casa">🏡 Casa</option>
+              <option value="pessoal">🌸 Pessoal</option>
+              <option value="lazer">✨ Lazer</option>
+            </select>
+            <button class="btn-add" onclick="addRotina()" style="padding:8px 12px">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- TAREFAS por período -->
+      <div class="card" style="margin-bottom:12px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">☀️ Manhã</div>
         <div id="manha-tasks"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="manha-input" class="form-input" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')addTask('manha')"/>
-          <button class="btn-add" onclick="addTask('manha')" style="padding:8px 12px">+</button>
+          <input id="manha-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('manha')"/>
+          <button class="btn-add" onclick="addTask('manha')" style="padding:7px 10px">+</button>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> Tarde</div>
+      <div class="card" style="margin-bottom:12px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">🌤 Tarde</div>
         <div id="tarde-tasks"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="tarde-input" class="form-input" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')addTask('tarde')"/>
-          <button class="btn-add" onclick="addTask('tarde')" style="padding:8px 12px">+</button>
+          <input id="tarde-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('tarde')"/>
+          <button class="btn-add" onclick="addTask('tarde')" style="padding:7px 10px">+</button>
         </div>
       </div>
-    </div>
-    <div>
       <div class="card">
-        <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> Noite</div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">🌙 Noite</div>
         <div id="noite-tasks"></div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="noite-input" class="form-input" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')addTask('noite')"/>
-          <button class="btn-add" onclick="addTask('noite')" style="padding:8px 12px">+</button>
+          <input id="noite-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('noite')"/>
+          <button class="btn-add" onclick="addTask('noite')" style="padding:7px 10px">+</button>
         </div>
-      </div>
-      <div class="card" style="background:var(--rose);border:none">
-        <div class="card-title" style="color:var(--rose-t)"><div class="pill" style="background:var(--rose-d)"></div> Como estou hoje?</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px" id="mood-btns">
-          <button class="mood-btn" onclick="setMood(this,'🌸 Ótima')">🌸 Ótima</button>
-          <button class="mood-btn" onclick="setMood(this,'😊 Bem')">😊 Bem</button>
-          <button class="mood-btn" onclick="setMood(this,'😐 Ok')">😐 Ok</button>
-          <button class="mood-btn" onclick="setMood(this,'😔 Cansada')">😔 Cansada</button>
-          <button class="mood-btn" onclick="setMood(this,'😩 Difícil')">😩 Difícil</button>
-        </div>
-        <div id="mood-note" style="margin-top:8px;font-size:12px;font-style:italic;color:var(--rose-t)"></div>
       </div>
     </div>
+  </div>
+
+  <!-- INTENÇÃO DO DIA -->
+  <div class="card">
+    <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">✨ Intenção do dia</div>
+    <textarea class="note-area" id="intencao" placeholder="Hoje quero focar em..." style="min-height:60px" oninput="debounceSave('intencao',this.value)"></textarea>
   </div>
 </div>
 
 <!-- SEMANA -->
 <div id="page-semana" class="page">
-  <div class="card" style="overflow-x:auto">
-    <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div><span id="week-label">Esta semana</span></div>
-    <div class="week-grid" id="week-grid"></div>
+
+  <!-- HEADER -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onclick="changeWeek(-1)" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted)">‹</button>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--cocoa)" id="week-label">Esta semana</div>
+      <button onclick="changeWeek(1)" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted)">›</button>
+      <button onclick="goThisWeek()" style="padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:12px;color:var(--muted);font-family:inherit">Esta semana</button>
+    </div>
+    <button onclick="showPage('calendario',null)" style="padding:7px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted)">→ Ver no Calendário</button>
   </div>
+
+  <!-- GRADE SEMANAL com eventos do calendário -->
+  <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px">
+    <div id="week-grid-full"></div>
+  </div>
+
+  <!-- Adicionar tarefa à semana -->
   <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> Adicionar à semana</div>
-    <div class="form-row">
+    <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">Adicionar tarefa à semana</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
       <select id="week-day-sel" class="form-input" style="max-width:120px">
         <option value="0">Segunda</option><option value="1">Terça</option><option value="2">Quarta</option>
         <option value="3">Quinta</option><option value="4">Sexta</option><option value="5">Sábado</option><option value="6">Domingo</option>
       </select>
       <input id="week-task-input" class="form-input" placeholder="Tarefa..." onkeydown="if(event.key==='Enter')addWeekTask()"/>
       <div class="color-pick" id="week-color-pick">
-        <button class="color-dot selected" style="background:var(--rose)" onclick="selWCol(this,'rose')"></button>
-        <button class="color-dot" style="background:var(--lav)" onclick="selWCol(this,'lav')"></button>
-        <button class="color-dot" style="background:var(--mint)" onclick="selWCol(this,'mint')"></button>
-        <button class="color-dot" style="background:var(--peach)" onclick="selWCol(this,'peach')"></button>
+        <button class="color-dot selected" style="background:#743014" onclick="selWCol(this,'wine')"></button>
+        <button class="color-dot" style="background:#84592B" onclick="selWCol(this,'caramel')"></button>
+        <button class="color-dot" style="background:#7a9860" onclick="selWCol(this,'mint')"></button>
+        <button class="color-dot" style="background:#6888a0" onclick="selWCol(this,'sky')"></button>
       </div>
       <button class="btn-add" onclick="addWeekTask()">+</button>
     </div>
   </div>
-  <div class="card" style="background:var(--yellow);border:none">
-    <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> Reflexão semanal</div>
+
+  <!-- Reflexão semanal -->
+  <div class="card" style="background:var(--golden);border:none">
+    <div style="font-size:11px;font-weight:600;color:var(--cocoa);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">📝 Reflexão semanal</div>
     <div class="grid-2" style="gap:10px">
-      <div><div class="slabel">O que correu bem ✨</div><textarea class="note-area" id="semana-bem" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="..." oninput="debounceSave('semana_bem',this.value)"></textarea></div>
-      <div><div class="slabel">O que melhorar 💭</div><textarea class="note-area" id="semana-melhorar" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="..." oninput="debounceSave('semana_melhorar',this.value)"></textarea></div>
+      <div><div style="font-size:11px;color:var(--caramel);margin-bottom:5px">O que correu bem ✨</div><textarea class="note-area" id="semana-bem" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="..." oninput="debounceSave('semana_bem',this.value)"></textarea></div>
+      <div><div style="font-size:11px;color:var(--caramel);margin-bottom:5px">O que melhorar 💭</div><textarea class="note-area" id="semana-melhorar" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="..." oninput="debounceSave('semana_melhorar',this.value)"></textarea></div>
     </div>
   </div>
 </div>
@@ -1301,35 +1355,164 @@ async function addEvent(){
 async function rmEvent(id,date,i){await dbDelete('events',{id});S.events[date].splice(i,1);showSaved();renderCal();updatePanel();}
 function renderEvts(){if(S.selDate)updatePanel();}
 
-// DAY
+// ═══════════════════════════════════════
+// DIA A DIA — integrado com calendário
+// ═══════════════════════════════════════
+let currentDiaDate = new Date();
+
 function renderDay(){
-  const now=new Date(),ds=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-  document.getElementById('today-label').textContent=ds[now.getDay()]+', '+now.getDate()+' de '+MONTHS[now.getMonth()];
-  document.getElementById('today-quote2').textContent=QUOTES[now.getDate()%QUOTES.length];
+  const d=currentDiaDate;
+  const dayNames=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  document.getElementById('diadia-date-label').textContent=d.getDate()+' de '+MONTHS[d.getMonth()]+' '+d.getFullYear();
+  document.getElementById('diadia-day-name').textContent=dayNames[d.getDay()]+' · '+QUOTES[d.getDate()%QUOTES.length];
+
+  // Mostrar eventos do calendário para este dia
+  const dateKey=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
+  const evts=S.events[dateKey]||[];
+  const strip=document.getElementById('diadia-events-strip');
+  if(evts.length){
+    strip.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+      ${evts.map(e=>{const ec=EVT_COLORS[e.color]||EVT_COLORS.wine;return`<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;background:${ec.bg};color:${ec.text};font-size:12px;font-weight:500">${e.time?'⏰ '+e.time+' ':'📌 '} ${e.name}</div>`;}).join('')}
+    </div>`;
+  }else{
+    strip.innerHTML='';
+  }
+
+  // Timeline (rotina com horários)
+  renderTimeline();
   ['manha','tarde','noite'].forEach(renderTasks);
 }
+
+function renderTimeline(){
+  const r=S.rotina||[];
+  const el=document.getElementById('timeline-blocks');
+  if(!r.length){
+    el.innerHTML='<div style="padding:20px;text-align:center;font-size:13px;color:var(--muted);font-style:italic">Adiciona tarefas com horário para planear o teu dia</div>';
+    return;
+  }
+  const catColors={trabalho:'#6888a0',saude:'#7a9860',casa:'#84592B',pessoal:'#743014',lazer:'#9D9167'};
+  const sorted=[...r].sort((a,b)=>a.hora.localeCompare(b.hora));
+  el.innerHTML=sorted.map((item,i)=>{
+    const col=catColors[item.cat]||catColors.pessoal;
+    return`<div style="display:flex;align-items:stretch;border-bottom:1px solid var(--border)">
+      <div style="width:52px;padding:12px 8px;text-align:right;font-size:11px;font-weight:600;color:var(--muted);flex-shrink:0;border-right:2px solid ${col}">${item.hora}</div>
+      <div style="flex:1;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:13px;color:var(--text)">${item.text}</div>
+          <div style="font-size:10px;color:${col};margin-top:1px;font-weight:500">${item.cat}</div>
+        </div>
+        <button onclick="rmRotina(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:16px">×</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function changeDay(dir){
+  currentDiaDate=new Date(currentDiaDate);
+  currentDiaDate.setDate(currentDiaDate.getDate()+dir);
+  renderDay();
+}
+function goTodayDia(){currentDiaDate=new Date();renderDay();}
+
 function renderTasks(p){
-  const cols={manha:'lav',tarde:'peach',noite:'sky'},c=CM[cols[p]];
-  document.getElementById(p+'-tasks').innerHTML=S.tasks[p].map((t,i)=>`<div class="time-task" style="background:${c.bg};color:${c.text}"><button class="check-btn${t.done?' done':''}" style="color:${c.dark};border-color:${c.dark}" onclick="togTask('${p}',${i},'${t.id}',${!t.done})"></button><span class="task-text${t.done?' done':''}">${t.text}</span><button onclick="rmTask('${p}',${i},'${t.id}')" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:14px;padding:0">×</button></div>`).join('');
+  const taskColors={manha:{bg:'#e8d8c8',text:'#442D1C',dark:'#84592B'},tarde:{bg:'#d8e4d0',text:'#283818',dark:'#5a7840'},noite:{bg:'#c8d4e0',text:'#1c3040',dark:'#6888a0'}};
+  const c=taskColors[p];
+  document.getElementById(p+'-tasks').innerHTML=S.tasks[p].map((t,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:${c.bg};margin-bottom:5px">
+      <button class="check-btn${t.done?' done':''}" style="color:${c.dark};border-color:${c.dark}" onclick="togTask('${p}',${i},'${t.id}',${!t.done})"></button>
+      <span class="task-text${t.done?' done':''}" style="flex:1;font-size:13px;color:${c.text}">${t.text}</span>
+      <button onclick="rmTask('${p}',${i},'${t.id}')" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:14px">×</button>
+    </div>`).join('')||`<div style="font-size:12px;color:var(--muted);font-style:italic;padding:4px 0">Sem tarefas</div>`;
 }
 async function addTask(p){const inp=document.getElementById(p+'-input'),text=inp.value.trim();if(!text)return;const today=new Date().toISOString().split('T')[0];const data=await dbInsert('tasks',{user_id:USER_ID,date:today,period:p,text,done:false});S.tasks[p].push({id:data.id,text,done:false});inp.value='';showSaved();renderTasks(p);}
 async function togTask(p,i,id,done){await dbUpdate('tasks',id,{done});S.tasks[p][i].done=done;showSaved();renderTasks(p);}
 async function rmTask(p,i,id){await dbDelete('tasks',{id});S.tasks[p].splice(i,1);showSaved();renderTasks(p);}
-async function setMood(btn,mood){document.querySelectorAll('#mood-btns .mood-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const today=new Date().toISOString().split('T')[0];await dbUpsert('notes',{user_id:USER_ID,key:'mood_'+today,value:mood},'user_id,key');document.getElementById('mood-note').textContent='Humor registado: '+mood;showSaved();}
-
-// WEEK
-function getWK(){const now=new Date(),day=now.getDay(),mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));return mon.toISOString().split('T')[0];}
-function renderWeek(){
-  const now=new Date(),day=now.getDay(),mon=new Date(now);mon.setDate(now.getDate()-(day===0?6:day-1));
-  const dc=['rose','lav','mint','peach','sky','yellow','lav'];
-  let html='';
-  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);const isT=d.toDateString()===now.toDateString(),c=CM[dc[i]];html+=`<div class="week-day" style="background:${c.bg}"><div class="week-day-header" style="color:${c.text}${isT?';border-bottom:2px solid '+c.dark:''}">${WDAYS[i].slice(0,3)}<br><strong>${d.getDate()}</strong></div><div class="week-day-body">${(S.weekTasks[i]||[]).map((t,ti)=>{const tc=CM[t.color||dc[i]];return`<button class="week-task" style="background:${tc.bg};color:${tc.text}" onclick="rmWTask(${i},${ti},'${t.id}')">${t.text} ×</button>`;}).join('')}</div></div>`;}
-  document.getElementById('week-grid').innerHTML=html;
-  const end=new Date(mon);end.setDate(mon.getDate()+6);
-  document.getElementById('week-label').textContent=mon.getDate()+' '+MONTHS[mon.getMonth()].slice(0,3)+' – '+end.getDate()+' '+MONTHS[end.getMonth()].slice(0,3);
+async function setMood(btn,mood){
+  document.querySelectorAll('#diadia-mood-strip .mood-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const today=new Date().toISOString().split('T')[0];
+  await dbUpsert('notes',{user_id:USER_ID,key:'mood_'+today,value:mood},'user_id,key');
+  showSaved();
 }
+
+// ═══════════════════════════════════════
+// SEMANA — integrada com calendário
+// ═══════════════════════════════════════
+let weekOffset=0;
+
+function getWeekStart(offset=0){
+  const now=new Date();now.setDate(now.getDate()+offset*7);
+  const day=now.getDay(),mon=new Date(now);
+  mon.setDate(now.getDate()-(day===0?6:day-1));
+  mon.setHours(0,0,0,0);return mon;
+}
+function getWK(){return getWeekStart(weekOffset).toISOString().split('T')[0];}
+
+function renderWeek(){
+  const mon=getWeekStart(weekOffset);
+  const now=new Date();
+  const end=new Date(mon);end.setDate(mon.getDate()+6);
+  document.getElementById('week-label').textContent=mon.getDate()+' '+MONTHS[mon.getMonth()].slice(0,3)+' – '+end.getDate()+' '+MONTHS[end.getMonth()].slice(0,3)+' '+end.getFullYear();
+
+  const grid=document.getElementById('week-grid-full');
+  // Header row
+  let headerHtml='<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:2px solid var(--border)">';
+  for(let i=0;i<7;i++){
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    const isToday=d.toDateString()===now.toDateString();
+    headerHtml+=`<div style="padding:10px 8px;text-align:center;border-right:${i<6?'1px solid var(--border)':'none'};background:${isToday?'var(--wine)':'transparent'}">
+      <div style="font-size:10px;font-weight:600;color:${isToday?'rgba(253,249,244,0.7)':'var(--muted)'};letter-spacing:0.05em">${WDAYS[i].toUpperCase().slice(0,3)}</div>
+      <div style="font-size:18px;font-weight:${isToday?'700':'400'};color:${isToday?'#fdf9f4':'var(--text)'};margin-top:2px">${d.getDate()}</div>
+    </div>`;
+  }
+  headerHtml+='</div>';
+
+  // Events + tasks row
+  let bodyHtml='<div style="display:grid;grid-template-columns:repeat(7,1fr);min-height:200px">';
+  for(let i=0;i<7;i++){
+    const d=new Date(mon);d.setDate(mon.getDate()+i);
+    const isToday=d.toDateString()===now.toDateString();
+    const dateKey=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
+    const evts=S.events[dateKey]||[];
+    const wTasks=S.weekTasks[i]||[];
+
+    bodyHtml+=`<div style="padding:8px 6px;border-right:${i<6?'1px solid var(--border)':'none'};background:${isToday?'rgba(116,48,20,0.04)':'transparent'};cursor:pointer" onclick="openDayFromWeek('${dateKey}')">`;
+
+    // Calendar events
+    evts.forEach(e=>{
+      const ec=EVT_COLORS[e.color]||EVT_COLORS.wine;
+      bodyHtml+=`<div style="font-size:10px;padding:3px 6px;border-radius:4px;margin-bottom:3px;background:${ec.bg};color:${ec.text};overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${e.time?e.time.slice(0,5)+' ':''} ${e.name}</div>`;
+    });
+
+    // Week tasks
+    wTasks.forEach((t,ti)=>{
+      const ec=EVT_COLORS[t.color]||EVT_COLORS.caramel;
+      bodyHtml+=`<div style="font-size:10px;padding:3px 6px;border-radius:4px;margin-bottom:3px;background:${ec.bg}25;border-left:2px solid ${ec.bg};color:var(--text);overflow:hidden;white-space:nowrap;text-overflow:ellipsis" onclick="event.stopPropagation();rmWTask(${i},${ti},'${t.id}')">${t.text} ×</div>`;
+    });
+
+    bodyHtml+='</div>';
+  }
+  bodyHtml+='</div>';
+
+  grid.innerHTML=headerHtml+bodyHtml;
+}
+
+function openDayFromWeek(dateKey){
+  const parts=dateKey.split('-');
+  currentDiaDate=new Date(parseInt(parts[0]),parseInt(parts[1]),parseInt(parts[2]));
+  showPage('diadia',null);
+  document.querySelectorAll('.nav-item').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('diadia'))b.classList.add('active');});
+}
+
+function changeWeek(dir){weekOffset+=dir;renderWeek();}
+function goThisWeek(){weekOffset=0;renderWeek();}
 function selWCol(el,c){document.querySelectorAll('#week-color-pick .color-dot').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');S.wColor=c;}
-async function addWeekTask(){const dayIdx=parseInt(document.getElementById('week-day-sel').value),text=document.getElementById('week-task-input').value.trim();if(!text)return;const data=await dbInsert('week_tasks',{user_id:USER_ID,week_key:getWK(),day_index:dayIdx,text,color:S.wColor});if(!S.weekTasks[dayIdx])S.weekTasks[dayIdx]=[];S.weekTasks[dayIdx].push({id:data.id,text,color:S.wColor});document.getElementById('week-task-input').value='';showSaved();renderWeek();}
+async function addWeekTask(){
+  const dayIdx=parseInt(document.getElementById('week-day-sel').value),text=document.getElementById('week-task-input').value.trim();if(!text)return;
+  const data=await dbInsert('week_tasks',{user_id:USER_ID,week_key:getWK(),day_index:dayIdx,text,color:S.wColor||'wine'});
+  if(!S.weekTasks[dayIdx])S.weekTasks[dayIdx]=[];S.weekTasks[dayIdx].push({id:data.id,text,color:S.wColor||'wine'});
+  document.getElementById('week-task-input').value='';showSaved();renderWeek();
+}
 async function rmWTask(di,ti,id){await dbDelete('week_tasks',{id});S.weekTasks[di].splice(ti,1);showSaved();renderWeek();}
 
 // HABITS
