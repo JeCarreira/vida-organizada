@@ -335,33 +335,67 @@
 
 <!-- CALENDÁRIO -->
 <div id="page-calendario" class="page">
-  <div class="card">
-    <div class="cal-header">
-      <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
-      <span class="cal-month" id="cal-month-label"></span>
-      <button class="cal-nav" onclick="changeMonth(1)">›</button>
+
+  <!-- HEADER -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button onclick="changeMonth(-1)" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted);display:flex;align-items:center;justify-content:center">‹</button>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--cocoa)" id="cal-month-label"></div>
+      <button onclick="changeMonth(1)" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted);display:flex;align-items:center;justify-content:center">›</button>
+      <button onclick="goToday()" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:12px;color:var(--muted);font-family:inherit">Hoje</button>
     </div>
-    <div class="cal-grid" id="cal-day-names"></div>
-    <div class="cal-grid" id="cal-days"></div>
-    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-      <div style="font-size:13px;font-style:italic;margin-bottom:10px;color:var(--sand-t)">Evento para: <strong id="selected-date-label"></strong></div>
-      <div class="form-row">
-        <input id="evt-name" class="form-input" placeholder="Nome do evento..."/>
-        <input id="evt-time" class="form-input" type="time" style="max-width:100px"/>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="color-pick" id="color-pick" style="gap:6px">
+        <button class="color-dot selected" style="background:#743014" onclick="selectColor(this,'wine')"></button>
+        <button class="color-dot" style="background:#84592B" onclick="selectColor(this,'caramel')"></button>
+        <button class="color-dot" style="background:#7a9860" onclick="selectColor(this,'mint')"></button>
+        <button class="color-dot" style="background:#6888a0" onclick="selectColor(this,'sky')"></button>
+        <button class="color-dot" style="background:#9D9167" onclick="selectColor(this,'olive')"></button>
       </div>
-      <div class="form-row">
-        <span style="font-size:12px;color:var(--muted)">Cor:</span>
-        <div class="color-pick" id="color-pick">
-          <button class="color-dot selected" style="background:var(--rose)" onclick="selectColor(this,'rose')"></button>
-          <button class="color-dot" style="background:var(--lav)" onclick="selectColor(this,'lav')"></button>
-          <button class="color-dot" style="background:var(--mint)" onclick="selectColor(this,'mint')"></button>
-          <button class="color-dot" style="background:var(--sky)" onclick="selectColor(this,'sky')"></button>
-          <button class="color-dot" style="background:var(--peach)" onclick="selectColor(this,'peach')"></button>
-          <button class="color-dot" style="background:var(--gold)" onclick="selectColor(this,'gold')"></button>
+    </div>
+  </div>
+
+  <!-- CALENDÁRIO GRID -->
+  <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden">
+    <!-- Nomes dos dias -->
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)">
+      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">DOM</div>
+      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">SEG</div>
+      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">TER</div>
+      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">QUA</div>
+      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">QUI</div>
+      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">SEX</div>
+      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">SÁB</div>
+    </div>
+    <!-- Dias -->
+    <div id="cal-grid-body" style="display:grid;grid-template-columns:repeat(7,1fr)"></div>
+  </div>
+
+  <!-- PAINEL DO DIA SELECIONADO -->
+  <div id="cal-day-panel" style="margin-top:16px;display:none">
+    <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--cocoa)" id="panel-date-label"></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px" id="panel-day-name"></div>
         </div>
-        <button class="btn-add" onclick="addEvent()">+ Adicionar</button>
+        <button onclick="goToDiaDia()" style="padding:7px 14px;border-radius:10px;border:1px solid var(--border);background:var(--wine);color:#fdf9f4;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500">Ver no Dia a Dia →</button>
       </div>
-      <div id="events-list" style="margin-top:8px"></div>
+
+      <!-- Eventos do dia -->
+      <div id="panel-events-list" style="margin-bottom:16px"></div>
+
+      <!-- Adicionar evento -->
+      <div style="border-top:1px solid var(--border);padding-top:14px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Adicionar evento</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="evt-name" class="form-input" placeholder="Nome do evento..." style="flex:2;min-width:140px"/>
+          <input id="evt-time" class="form-input" type="time" style="max-width:100px"/>
+          <button class="btn-add" onclick="addEvent()">+ Adicionar</button>
+        </div>
+        <!-- Tarefas do dia a dia ligadas -->
+        <div id="panel-tasks-preview" style="margin-top:12px"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1178,29 +1212,94 @@ function renderQ(){
 function selQ(el,area,qi,score){document.querySelectorAll(`button[data-area="${area}"][data-qi="${qi}"]`).forEach(b=>{b.style.background='var(--bg)';b.style.color='var(--muted)';b.style.borderColor=AREAS.find(a=>a.key===area).color+'40';});el.style.background=AREAS.find(a=>a.key===area).color;el.style.color='white';if(!S.qAns[area])S.qAns[area]=[];S.qAns[area][qi]=score;}
 function applyQ(){let n=0;AREAS.forEach(a=>{const ans=S.qAns[a.key];if(!ans||!ans.length)return;const filled=ans.filter(v=>v!=null);if(!filled.length)return;S.wheel[a.key]=Math.round(filled.reduce((s,v)=>s+v,0)/filled.length);n++;});if(!n){alert('Responde pelo menos a uma pergunta!');return;}renderSliders();drawWheel();updInsight();debounceSave('wheel_scores',JSON.stringify(S.wheel));alert(`${n} área(s) atualizada(s) ✨\nVai ao separador Visão Geral para ver a tua roda!`);showRTab('visao',null);}
 
-// CALENDAR
+// ═══════════════════════════════════════
+// CALENDÁRIO — Grade tipo Google Calendar
+// ═══════════════════════════════════════
+const EVT_COLORS={
+  wine:{bg:'#743014',text:'#fdf9f4'},caramel:{bg:'#84592B',text:'#fdf9f4'},
+  mint:{bg:'#7a9860',text:'#fdf9f4'},sky:{bg:'#6888a0',text:'#fdf9f4'},
+  olive:{bg:'#9D9167',text:'#fdf9f4'},rose:{bg:'#84592B',text:'#fdf9f4'},
+  lav:{bg:'#9D9167',text:'#fdf9f4'},peach:{bg:'#743014',text:'#fdf9f4'},gold:{bg:'#a07030',text:'#fdf9f4'},
+};
+
 function renderCal(){
   const{calYear:y,calMonth:m}=S;
   document.getElementById('cal-month-label').textContent=MONTHS[m]+' '+y;
-  document.getElementById('cal-day-names').innerHTML=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].map(d=>`<div class="cal-day-name">${d}</div>`).join('');
-  const first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),now=new Date();
-  let html='';
-  for(let i=0;i<first;i++)html+='<div class="cal-day-wrap"><button class="cal-day other-month"></button></div>';
-  for(let d=1;d<=dim;d++){const k=y+'-'+m+'-'+d,isT=now.getDate()===d&&now.getMonth()===m&&now.getFullYear()===y,iS=S.selDate===k,hE=S.events[k]&&S.events[k].length>0;html+=`<div class="cal-day-wrap"><button class="cal-day${isT?' today':''}${iS?' selected':''}" onclick="selDate(${y},${m},${d})">${d}</button>${hE?'<div class="evt-dot"></div>':''}</div>`;}
-  document.getElementById('cal-days').innerHTML=html;renderEvts();
+  const first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),prevDim=new Date(y,m,0).getDate();
+  const now=new Date(),todayKey=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
+  let cells=[];
+  for(let i=first-1;i>=0;i--)cells.push({day:prevDim-i,month:'prev'});
+  for(let d=1;d<=dim;d++)cells.push({day:d,month:'cur'});
+  let nd=1;while(cells.length%7!==0)cells.push({day:nd++,month:'next'});
+  while(cells.length<42)cells.push({day:nd++,month:'next'});
+
+  const body=document.getElementById('cal-grid-body');
+  body.innerHTML=cells.map((c,idx)=>{
+    let dateKey;
+    if(c.month==='cur')dateKey=y+'-'+m+'-'+c.day;
+    else if(c.month==='prev'){const pm=m-1<0?11:m-1,py=m-1<0?y-1:y;dateKey=py+'-'+pm+'-'+c.day;}
+    else{const nm=m+1>11?0:m+1,ny=m+1>11?y+1:y;dateKey=ny+'-'+nm+'-'+c.day;}
+    const isOther=c.month!=='cur',isToday=dateKey===todayKey,isSel=S.selDate===dateKey;
+    const evts=S.events[dateKey]||[];
+    const isLastInRow=(idx+1)%7===0,isLastRow=idx>=cells.length-7;
+    return`<div onclick="selDate2('${dateKey}')" style="min-height:90px;padding:6px 5px;cursor:pointer;border-right:${!isLastInRow?'1px solid var(--border)':'none'};border-bottom:${!isLastRow?'1px solid var(--border)':'none'};background:${isSel?'rgba(116,48,20,0.06)':isOther?'rgba(0,0,0,0.018)':'transparent'};transition:background 0.15s">
+      <div style="margin-bottom:3px"><span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:12px;font-weight:${isToday?'700':'400'};background:${isToday?'var(--wine)':'transparent'};color:${isToday?'#fdf9f4':isOther?'var(--muted)':'var(--text)'}">${c.day}</span></div>
+      ${evts.slice(0,3).map(e=>{const ec=EVT_COLORS[e.color]||EVT_COLORS.wine;return`<div style="font-size:10px;padding:2px 5px;border-radius:3px;margin-bottom:2px;background:${ec.bg};color:${ec.text};overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${e.time?e.time.slice(0,5)+' ':''} ${e.name}</div>`;}).join('')}
+      ${evts.length>3?`<div style="font-size:10px;color:var(--muted);padding-left:4px">+${evts.length-3}</div>`:''}
+    </div>`;
+  }).join('');
+  if(S.selDate)updatePanel();
 }
-function selDate(y,m,d){S.selDate=y+'-'+m+'-'+d;document.getElementById('selected-date-label').textContent=d+' de '+MONTHS[m];renderCal();}
+
+function selDate2(dateKey){
+  S.selDate=dateKey;
+  renderCal();
+  const panel=document.getElementById('cal-day-panel');
+  panel.style.display='block';
+  updatePanel();
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+
+function updatePanel(){
+  if(!S.selDate)return;
+  const parts=S.selDate.split('-');
+  const y=parseInt(parts[0]),m=parseInt(parts[1]),d=parseInt(parts[2]);
+  const date=new Date(y,m,d);
+  const dayNames=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  document.getElementById('panel-date-label').textContent=d+' de '+MONTHS[m]+' '+y;
+  document.getElementById('panel-day-name').textContent=dayNames[date.getDay()];
+  const evts=S.events[S.selDate]||[];
+  document.getElementById('panel-events-list').innerHTML=evts.length
+    ?evts.map((e,i)=>{const ec=EVT_COLORS[e.color]||EVT_COLORS.wine;return`
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;background:${ec.bg}18;border-left:3px solid ${ec.bg};margin-bottom:6px">
+        <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">${e.name}</div>${e.time?`<div style="font-size:11px;color:var(--muted)">⏰ ${e.time}</div>`:''}</div>
+        <button onclick="rmEvent('${e.id}','${S.selDate}',${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:18px">×</button>
+      </div>`;}).join('')
+    :'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:4px 0">Sem eventos neste dia — adiciona um abaixo ✨</div>';
+  // tasks preview (today only)
+  const todayStr=new Date().toISOString().split('T')[0];
+  const [ty,tm,td2]=[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()];
+  const tasksPrev=document.getElementById('panel-tasks-preview');
+  if(y===ty&&m===tm&&d===td2){
+    const allTasks=[...S.tasks.manha,...S.tasks.tarde,...S.tasks.noite];
+    tasksPrev.innerHTML=allTasks.length?`<div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;margin-top:4px">Tarefas de hoje</div>`+allTasks.map(t=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;padding:3px 0"><span>${t.done?'✅':'⬜'}</span><span style="${t.done?'text-decoration:line-through;opacity:0.5':''}">${t.text}</span></div>`).join(''):'';
+  }else tasksPrev.innerHTML='';
+}
+
+function goToday(){const now=new Date();S.calYear=now.getFullYear();S.calMonth=now.getMonth();S.selDate=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();renderCal();document.getElementById('cal-day-panel').style.display='block';updatePanel();}
+function goToDiaDia(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-diadia').classList.add('active');document.querySelectorAll('.nav-item,.mob-btn').forEach(b=>{b.classList.remove('active');if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('diadia'))b.classList.add('active');});}
 function changeMonth(dir){S.calMonth+=dir;if(S.calMonth>11){S.calMonth=0;S.calYear++;}if(S.calMonth<0){S.calMonth=11;S.calYear--;}renderCal();}
 function selectColor(el,c){document.querySelectorAll('#color-pick .color-dot').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');S.selColor=c;}
 async function addEvent(){
   const name=document.getElementById('evt-name').value.trim(),time=document.getElementById('evt-time').value;
   if(!name||!S.selDate)return;
-  const data=await dbInsert('events',{user_id:USER_ID,date:S.selDate,name,time,color:S.selColor});
-  if(!S.events[S.selDate])S.events[S.selDate]=[];S.events[S.selDate].push({id:data.id,name,time,color:S.selColor});
-  document.getElementById('evt-name').value='';showSaved();renderCal();
+  const data=await dbInsert('events',{user_id:USER_ID,date:S.selDate,name,time,color:S.selColor||'wine'});
+  if(!S.events[S.selDate])S.events[S.selDate]=[];
+  S.events[S.selDate].push({id:data.id,name,time,color:S.selColor||'wine'});
+  document.getElementById('evt-name').value='';showSaved();renderCal();updatePanel();
 }
-function renderEvts(){const list=S.events[S.selDate]||[];document.getElementById('events-list').innerHTML=list.map((e,i)=>{const c=CM[e.color]||CM.rose;return`<button class="event-tag" style="background:${c.bg};color:${c.text}" onclick="rmEvent('${e.id}','${S.selDate}',${i})">${e.time?`<em style="font-size:10px">${e.time}</em>`:''} ${e.name} ×</button>`;}).join('');}
-async function rmEvent(id,date,i){await dbDelete('events',{id});S.events[date].splice(i,1);showSaved();renderCal();}
+async function rmEvent(id,date,i){await dbDelete('events',{id});S.events[date].splice(i,1);showSaved();renderCal();updatePanel();}
+function renderEvts(){if(S.selDate)updatePanel();}
 
 // DAY
 function renderDay(){
