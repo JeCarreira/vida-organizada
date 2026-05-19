@@ -1,0 +1,118 @@
+:root {
+  --cream: #f6f0e7;
+  --sand: #e8dcc8;
+  --brown: #6a4b33;
+  --ink: #2f2720;
+  --soft-ink: #5a4f45;
+  --line: #d4c7b4;
+  --paper: #fbf7f1;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background: var(--cream);
+  color: var(--ink);
+}
+.app-shell { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 250px;
+  border-right: 1px solid var(--line);
+  background: var(--paper);
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.brand h1 { margin: 0; font-size: 1.3rem; }
+.brand-kicker, .eyebrow, .topbar-kicker {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .7rem;
+  color: var(--soft-ink);
+  margin: 0 0 8px;
+}
+.menu { display: flex; flex-direction: column; gap: 6px; }
+.menu-item {
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink);
+}
+.menu-item.is-active { border-color: var(--line); background: var(--sand); }
+.sidebar-footer { margin-top: auto; }
+.muted { color: var(--soft-ink); font-size: .85rem; }
+.text-btn {
+  border: 1px solid var(--line);
+  background: transparent;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--ink);
+}
+.primary-btn {
+  border: 1px solid var(--brown);
+  background: var(--brown);
+  color: var(--paper);
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.main { flex: 1; padding: 28px; max-width: 1100px; }
+.topbar { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.mobile-menu-btn { display: none; }
+.page { display: none; }
+.page.is-active { display: block; }
+.editorial-block { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 18px 0; margin-bottom: 24px; }
+.editorial-block h3 { margin: 0 0 10px; }
+.editorial-block p { margin: 0; line-height: 1.6; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 24px; }
+.stat { border: 1px solid var(--line); padding: 14px; background: var(--paper); }
+.list { border-top: 1px solid var(--line); }
+.list-item { border-bottom: 1px solid var(--line); padding: 10px 0; display: flex; justify-content: space-between; gap: 12px; }
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 20px; }
+.cal-cell { min-height: 96px; border: 1px solid var(--line); background: var(--paper); padding: 6px; cursor: pointer; }
+.cal-cell.is-out { opacity: .45; }
+.cal-day { font-size: .8rem; margin-bottom: 6px; }
+.cal-dot { width: 8px; height: 8px; border-radius: 999px; display: inline-block; margin-right: 4px; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form { display: grid; gap: 10px; }
+.form label { display: grid; gap: 5px; font-size: .9rem; }
+.form input, .form textarea, .form select {
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 8px;
+  font: inherit;
+  color: var(--ink);
+}
+.check-line { display: flex !important; grid-template-columns: none !important; align-items: center; gap: 8px; }
+.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+.week-day { border: 1px solid var(--line); background: var(--paper); min-height: 140px; padding: 8px; }
+.week-day h5 { margin: 0 0 8px; font-size: .85rem; }
+.event-tag { font-size: .8rem; border-left: 3px solid var(--brown); padding-left: 6px; margin-bottom: 6px; }
+.auth-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(47,39,32,0.24);
+  display: grid;
+  place-items: center;
+}
+.auth-screen.is-hidden { display: none; }
+.auth-panel {
+  width: min(460px, 92vw);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 22px;
+}
+.auth-actions { display: flex; gap: 8px; }
+@media (max-width: 900px) {
+  .sidebar { position: fixed; left: -280px; top: 0; bottom: 0; z-index: 50; transition: left .2s; }
+  .sidebar.is-open { left: 0; }
+  .mobile-menu-btn { display: inline-block; }
+  .main { padding: 18px; width: 100%; }
+  .stats { grid-template-columns: 1fr; }
+  .split { grid-template-columns: 1fr; }
+  .week-grid { grid-template-columns: 1fr; }
+  .calendar-grid { gap: 4px; }
+}
