@@ -10,18 +10,48 @@ import {
   formatAuthError,
 } from './services/supabase.js';
 
+const areaPalette = {
+  'Casa': { color: 'casa', name: 'Areia quente', hex: '#d9c7a6' },
+  'Família': { color: 'familia', name: 'Sálvia familiar', hex: '#c7d3b5' },
+  'Filhos': { color: 'filhos', name: 'Azul bebé elegante', hex: '#c9dbe7' },
+  'Eu': { color: 'eu', name: 'Rosa antigo', hex: '#d6b1bb' },
+  'Bem-estar': { color: 'bem-estar', name: 'Verde spa', hex: '#afc8a5' },
+  'Casamento': { color: 'casamento', name: 'Lavanda fina', hex: '#c6c5dd' },
+  'Projeto / Marca': { color: 'projeto', name: 'Terracota premium', hex: '#c58c66' },
+  'Papéis e burocracia': { color: 'papeis', name: 'Taupe burocracia', hex: '#b8afa6' },
+  'Finanças': { color: 'financas', name: 'Oliva dourado', hex: '#8f9b74' },
+  'Rotinas': { color: 'rotinas', name: 'Linho rotina', hex: '#e7ddbf' },
+  'Social / Comunidade': { color: 'social', name: 'Pêssego social', hex: '#eab8a5' },
+  'Outro': { color: 'outro', name: 'Neutro suave', hex: '#bbb2a8' },
+};
+
 const eventColors = {
-  areia: '#a18464',
+  casa: '#d9c7a6',
+  familia: '#c7d3b5',
+  filhos: '#c9dbe7',
+  eu: '#d6b1bb',
+  'bem-estar': '#afc8a5',
+  casamento: '#c6c5dd',
+  projeto: '#c58c66',
+  papeis: '#b8afa6',
+  financas: '#8f9b74',
+  rotinas: '#e7ddbf',
+  social: '#eab8a5',
+  outro: '#bbb2a8',
+  champagne: '#e8d8aa',
+  ameixa: '#a58295',
+  'azul-profundo': '#8ea4bd',
+  areia: '#d9c7a6',
   creme: '#eadfce',
   caramelo: '#c18954',
   castanho: '#6a4b33',
-  terracota: '#b96f52',
-  'verde-oliva': '#7d835b',
-  salvia: '#9ead8f',
-  'azul-nevoa': '#8fa6b8',
-  'rosa-antigo': '#c99aa3',
-  lavanda: '#b3a2c7',
-  grafite: '#3f3f42',
+  terracota: '#c58c66',
+  'verde-oliva': '#8f9b74',
+  salvia: '#c7d3b5',
+  'azul-nevoa': '#c9dbe7',
+  'rosa-antigo': '#d6b1bb',
+  lavanda: '#c6c5dd',
+  grafite: '#77706a',
 };
 
 const state = {
@@ -65,6 +95,9 @@ const el = {
   eventSubmitBtn: document.getElementById('event-submit-btn'),
   quickEventBtn: document.getElementById('quick-event-btn'),
   selectedDayEventBtn: document.getElementById('selected-day-event-btn'),
+  areaColorDot: document.getElementById('area-color-dot'),
+  areaColorName: document.getElementById('area-color-name'),
+  areaColorNote: document.getElementById('area-color-note'),
 };
 
 function fmtDate(date) {
@@ -96,7 +129,18 @@ function endOfWeek(date) {
 function sameDay(a, b) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
-function eventColor(name) { return eventColors[name] || '#6a4b33'; }
+function eventColor(name) { return eventColors[name] || '#d9c7a6'; }
+function readableTime(dateValue) { return new Date(dateValue).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }); }
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char]));
+}
+function eventBlock(event, variant = 'month') {
+  const color = eventColor(event.color);
+  return `<article class="event-card event-card--${variant}" style="--event-color:${color}; background:${color};">
+    <strong>${escapeHtml(event.title)}</strong>
+    <span>${event.all_day ? 'Dia inteiro' : readableTime(event.starts_at)}</span>
+  </article>`;
+}
 
 function route(page) {
   state.page = page;
@@ -133,7 +177,7 @@ function renderDashboard() {
     <div class="stat"><div class="muted">Hoje</div><strong>${state.events.filter((e) => sameDay(new Date(e.starts_at), now)).length} eventos</strong></div>`;
   const upcoming = [...state.events].filter((e) => new Date(e.starts_at) >= now).slice(0, 6);
   el.upcoming.innerHTML = upcoming.length
-    ? upcoming.map((e) => `<div class="list-item"><span>${e.title}</span><span class="muted">${fmtDate(new Date(e.starts_at))}</span></div>`).join('')
+    ? upcoming.map((e) => `<div class="list-item event-list-item" style="--event-color:${eventColor(e.color)}"><span>${escapeHtml(e.title)}</span><span class="muted">${fmtDate(new Date(e.starts_at))}</span></div>`).join('')
     : '<p class="muted">Sem eventos próximos.</p>';
 }
 
@@ -170,7 +214,7 @@ function renderCalendar() {
   el.calendarGrid.innerHTML = cells.map((d) => {
     const inMonth = d.getMonth() === base.getMonth();
     const dayEvents = state.events.filter((e) => sameDay(new Date(e.starts_at), d));
-    return `<button class="cal-cell ${inMonth ? '' : 'is-out'}" type="button" data-date="${d.toISOString()}"><div class="cal-day">${d.getDate()}</div><div class="cal-events">${dayEvents.slice(0, 3).map((ev) => `<span class="cal-dot" title="${ev.title}" style="background:${eventColor(ev.color)}"></span>`).join('')}</div></button>`;
+    return `<button class="cal-cell ${inMonth ? '' : 'is-out'}" type="button" data-date="${d.toISOString()}"><div class="cal-day">${d.getDate()}</div><div class="cal-events">${dayEvents.slice(0, 3).map((ev) => eventBlock(ev, 'month')).join('')}</div></button>`;
   }).join('');
   [...el.calendarGrid.querySelectorAll('.cal-cell')].forEach((btn) => btn.addEventListener('click', () => {
     const clickedDate = new Date(btn.dataset.date);
@@ -185,7 +229,7 @@ function renderDayEvents() {
   el.selectedDayLabel.textContent = fmtDate(state.selectedDate);
   const events = state.events.filter((e) => sameDay(new Date(e.starts_at), state.selectedDate));
   el.dayEvents.innerHTML = events.length
-    ? events.map((e) => `<div class="list-item"><div><strong>${e.title}</strong><div class="muted">${e.area || 'Sem área'}</div></div><div class="muted">${new Date(e.starts_at).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}</div></div>`).join('')
+    ? events.map((e) => `<div class="list-item event-list-item" style="--event-color:${eventColor(e.color)}"><div><strong>${escapeHtml(e.title)}</strong><div class="muted">${escapeHtml(e.area || 'Sem área')}</div></div><div class="muted">${e.all_day ? 'Dia inteiro' : readableTime(e.starts_at)}</div></div>`).join('')
     : '<p class="muted">Sem eventos para este dia.</p>';
 }
 
@@ -200,7 +244,7 @@ function renderWeek() {
   });
   el.weekGrid.innerHTML = days.map((day) => {
     const events = state.events.filter((e) => sameDay(new Date(e.starts_at), day));
-    return `<article class="week-day"><h5>${day.toLocaleDateString('pt-PT', { weekday: 'long', day: '2-digit' })}</h5>${events.map((e) => `<div class="event-tag" style="border-color:${eventColor(e.color)}">${e.title}</div>`).join('') || '<p class="muted">Sem eventos</p>'}</article>`;
+    return `<article class="week-day"><h5>${day.toLocaleDateString('pt-PT', { weekday: 'long', day: '2-digit' })}</h5>${events.map((e) => eventBlock(e, 'week')).join('') || '<p class="muted">Sem eventos</p>'}</article>`;
   }).join('');
 }
 
@@ -209,7 +253,7 @@ function renderToday() {
   el.todayLabel.textContent = fmtDate(today);
   const events = state.events.filter((e) => sameDay(new Date(e.starts_at), today));
   el.todayEvents.innerHTML = events.length
-    ? events.map((e) => `<div class="list-item"><span>${e.title}</span><span class="muted">${new Date(e.starts_at).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}</span></div>`).join('')
+    ? events.map((e) => `<div class="list-item event-list-item" style="--event-color:${eventColor(e.color)}"><span>${escapeHtml(e.title)}</span><span class="muted">${e.all_day ? 'Dia inteiro' : readableTime(e.starts_at)}</span></div>`).join('')
     : '<p class="muted">Sem eventos para hoje.</p>';
 }
 
@@ -222,13 +266,23 @@ function render() {
   renderToday();
 }
 
+function syncAreaColor() {
+  const area = el.eventForm.elements.area?.value || 'Casa';
+  const palette = areaPalette[area] || areaPalette.Outro;
+  const radio = el.eventForm.querySelector(`input[name="color"][value="${palette.color}"]`);
+  if (radio) radio.checked = true;
+  if (el.areaColorDot) el.areaColorDot.style.setProperty('--event-color', palette.hex);
+  if (el.areaColorName) el.areaColorName.textContent = palette.name;
+  if (el.areaColorNote) el.areaColorNote.textContent = `${area} fica com ${palette.name.toLowerCase()} por defeito, para manter o calendário harmonioso.`;
+}
+
 function openEventModal(date = state.selectedDate) {
   const start = new Date(date);
   start.setHours(start.getHours() || 9, 0, 0, 0);
   state.selectedDate = new Date(date);
   el.eventForm.reset();
   el.eventForm.elements.starts_at.value = fmtDateTimeLocal(start);
-  el.eventForm.elements.color.value = 'areia';
+  syncAreaColor();
   el.eventFeedback.textContent = '';
   el.eventSubmitBtn.disabled = false;
   el.eventSubmitBtn.textContent = 'Guardar evento';
@@ -302,6 +356,7 @@ async function boot() {
   el.quickEventBtn.addEventListener('click', () => openEventModal(new Date()));
   el.selectedDayEventBtn.addEventListener('click', () => openEventModal(state.selectedDate));
   document.querySelectorAll('[data-close-modal]').forEach((node) => node.addEventListener('click', closeEventModal));
+  el.eventForm.elements.area.addEventListener('change', syncAreaColor);
 
   document.getElementById('prev-year').addEventListener('click', async () => { state.currentDate.setFullYear(state.currentDate.getFullYear() - 1); await refreshEventsForCurrentScope(); render(); });
   document.getElementById('next-year').addEventListener('click', async () => { state.currentDate.setFullYear(state.currentDate.getFullYear() + 1); await refreshEventsForCurrentScope(); render(); });
