@@ -130,24 +130,40 @@
           <input name="ends_at" type="datetime-local" />
         </label>
         <label>Título
-          <input name="title" type="text" maxlength="120" required placeholder="Ex.: consulta, reunião, rotina da casa..." />
+          <input name="title" type="text" maxlength="120" required placeholder="Ex.: consulta, aniversário, preparar Natal..." />
         </label>
-        <label>Área
-          <select name="area" required>
-            <option value="Casa">Casa</option>
-            <option value="Família">Família</option>
-            <option value="Filhos">Filhos</option>
-            <option value="Eu">Eu</option>
-            <option value="Bem-estar">Bem-estar</option>
-            <option value="Casamento">Casamento</option>
-            <option value="Projeto / Marca">Projeto / Marca</option>
-            <option value="Papéis e burocracia">Papéis e burocracia</option>
-            <option value="Finanças">Finanças</option>
-            <option value="Rotinas">Rotinas</option>
-            <option value="Social / Comunidade">Social / Comunidade</option>
-            <option value="Outro">Outro</option>
-          </select>
-        </label>
+
+        <div class="form-row">
+          <label>Tipo
+            <select name="event_type" required>
+              <option value="Normal">Normal</option>
+              <option value="Aniversário">Aniversário</option>
+              <option value="Ocasião especial">Ocasião especial</option>
+              <option value="Natal">Natal</option>
+              <option value="Viagem">Viagem</option>
+              <option value="Consulta">Consulta</option>
+              <option value="Escola / filhos">Escola / filhos</option>
+              <option value="Projeto">Projeto</option>
+              <option value="Rotina">Rotina</option>
+            </select>
+          </label>
+          <label>Área
+            <select name="area" required>
+              <option value="Casa">Casa</option>
+              <option value="Família">Família</option>
+              <option value="Filhos">Filhos</option>
+              <option value="Eu">Eu</option>
+              <option value="Bem-estar">Bem-estar</option>
+              <option value="Casamento">Casamento</option>
+              <option value="Projeto / Marca">Projeto / Marca</option>
+              <option value="Papéis e burocracia">Papéis e burocracia</option>
+              <option value="Finanças">Finanças</option>
+              <option value="Rotinas">Rotinas</option>
+              <option value="Social / Comunidade">Social / Comunidade</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </label>
+        </div>
 
         <section class="area-color-card" aria-live="polite">
           <span id="area-color-dot" class="area-color-dot"></span>
@@ -156,6 +172,34 @@
             <strong id="area-color-name">Areia quente</strong>
             <p id="area-color-note" class="muted">A cor é escolhida automaticamente pela área, para o calendário ficar consistente.</p>
           </div>
+        </section>
+
+        <section class="smart-planning-card">
+          <p class="eyebrow">Preparação inteligente</p>
+          <div class="form-row">
+            <label>Começar a preparar
+              <select name="prepare_days_before">
+                <option value="0">No próprio dia</option>
+                <option value="1">1 dia antes</option>
+                <option value="3">3 dias antes</option>
+                <option value="7">1 semana antes</option>
+                <option value="14">2 semanas antes</option>
+                <option value="30">1 mês antes</option>
+                <option value="60">2 meses antes</option>
+                <option value="90">3 meses antes</option>
+              </select>
+            </label>
+            <label>Repetição
+              <select name="recurrence">
+                <option value="none">Não repetir</option>
+                <option value="daily">Todos os dias</option>
+                <option value="weekly">Todas as semanas</option>
+                <option value="monthly">Todos os meses</option>
+                <option value="yearly">Todos os anos</option>
+              </select>
+            </label>
+          </div>
+          <p class="muted">Ideal para aniversários, Natal, consultas, pagamentos, rotinas da casa e coisas que queres preparar com antecedência.</p>
         </section>
 
         <fieldset class="color-fieldset">
@@ -174,13 +218,14 @@
             <label class="color-chip"><input type="radio" name="color" value="rotinas" /><span class="color-dot-visual" style="--event-color:#e7ddbf"></span><span>Linho rotina</span></label>
             <label class="color-chip"><input type="radio" name="color" value="social" /><span class="color-dot-visual" style="--event-color:#eab8a5"></span><span>Pêssego social</span></label>
             <label class="color-chip"><input type="radio" name="color" value="outro" /><span class="color-dot-visual" style="--event-color:#bbb2a8"></span><span>Neutro suave</span></label>
-            <label class="color-chip"><input type="radio" name="color" value="champagne" /><span class="color-dot-visual" style="--event-color:#e8d8aa"></span><span>Champagne</span></label>
-            <label class="color-chip"><input type="radio" name="color" value="ameixa" /><span class="color-dot-visual" style="--event-color:#a58295"></span><span>Ameixa delicada</span></label>
-            <label class="color-chip"><input type="radio" name="color" value="azul-profundo" /><span class="color-dot-visual" style="--event-color:#8ea4bd"></span><span>Azul editorial</span></label>
           </div>
         </fieldset>
+
+        <label>Checklist de ações
+          <textarea name="checklist_text" rows="5" maxlength="1500" placeholder="Uma ação por linha. Ex.:&#10;Comprar presente&#10;Confirmar horário&#10;Preparar roupa das crianças"></textarea>
+        </label>
         <label>Notas
-          <textarea name="notes" rows="3" maxlength="1200" placeholder="Detalhes úteis, lembretes ou contexto."></textarea>
+          <textarea name="notes" rows="3" maxlength="1200" placeholder="Contexto, ideias, compras, orçamento, pessoas envolvidas..."></textarea>
         </label>
         <label class="check-line"><input name="all_day" type="checkbox" /> Evento de dia inteiro</label>
         <p id="event-feedback" class="form-feedback" aria-live="polite"></p>
