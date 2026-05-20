@@ -26,6 +26,10 @@ function normalize(value) {
     .trim();
 }
 
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>\"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;' }[char]));
+}
+
 function eventTypeKey(event) {
   const text = normalize(`${event?.title || ''} ${event?.event_type || ''} ${event?.area || ''}`);
   if (text.includes('natal')) return 'natal';
@@ -39,8 +43,12 @@ function eventTypeKey(event) {
 }
 
 function money(value) {
-  const n = Number(value || 0);
+  const n = Number(String(value || '0').replace(',', '.'));
   return Number.isFinite(n) ? Math.max(0, n) : 0;
+}
+
+function euro(value) {
+  return `${money(value).toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 }
 
 function splitBudget(total, template) {
@@ -157,26 +165,113 @@ function applySmartPrepareDefault(type, select, recurrence) {
   if (key.includes('ocasiao')) { select.value = '30'; return; }
 }
 
-function injectBudgetAgent(panel) {
-  if (!panel || panel.querySelector('[data-budget-agent]')) return;
-  const form = panel.querySelector('#phase-budget-form');
-  if (!form) return;
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'text-btn budget-agent-btn';
-  button.dataset.budgetAgent = 'true';
-  button.textContent = 'Gerar plano de compras com orçamento';
-  const hint = document.createElement('p');
-  hint.className = 'muted budget-agent-hint';
-  hint.textContent = 'Escreve um orçamento previsto e o sistema distribui esse valor por compras essenciais, margem e prioridades.';
-  form.insertBefore(hint, form.firstChild);
-  form.insertBefore(button, hint.nextSibling);
+function lineToPurchase(line) {
+  const [name = '', quantity = '', store = '', estimated = '0', bought = ''] = String(line || '').split('|').map((part) => part.trim());
+  return { name, quantity, store, estimated: money(estimated), bought: normalize(bought).includes('comprado') };
 }
 
-function buildBudgetLines(event, total) {
+function readTextareaPurchases(textarea) {
+  return String(textarea?.value || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map(lineToPurchase);
+}
+
+function purchaseToLine(item) {
+  return `${item.name || ''} | ${item.quantity || ''} | ${item.store || ''} | ${money(item.estimated).toFixed(2)} | ${item.bought ? 'comprado' : ''}`.trim();
+}
+
+function rowHtml(item = {}) {
+  return `<tr>
+    <td><input class="shop-name" value="${escapeHtml(item.name || '')}" placeholder="Ex.: bolo, presente, decoração"></td>
+    <td><input class="shop-qty" value="${escapeHtml(item.quantity || '')}" placeholder="Qtd."></td>
+    <td><input class="shop-store" value="${escapeHtml(item.store || '')}" placeholder="Loja / local"></td>
+    <td><div class="euro-input"><input class="shop-estimated" type="number" min="0" step="0.01" value="${money(item.estimated).toFixed(2)}"><span>€</span></div></td>
+    <td class="shop-bought-cell"><input class="shop-bought" type="checkbox" ${item.bought ? 'checked' : ''}></td>
+    <td><button type="button" class="text-btn mini-danger" data-remove-shopping-row>×</button></td>
+  </tr>`;
+}
+
+function syncShoppingTextarea(form) {
+  const textarea = form?.elements?.shopping_list;
+  const table = form?.querySelector('[data-shopping-table]');
+  if (!textarea || !table) return;
+  const rows = [...table.querySelectorAll('tbody tr')].map((row) => ({
+    name: row.querySelector('.shop-name')?.value.trim() || '',
+    quantity: row.querySelector('.shop-qty')?.value.trim() || '',
+    store: row.querySelector('.shop-store')?.value.trim() || '',
+    estimated: money(row.querySelector('.shop-estimated')?.value),
+    bought: Boolean(row.querySelector('.shop-bought')?.checked),
+  })).filter((item) => item.name || item.quantity || item.store || item.estimated);
+  textarea.value = rows.map(purchaseToLine).join('\n');
+  updateBudgetSummary(form);
+}
+
+function updateBudgetSummary(form) {
+  const summary = form?.querySelector('[data-budget-summary]');
+  const table = form?.querySelector('[data-shopping-table]');
+  if (!summary || !table) return;
+  const planned = [...table.querySelectorAll('.shop-estimated')].reduce((sum, input) => sum + money(input.value), 0);
+  const total = money(form.elements.budget_estimate?.value);
+  const spent = money(form.elements.budget_spent?.value);
+  const remaining = Math.max(0, total - planned);
+  summary.innerHTML = `<span><strong>${euro(total)}</strong><small>orçamento</small></span><span><strong>${euro(planned)}</strong><small>planeado em compras</small></span><span><strong>${euro(spent)}</strong><small>já gasto</small></span><span><strong>${euro(remaining)}</strong><small>por distribuir</small></span>`;
+}
+
+function renderShoppingTable(form, purchases) {
+  let tableWrap = form.querySelector('[data-shopping-table-wrap]');
+  if (!tableWrap) {
+    tableWrap = document.createElement('section');
+    tableWrap.className = 'shopping-table-wrap';
+    tableWrap.dataset.shoppingTableWrap = 'true';
+    const textareaLabel = form.elements.shopping_list?.closest('label');
+    textareaLabel?.insertAdjacentElement('beforebegin', tableWrap);
+  }
+  tableWrap.innerHTML = `<div class="budget-summary" data-budget-summary></div>
+    <div class="shopping-table-scroll">
+      <table class="shopping-table" data-shopping-table>
+        <thead><tr><th>Compra</th><th>Quantidade</th><th>Onde</th><th>Valor</th><th>Comprado</th><th></th></tr></thead>
+        <tbody>${(purchases.length ? purchases : [{}]).map(rowHtml).join('')}</tbody>
+      </table>
+    </div>
+    <button type="button" class="text-btn" data-add-shopping-row>Adicionar compra</button>`;
+  updateBudgetSummary(form);
+}
+
+function injectBudgetAgent(panel) {
+  if (!panel) return;
+  const form = panel.querySelector('#phase-budget-form');
+  if (!form) return;
+
+  const textarea = form.elements.shopping_list;
+  if (textarea) {
+    const textareaLabel = textarea.closest('label');
+    if (textareaLabel) textareaLabel.classList.add('is-hidden-shopping-source');
+  }
+
+  if (!form.querySelector('[data-budget-agent]')) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'text-btn budget-agent-btn';
+    button.dataset.budgetAgent = 'true';
+    button.textContent = 'Gerar plano de compras com orçamento';
+    const hint = document.createElement('p');
+    hint.className = 'muted budget-agent-hint';
+    hint.textContent = 'Escreve um orçamento em euros. O sistema distribui esse valor por compras essenciais, margem e prioridades.';
+    form.insertBefore(hint, form.firstChild);
+    form.insertBefore(button, hint.nextSibling);
+  }
+
+  if (!form.querySelector('[data-shopping-table-wrap]')) {
+    renderShoppingTable(form, readTextareaPurchases(textarea));
+  }
+  updateBudgetSummary(form);
+}
+
+function buildBudgetPurchases(event, total) {
   const template = budgetTemplates[eventTypeKey(event)] || budgetTemplates.ocasiao;
-  const lines = splitBudget(total || 0, template);
-  return lines.map((item) => `${item.name} | ${item.quantity} | ${item.store} | ${item.estimated.toFixed(2)} |`).join('\n');
+  return splitBudget(total || 0, template);
 }
 
 async function handleBudgetAgent(button) {
@@ -186,7 +281,7 @@ async function handleBudgetAgent(button) {
   if (!form || !eventId) return;
   const total = money(form.elements.budget_estimate?.value);
   if (!total) {
-    window.alert('Primeiro escreve o orçamento previsto. Ex.: 150');
+    window.alert('Primeiro escreve o orçamento previsto em euros. Ex.: 150');
     form.elements.budget_estimate?.focus();
     return;
   }
@@ -196,7 +291,8 @@ async function handleBudgetAgent(button) {
   button.textContent = 'A gerar…';
   try {
     const event = await readEvent(eventId);
-    form.elements.shopping_list.value = buildBudgetLines(event, total);
+    renderShoppingTable(form, buildBudgetPurchases(event, total));
+    syncShoppingTextarea(form);
   } catch (error) {
     window.alert(error?.message || 'Não consegui gerar o plano de compras.');
   } finally {
@@ -242,7 +338,7 @@ async function completeTodayAction(li) {
 function installStyles() {
   if (document.getElementById('phase-06-agent-styles')) return;
   document.head.insertAdjacentHTML('beforeend', `<style id="phase-06-agent-styles">
-    .budget-agent-btn{margin:0 0 8px}.budget-agent-hint{margin:0 0 8px}.action-list li,.action-list button{cursor:pointer}.action-list li.is-saving{opacity:.55}.action-list li.is-done{opacity:.55;text-decoration:line-through}
+    .budget-agent-btn{width:100%;margin:0 0 10px}.budget-agent-hint{margin:0 0 8px}.is-hidden-shopping-source{display:none!important}.budget-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0}.budget-summary span{border:1px solid var(--line);background:rgba(255,255,255,.74);padding:9px}.budget-summary strong{display:block}.budget-summary small{color:var(--soft-ink);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em}.shopping-table-scroll{overflow:auto;border:1px solid var(--line);background:rgba(255,255,255,.62)}.shopping-table{width:100%;border-collapse:collapse;min-width:760px}.shopping-table th{font-size:.76rem;text-transform:uppercase;letter-spacing:.05em;color:var(--soft-ink);text-align:left;background:#f7efe5}.shopping-table th,.shopping-table td{border-bottom:1px solid var(--line);padding:7px}.shopping-table input{width:100%;border:1px solid #d8c8b4;background:#fffaf4;padding:8px;font:inherit}.euro-input{display:flex;align-items:center;gap:6px}.euro-input span{font-weight:700;color:var(--brown)}.shop-bought-cell{text-align:center}.shop-bought-cell input{width:auto}.mini-danger{padding:6px 9px!important;color:#8c463b!important}.action-list li,.action-list button{cursor:pointer}.action-list li.is-saving{opacity:.55}.action-list li.is-done{opacity:.55;text-decoration:line-through}@media(max-width:900px){.budget-summary{grid-template-columns:1fr 1fr}}
   </style>`);
 }
 
@@ -260,6 +356,19 @@ function boot() {
         applySmartPrepareDefault(event.target.value, prepare, recurrence);
       }, 0);
     }
+    if (event.target.closest('[data-shopping-table]') || event.target.matches('input[name="budget_estimate"], input[name="budget_spent"]')) {
+      syncShoppingTextarea(event.target.closest('form'));
+    }
+  }, true);
+
+  document.addEventListener('input', (event) => {
+    if (event.target.closest('[data-shopping-table]') || event.target.matches('input[name="budget_estimate"], input[name="budget_spent"]')) {
+      syncShoppingTextarea(event.target.closest('form'));
+    }
+  }, true);
+
+  document.addEventListener('submit', (event) => {
+    if (event.target?.id === 'phase-budget-form') syncShoppingTextarea(event.target);
   }, true);
 
   document.addEventListener('click', (event) => {
@@ -268,6 +377,24 @@ function boot() {
       event.preventDefault();
       event.stopPropagation();
       handleBudgetAgent(budgetAgent);
+      return;
+    }
+
+    const addRow = event.target.closest('[data-add-shopping-row]');
+    if (addRow) {
+      event.preventDefault();
+      const form = addRow.closest('form');
+      form?.querySelector('[data-shopping-table] tbody')?.insertAdjacentHTML('beforeend', rowHtml({}));
+      syncShoppingTextarea(form);
+      return;
+    }
+
+    const removeRow = event.target.closest('[data-remove-shopping-row]');
+    if (removeRow) {
+      event.preventDefault();
+      const form = removeRow.closest('form');
+      removeRow.closest('tr')?.remove();
+      syncShoppingTextarea(form);
       return;
     }
 
