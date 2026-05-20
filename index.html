@@ -14,10 +14,8 @@
         <h1>Vida de Mãe Leve</h1>
       </div>
       <nav class="menu" id="menu">
-        <button class="menu-item is-active" data-page="dashboard">Dashboard</button>
-        <button class="menu-item" data-page="calendar">Calendário</button>
-        <button class="menu-item" data-page="week">Semana</button>
-        <button class="menu-item" data-page="today">Hoje</button>
+        <button class="menu-item is-active" data-page="dashboard">Entrada</button>
+        <button class="menu-item" data-page="planning">Planeamento</button>
       </nav>
       <div class="sidebar-footer">
         <p id="auth-email" class="muted"></p>
@@ -30,7 +28,7 @@
         <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Abrir menu">Menu</button>
         <div>
           <p class="topbar-kicker" id="topbar-date"></p>
-          <h2 id="page-title">Dashboard</h2>
+          <h2 id="page-title">Entrada</h2>
         </div>
       </header>
 
@@ -47,70 +45,134 @@
         </div>
       </section>
 
-      <section class="page" data-page="calendar">
-        <div class="calendar-header">
-          <button id="prev-month" class="text-btn" type="button">Anterior</button>
-          <h3 id="calendar-label"></h3>
-          <button id="next-month" class="text-btn" type="button">Seguinte</button>
+      <section class="page" data-page="planning">
+        <div class="editorial-block compact planning-intro">
+          <div>
+            <p class="eyebrow">Planeamento</p>
+            <h3>Do ano ao dia de hoje, sem perderes o fio.</h3>
+            <p>Começa pela visão geral, aproxima para o mês, organiza a semana e executa apenas o que cabe no teu dia.</p>
+          </div>
+          <button id="quick-event-btn" class="primary-btn" type="button">Novo evento</button>
         </div>
-        <div id="calendar-grid" class="calendar-grid"></div>
 
-        <div class="split">
-          <section>
-            <h4>Novo evento</h4>
-            <form id="event-form" class="form">
-              <label>Data e hora de início
-                <input name="starts_at" type="datetime-local" required />
-              </label>
-              <label>Data e hora de fim (opcional)
-                <input name="ends_at" type="datetime-local" />
-              </label>
-              <label>Título
-                <input name="title" type="text" maxlength="120" required />
-              </label>
-              <label>Área
-                <input name="area" type="text" maxlength="80" placeholder="Casa, Família, Projeto..." />
-              </label>
-              <label>Cor
-                <select name="color">
-                  <option value="areia">Areia</option>
-                  <option value="castanho">Castanho</option>
-                  <option value="grafite">Grafite</option>
-                </select>
-              </label>
-              <label>Notas
-                <textarea name="notes" rows="3" maxlength="1200"></textarea>
-              </label>
-              <label class="check-line"><input name="all_day" type="checkbox" /> Evento de dia inteiro</label>
-              <button type="submit" class="primary-btn">Guardar evento</button>
-            </form>
+        <div class="planning-tabs" role="tablist" aria-label="Vistas de planeamento">
+          <button class="planning-tab is-active" type="button" data-planning-view="year">Ano</button>
+          <button class="planning-tab" type="button" data-planning-view="month">Mês</button>
+          <button class="planning-tab" type="button" data-planning-view="week">Semana</button>
+          <button class="planning-tab" type="button" data-planning-view="today">Hoje</button>
+        </div>
+
+        <div class="planning-view is-active" data-planning-view="year">
+          <div class="calendar-header">
+            <button id="prev-year" class="text-btn" type="button">Ano anterior</button>
+            <h3 id="year-label"></h3>
+            <button id="next-year" class="text-btn" type="button">Ano seguinte</button>
+          </div>
+          <div id="year-grid" class="year-grid"></div>
+        </div>
+
+        <div class="planning-view" data-planning-view="month">
+          <div class="calendar-header">
+            <button id="prev-month" class="text-btn" type="button">Mês anterior</button>
+            <h3 id="calendar-label"></h3>
+            <button id="next-month" class="text-btn" type="button">Mês seguinte</button>
+          </div>
+          <div class="weekday-row" aria-hidden="true">
+            <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+          </div>
+          <div id="calendar-grid" class="calendar-grid"></div>
+          <section class="selected-day-panel">
+            <div>
+              <h4>Eventos do dia selecionado</h4>
+              <p id="selected-day-label" class="muted"></p>
+            </div>
+            <button id="selected-day-event-btn" class="text-btn" type="button">Criar neste dia</button>
           </section>
-          <section>
-            <h4>Eventos do dia selecionado</h4>
-            <p id="selected-day-label" class="muted"></p>
-            <div id="day-events" class="list"></div>
-          </section>
+          <div id="day-events" class="list"></div>
         </div>
-      </section>
 
-      <section class="page" data-page="week">
-        <div class="calendar-header">
-          <button id="prev-week" class="text-btn" type="button">Semana anterior</button>
-          <h3 id="week-label"></h3>
-          <button id="next-week" class="text-btn" type="button">Semana seguinte</button>
+        <div class="planning-view" data-planning-view="week">
+          <div class="calendar-header">
+            <button id="prev-week" class="text-btn" type="button">Semana anterior</button>
+            <h3 id="week-label"></h3>
+            <button id="next-week" class="text-btn" type="button">Semana seguinte</button>
+          </div>
+          <div id="week-grid" class="week-grid"></div>
         </div>
-        <div id="week-grid" class="week-grid"></div>
-      </section>
 
-      <section class="page" data-page="today">
-        <div class="editorial-block compact">
-          <p class="eyebrow">Hoje</p>
-          <h3 id="today-label"></h3>
+        <div class="planning-view" data-planning-view="today">
+          <div class="editorial-block compact">
+            <p class="eyebrow">Hoje</p>
+            <h3 id="today-label"></h3>
+          </div>
+          <div id="today-events" class="list"></div>
         </div>
-        <div id="today-events" class="list"></div>
       </section>
     </main>
   </div>
+
+  <section id="event-modal" class="modal is-hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Novo evento</p>
+          <h3 id="event-modal-title">Criar no calendário</h3>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">×</button>
+      </div>
+
+      <form id="event-form" class="form">
+        <label>Data e hora de início
+          <input name="starts_at" type="datetime-local" required />
+        </label>
+        <label>Data e hora de fim (opcional)
+          <input name="ends_at" type="datetime-local" />
+        </label>
+        <label>Título
+          <input name="title" type="text" maxlength="120" required placeholder="Ex.: consulta, reunião, rotina da casa..." />
+        </label>
+        <label>Área
+          <select name="area" required>
+            <option value="Casa">Casa</option>
+            <option value="Família">Família</option>
+            <option value="Filhos">Filhos</option>
+            <option value="Eu">Eu</option>
+            <option value="Bem-estar">Bem-estar</option>
+            <option value="Casamento">Casamento</option>
+            <option value="Projeto / Marca">Projeto / Marca</option>
+            <option value="Papéis e burocracia">Papéis e burocracia</option>
+            <option value="Finanças">Finanças</option>
+            <option value="Rotinas">Rotinas</option>
+            <option value="Social / Comunidade">Social / Comunidade</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </label>
+        <fieldset class="color-fieldset">
+          <legend>Cor</legend>
+          <div class="color-grid">
+            <label class="color-chip"><input type="radio" name="color" value="areia" checked /><span class="color-dot-visual" style="--event-color:#a18464"></span>Areia</label>
+            <label class="color-chip"><input type="radio" name="color" value="creme" /><span class="color-dot-visual" style="--event-color:#eadfce"></span>Creme</label>
+            <label class="color-chip"><input type="radio" name="color" value="caramelo" /><span class="color-dot-visual" style="--event-color:#c18954"></span>Caramelo</label>
+            <label class="color-chip"><input type="radio" name="color" value="castanho" /><span class="color-dot-visual" style="--event-color:#6a4b33"></span>Castanho</label>
+            <label class="color-chip"><input type="radio" name="color" value="terracota" /><span class="color-dot-visual" style="--event-color:#b96f52"></span>Terracota</label>
+            <label class="color-chip"><input type="radio" name="color" value="verde-oliva" /><span class="color-dot-visual" style="--event-color:#7d835b"></span>Verde oliva</label>
+            <label class="color-chip"><input type="radio" name="color" value="salvia" /><span class="color-dot-visual" style="--event-color:#9ead8f"></span>Sálvia</label>
+            <label class="color-chip"><input type="radio" name="color" value="azul-nevoa" /><span class="color-dot-visual" style="--event-color:#8fa6b8"></span>Azul névoa</label>
+            <label class="color-chip"><input type="radio" name="color" value="rosa-antigo" /><span class="color-dot-visual" style="--event-color:#c99aa3"></span>Rosa antigo</label>
+            <label class="color-chip"><input type="radio" name="color" value="lavanda" /><span class="color-dot-visual" style="--event-color:#b3a2c7"></span>Lavanda</label>
+            <label class="color-chip"><input type="radio" name="color" value="grafite" /><span class="color-dot-visual" style="--event-color:#3f3f42"></span>Grafite</label>
+          </div>
+        </fieldset>
+        <label>Notas
+          <textarea name="notes" rows="3" maxlength="1200" placeholder="Detalhes úteis, lembretes ou contexto."></textarea>
+        </label>
+        <label class="check-line"><input name="all_day" type="checkbox" /> Evento de dia inteiro</label>
+        <p id="event-feedback" class="form-feedback" aria-live="polite"></p>
+        <button id="event-submit-btn" type="submit" class="primary-btn">Guardar evento</button>
+      </form>
+    </div>
+  </section>
 
   <section id="auth-screen" class="auth-screen">
     <div class="auth-panel">
