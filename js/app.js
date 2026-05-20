@@ -129,6 +129,11 @@ function endOfWeek(date) {
 function sameDay(a, b) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
+function setMonthSafely(offset) {
+  const next = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() + offset, 1);
+  state.currentDate = next;
+  state.selectedDate = new Date(next);
+}
 function eventColor(name) { return eventColors[name] || '#d9c7a6'; }
 function readableTime(dateValue) { return new Date(dateValue).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }); }
 function escapeHtml(value) {
@@ -166,6 +171,20 @@ async function refreshEventsForCurrentScope() {
   state.events = await listEventsByRange(rangeStart.toISOString(), new Date(rangeEnd.getTime() + 86400000).toISOString());
 }
 
+async function navigateCalendar(changeFn) {
+  changeFn();
+  render();
+  try {
+    await refreshEventsForCurrentScope();
+    render();
+  } catch (error) {
+    console.error(error);
+    if (el.dayEvents) {
+      el.dayEvents.innerHTML = `<p class="muted">Não consegui atualizar os eventos agora. ${escapeHtml(error?.message || '')}</p>`;
+    }
+  }
+}
+
 function renderDashboard() {
   const now = new Date();
   const thisWeekEnd = endOfWeek(now);
@@ -193,13 +212,15 @@ function renderYear() {
     return `<button class="year-card" type="button" data-month="${month.getMonth()}"><span>${month.toLocaleDateString('pt-PT', { month: 'long' })}</span><strong>${count}</strong><small>${count === 1 ? 'evento' : 'eventos'}</small></button>`;
   }).join('');
   [...el.yearGrid.querySelectorAll('.year-card')].forEach((card) => card.addEventListener('click', () => {
-    state.currentDate.setMonth(Number(card.dataset.month));
+    state.currentDate = new Date(year, Number(card.dataset.month), 1);
+    state.selectedDate = new Date(state.currentDate);
     setPlanningView('month');
   }));
 }
 
 function renderCalendar() {
   const base = state.currentDate;
+  const today = new Date();
   el.calendarLabel.textContent = base.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
   const first = new Date(base.getFullYear(), base.getMonth(), 1);
   const firstWeekday = (first.getDay() + 6) % 7;
@@ -213,8 +234,10 @@ function renderCalendar() {
   }
   el.calendarGrid.innerHTML = cells.map((d) => {
     const inMonth = d.getMonth() === base.getMonth();
+    const isToday = sameDay(d, today);
+    const isSelected = sameDay(d, state.selectedDate);
     const dayEvents = state.events.filter((e) => sameDay(new Date(e.starts_at), d));
-    return `<button class="cal-cell ${inMonth ? '' : 'is-out'}" type="button" data-date="${d.toISOString()}"><div class="cal-day">${d.getDate()}</div><div class="cal-events">${dayEvents.slice(0, 3).map((ev) => eventBlock(ev, 'month')).join('')}</div></button>`;
+    return `<button class="cal-cell ${inMonth ? '' : 'is-out'} ${isToday ? 'is-today' : ''} ${isSelected ? 'is-selected' : ''}" type="button" data-date="${d.toISOString()}" aria-label="${fmtDate(d)}"><div class="cal-day">${d.getDate()}</div><div class="cal-events">${dayEvents.slice(0, 3).map((ev) => eventBlock(ev, 'month')).join('')}</div></button>`;
   }).join('');
   [...el.calendarGrid.querySelectorAll('.cal-cell')].forEach((btn) => btn.addEventListener('click', () => {
     const clickedDate = new Date(btn.dataset.date);
@@ -244,7 +267,7 @@ function renderWeek() {
   });
   el.weekGrid.innerHTML = days.map((day) => {
     const events = state.events.filter((e) => sameDay(new Date(e.starts_at), day));
-    return `<article class="week-day"><h5>${day.toLocaleDateString('pt-PT', { weekday: 'long', day: '2-digit' })}</h5>${events.map((e) => eventBlock(e, 'week')).join('') || '<p class="muted">Sem eventos</p>'}</article>`;
+    return `<article class="week-day ${sameDay(day, new Date()) ? 'is-today' : ''}"><h5>${day.toLocaleDateString('pt-PT', { weekday: 'long', day: '2-digit' })}</h5>${events.map((e) => eventBlock(e, 'week')).join('') || '<p class="muted">Sem eventos</p>'}</article>`;
   }).join('');
 }
 
@@ -358,12 +381,28 @@ async function boot() {
   document.querySelectorAll('[data-close-modal]').forEach((node) => node.addEventListener('click', closeEventModal));
   el.eventForm.elements.area.addEventListener('change', syncAreaColor);
 
-  document.getElementById('prev-year').addEventListener('click', async () => { state.currentDate.setFullYear(state.currentDate.getFullYear() - 1); await refreshEventsForCurrentScope(); render(); });
-  document.getElementById('next-year').addEventListener('click', async () => { state.currentDate.setFullYear(state.currentDate.getFullYear() + 1); await refreshEventsForCurrentScope(); render(); });
-  document.getElementById('prev-month').addEventListener('click', async () => { state.currentDate.setMonth(state.currentDate.getMonth() - 1); await refreshEventsForCurrentScope(); render(); });
-  document.getElementById('next-month').addEventListener('click', async () => { state.currentDate.setMonth(state.currentDate.getMonth() + 1); await refreshEventsForCurrentScope(); render(); });
-  document.getElementById('prev-week').addEventListener('click', async () => { state.currentDate.setDate(state.currentDate.getDate() - 7); await refreshEventsForCurrentScope(); render(); });
-  document.getElementById('next-week').addEventListener('click', async () => { state.currentDate.setDate(state.currentDate.getDate() + 7); await refreshEventsForCurrentScope(); render(); });
+  document.getElementById('prev-year').addEventListener('click', () => navigateCalendar(() => {
+    state.currentDate = new Date(state.currentDate.getFullYear() - 1, 0, 1);
+    state.selectedDate = new Date(state.currentDate);
+  }));
+  document.getElementById('next-year').addEventListener('click', () => navigateCalendar(() => {
+    state.currentDate = new Date(state.currentDate.getFullYear() + 1, 0, 1);
+    state.selectedDate = new Date(state.currentDate);
+  }));
+  document.getElementById('prev-month').addEventListener('click', () => navigateCalendar(() => setMonthSafely(-1)));
+  document.getElementById('next-month').addEventListener('click', () => navigateCalendar(() => setMonthSafely(1)));
+  document.getElementById('prev-week').addEventListener('click', () => navigateCalendar(() => {
+    const next = new Date(state.currentDate);
+    next.setDate(next.getDate() - 7);
+    state.currentDate = next;
+    state.selectedDate = new Date(next);
+  }));
+  document.getElementById('next-week').addEventListener('click', () => navigateCalendar(() => {
+    const next = new Date(state.currentDate);
+    next.setDate(next.getDate() + 7);
+    state.currentDate = next;
+    state.selectedDate = new Date(next);
+  }));
 
   el.authForm.addEventListener('submit', handleAuthSubmit);
   el.logoutBtn.addEventListener('click', async () => { await signOut(); });
