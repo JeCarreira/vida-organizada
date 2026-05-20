@@ -96,3 +96,18 @@ export async function createEvent(payload) {
   if (error) throw error;
   return true;
 }
+
+export async function updateEvent(eventId, patch) {
+  const { data, error } = await withTimeout(
+    requireClient()
+      .from('events')
+      .update(patch)
+      .eq('id', eventId)
+      .select('*')
+      .single(),
+    'atualização do evento'
+  );
+
+  if (error) throw error;
+  return data;
+}
