@@ -104,8 +104,9 @@
           <div class="editorial-block compact">
             <p class="eyebrow">Hoje</p>
             <h3 id="today-label"></h3>
+            <p>O teu painel de execução: o que acontece hoje, o que já devia estar a ser preparado e o próximo passo simples.</p>
           </div>
-          <div id="today-events" class="list"></div>
+          <div id="today-events" class="today-board"></div>
         </div>
       </section>
     </main>
@@ -130,7 +131,7 @@
           <input name="ends_at" type="datetime-local" />
         </label>
         <label>Título
-          <input name="title" type="text" maxlength="120" required placeholder="Ex.: consulta, aniversário, preparar Natal..." />
+          <input name="title" type="text" maxlength="120" required placeholder="Ex.: aniversário Matilde, preparar Natal, férias de verão..." />
         </label>
 
         <div class="form-row">
@@ -175,7 +176,7 @@
         </section>
 
         <section class="smart-planning-card">
-          <p class="eyebrow">Preparação inteligente</p>
+          <p class="eyebrow">Agente interno de preparação</p>
           <div class="form-row">
             <label>Começar a preparar
               <select name="prepare_days_before">
@@ -199,12 +200,13 @@
               </select>
             </label>
           </div>
-          <p class="muted">Ideal para aniversários, Natal, consultas, pagamentos, rotinas da casa e coisas que queres preparar com antecedência.</p>
+          <p class="muted">Escolhe o tipo e a antecedência. Depois gera uma checklist detalhada, pensada para não te esqueceres dos passos pequenos.</p>
+          <button id="generate-checklist-btn" type="button" class="text-btn">Gerar checklist sugerida</button>
         </section>
 
         <fieldset class="color-fieldset">
           <legend>Ajuste opcional da cor</legend>
-          <p class="muted color-hint">Paleta suave, feminina e editorial. Usa só se quiseres diferenciar este evento da cor natural da área.</p>
+          <p class="muted color-hint">A cor vem da área, mas podes ajustar este evento específico.</p>
           <div class="color-grid">
             <label class="color-chip"><input type="radio" name="color" value="casa" checked /><span class="color-dot-visual" style="--event-color:#d9c7a6"></span><span>Areia quente</span></label>
             <label class="color-chip"><input type="radio" name="color" value="familia" /><span class="color-dot-visual" style="--event-color:#c7d3b5"></span><span>Sálvia familiar</span></label>
@@ -222,7 +224,7 @@
         </fieldset>
 
         <label>Checklist de ações
-          <textarea name="checklist_text" rows="5" maxlength="1500" placeholder="Uma ação por linha. Ex.:&#10;Comprar presente&#10;Confirmar horário&#10;Preparar roupa das crianças"></textarea>
+          <textarea name="checklist_text" rows="8" maxlength="4000" placeholder="Uma ação por linha. Podes escrever à mão ou usar o botão Gerar checklist sugerida."></textarea>
         </label>
         <label>Notas
           <textarea name="notes" rows="3" maxlength="1200" placeholder="Contexto, ideias, compras, orçamento, pessoas envolvidas..."></textarea>
@@ -231,6 +233,21 @@
         <p id="event-feedback" class="form-feedback" aria-live="polite"></p>
         <button id="event-submit-btn" type="submit" class="primary-btn">Guardar evento</button>
       </form>
+    </div>
+  </section>
+
+  <section id="detail-modal" class="modal is-hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-detail></div>
+    <div class="modal-panel detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow" id="detail-type">Evento</p>
+          <h3 id="detail-title">Detalhe do evento</h3>
+        </div>
+        <button class="icon-btn" type="button" data-close-detail aria-label="Fechar">×</button>
+      </div>
+      <div id="detail-content"></div>
+      <p id="detail-feedback" class="form-feedback" aria-live="polite"></p>
     </div>
   </section>
 
@@ -257,5 +274,6 @@
 
   <script src="./public-config.js"></script>
   <script type="module" src="./js/app.js"></script>
+  <script type="module" src="./js/interaction-patch.js"></script>
 </body>
 </html>
