@@ -2,6 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const supabaseUrl = window.__ENV__?.SUPABASE_URL || '';
 const supabaseAnonKey = window.__ENV__?.SUPABASE_ANON_KEY || '';
+const REQUEST_TIMEOUT_MS = 12000;
 
 export const hasSupabaseConfig = Boolean(supabaseUrl && supabaseAnonKey);
 
@@ -16,6 +17,21 @@ function requireClient() {
     throw new Error('Configuração Supabase incompleta. Verifica o ficheiro public-config.js.');
   }
   return supabase;
+}
+
+async function withTimeout(promise, label = 'pedido ao Supabase') {
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      reject(new Error(`Tempo esgotado no ${label}. Verifica a ligação, RLS e a tabela events no Supabase.`));
+    }, REQUEST_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
 }
 
 export function formatAuthError(error) {
@@ -35,45 +51,47 @@ export function formatAuthError(error) {
 }
 
 export async function getSession() {
-  const { data, error } = await requireClient().auth.getSession();
+  const { data, error } = await withTimeout(requireClient().auth.getSession(), 'arranque da sessão');
   if (error) throw error;
   return data.session;
 }
 
 export async function signUp(email, password) {
-  const { error } = await requireClient().auth.signUp({ email, password });
+  const { error } = await withTimeout(requireClient().auth.signUp({ email, password }), 'criação de conta');
   if (error) throw error;
 }
 
 export async function signIn(email, password) {
-  const { error } = await requireClient().auth.signInWithPassword({ email, password });
+  const { error } = await withTimeout(requireClient().auth.signInWithPassword({ email, password }), 'login');
   if (error) throw error;
 }
 
 export async function signOut() {
-  const { error } = await requireClient().auth.signOut();
+  const { error } = await withTimeout(requireClient().auth.signOut(), 'logout');
   if (error) throw error;
 }
 
 export async function listEventsByRange(startIso, endIso) {
-  const { data, error } = await requireClient()
-    .from('events')
-    .select('*')
-    .gte('starts_at', startIso)
-    .lt('starts_at', endIso)
-    .order('starts_at', { ascending: true });
+  const { data, error } = await withTimeout(
+    requireClient()
+      .from('events')
+      .select('*')
+      .gte('starts_at', startIso)
+      .lt('starts_at', endIso)
+      .order('starts_at', { ascending: true }),
+    'leitura de eventos'
+  );
 
   if (error) throw error;
   return data || [];
 }
 
 export async function createEvent(payload) {
-  const { data, error } = await requireClient()
-    .from('events')
-    .insert(payload)
-    .select('*')
-    .single();
+  const { error } = await withTimeout(
+    requireClient().from('events').insert(payload),
+    'gravação do evento'
+  );
 
   if (error) throw error;
-  return data;
+  return true;
 }
