@@ -23,10 +23,15 @@ create table if not exists public.events (
   recurrence text not null default 'none',
   checklist jsonb not null default '[]'::jsonb,
   status text not null default 'por_preparar',
+  budget_estimate numeric(10,2) not null default 0,
+  budget_spent numeric(10,2) not null default 0,
+  budget_currency text not null default 'EUR',
+  shopping_list jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint events_end_after_start check (ends_at is null or ends_at >= starts_at),
-  constraint events_prepare_days_non_negative check (prepare_days_before >= 0)
+  constraint events_prepare_days_non_negative check (prepare_days_before >= 0),
+  constraint events_budget_non_negative check (budget_estimate >= 0 and budget_spent >= 0)
 );
 
 -- Fase 0.3: campos aditivos para repositórios que já tinham a tabela events criada.
@@ -36,8 +41,17 @@ alter table public.events add column if not exists recurrence text not null defa
 alter table public.events add column if not exists checklist jsonb not null default '[]'::jsonb;
 alter table public.events add column if not exists status text not null default 'por_preparar';
 
+-- Fase 0.6: compras e orçamento por evento.
+alter table public.events add column if not exists budget_estimate numeric(10,2) not null default 0;
+alter table public.events add column if not exists budget_spent numeric(10,2) not null default 0;
+alter table public.events add column if not exists budget_currency text not null default 'EUR';
+alter table public.events add column if not exists shopping_list jsonb not null default '[]'::jsonb;
+
 alter table public.events drop constraint if exists events_prepare_days_non_negative;
 alter table public.events add constraint events_prepare_days_non_negative check (prepare_days_before >= 0);
+
+alter table public.events drop constraint if exists events_budget_non_negative;
+alter table public.events add constraint events_budget_non_negative check (budget_estimate >= 0 and budget_spent >= 0);
 
 create index if not exists events_user_id_starts_at_idx on public.events (user_id, starts_at);
 create index if not exists events_user_id_event_type_idx on public.events (user_id, event_type);
