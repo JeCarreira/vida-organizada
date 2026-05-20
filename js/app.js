@@ -54,6 +54,22 @@ const eventColors = {
   grafite: '#77706a',
 };
 
+const recurrenceLabels = {
+  none: '',
+  daily: 'diário',
+  weekly: 'semanal',
+  monthly: 'mensal',
+  yearly: 'anual',
+};
+
+const recurrenceOccurrences = {
+  none: 1,
+  daily: 30,
+  weekly: 16,
+  monthly: 12,
+  yearly: 8,
+};
+
 const state = {
   page: 'dashboard',
   planningView: 'year',
@@ -139,12 +155,67 @@ function readableTime(dateValue) { return new Date(dateValue).toLocaleTimeString
 function escapeHtml(value) {
   return String(value || '').replace(/[&<>"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[char]));
 }
+function parseChecklist(value) {
+  return String(value || '')
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((text) => ({ text, done: false }));
+}
+function checklistProgress(event) {
+  const items = Array.isArray(event.checklist) ? event.checklist : [];
+  if (!items.length) return '';
+  const done = items.filter((item) => item.done).length;
+  return `${done}/${items.length}`;
+}
+function preparationLabel(event) {
+  const days = Number(event.prepare_days_before || 0);
+  if (!days) return '';
+  return `preparar ${days}d antes`;
+}
+function eventMeta(event) {
+  const parts = [];
+  if (event.event_type && event.event_type !== 'Normal') parts.push(event.event_type);
+  const prep = preparationLabel(event);
+  if (prep) parts.push(prep);
+  const progress = checklistProgress(event);
+  if (progress) parts.push(`checklist ${progress}`);
+  if (event.recurrence && event.recurrence !== 'none') parts.push(recurrenceLabels[event.recurrence]);
+  return parts.join(' · ');
+}
 function eventBlock(event, variant = 'month') {
   const color = eventColor(event.color);
+  const meta = eventMeta(event);
   return `<article class="event-card event-card--${variant}" style="--event-color:${color}; background:${color};">
     <strong>${escapeHtml(event.title)}</strong>
-    <span>${event.all_day ? 'Dia inteiro' : readableTime(event.starts_at)}</span>
+    <span>${event.all_day ? 'Dia inteiro' : readableTime(event.starts_at)}${meta ? ` · ${escapeHtml(meta)}` : ''}</span>
   </article>`;
+}
+function addRecurrence(date, recurrence, index) {
+  const next = new Date(date);
+  if (recurrence === 'daily') next.setDate(next.getDate() + index);
+  if (recurrence === 'weekly') next.setDate(next.getDate() + (index * 7));
+  if (recurrence === 'monthly') next.setMonth(next.getMonth() + index);
+  if (recurrence === 'yearly') next.setFullYear(next.getFullYear() + index);
+  return next;
+}
+function buildRecurringPayload(basePayload, recurrence) {
+  const total = recurrenceOccurrences[recurrence] || 1;
+  if (total === 1) return [basePayload];
+
+  const start = new Date(basePayload.starts_at);
+  const end = basePayload.ends_at ? new Date(basePayload.ends_at) : null;
+  const duration = end ? end.getTime() - start.getTime() : null;
+
+  return Array.from({ length: total }, (_, index) => {
+    const startsAt = addRecurrence(start, recurrence, index);
+    const endsAt = duration === null ? null : new Date(startsAt.getTime() + duration);
+    return {
+      ...basePayload,
+      starts_at: startsAt.toISOString(),
+      ends_at: endsAt ? endsAt.toISOString() : null,
+    };
+  });
 }
 
 function route(page) {
@@ -187,16 +258,26 @@ async function navigateCalendar(changeFn) {
 
 function renderDashboard() {
   const now = new Date();
+  const prepWindowEnd = new Date(now);
+  prepWindowEnd.setDate(now.getDate() + 30);
   const thisWeekEnd = endOfWeek(now);
   const weekEvents = state.events.filter((e) => new Date(e.starts_at) >= now && new Date(e.starts_at) <= thisWeekEnd);
   const monthEvents = state.events.filter((e) => new Date(e.starts_at).getMonth() === now.getMonth() && new Date(e.starts_at).getFullYear() === now.getFullYear());
+  const prepEvents = state.events.filter((e) => {
+    const days = Number(e.prepare_days_before || 0);
+    if (!days) return false;
+    const eventDate = new Date(e.starts_at);
+    const prepStart = new Date(eventDate);
+    prepStart.setDate(eventDate.getDate() - days);
+    return prepStart <= prepWindowEnd && eventDate >= now;
+  });
   el.stats.innerHTML = `
     <div class="stat"><div class="muted">Este mês</div><strong>${monthEvents.length} eventos</strong></div>
     <div class="stat"><div class="muted">Esta semana</div><strong>${weekEvents.length} eventos</strong></div>
-    <div class="stat"><div class="muted">Hoje</div><strong>${state.events.filter((e) => sameDay(new Date(e.starts_at), now)).length} eventos</strong></div>`;
+    <div class="stat"><div class="muted">Preparar</div><strong>${prepEvents.length} planos</strong></div>`;
   const upcoming = [...state.events].filter((e) => new Date(e.starts_at) >= now).slice(0, 6);
   el.upcoming.innerHTML = upcoming.length
-    ? upcoming.map((e) => `<div class="list-item event-list-item" style="--event-color:${eventColor(e.color)}"><span>${escapeHtml(e.title)}</span><span class="muted">${fmtDate(new Date(e.starts_at))}</span></div>`).join('')
+    ? upcoming.map((e) => `<div class="list-item event-list-item" style="--event-color:${eventColor(e.color)}"><div><strong>${escapeHtml(e.title)}</strong><div class="muted">${escapeHtml(eventMeta(e) || e.area || '')}</div></div><span class="muted">${fmtDate(new Date(e.starts_at))}</span></div>`).join('')
     : '<p class="muted">Sem eventos próximos.</p>';
 }
 
@@ -248,11 +329,17 @@ function renderCalendar() {
   renderDayEvents();
 }
 
+function checklistHtml(event) {
+  const items = Array.isArray(event.checklist) ? event.checklist : [];
+  if (!items.length) return '';
+  return `<ul class="event-checklist">${items.slice(0, 6).map((item) => `<li><span class="fake-check">${item.done ? '✓' : ''}</span>${escapeHtml(item.text)}</li>`).join('')}</ul>`;
+}
+
 function renderDayEvents() {
   el.selectedDayLabel.textContent = fmtDate(state.selectedDate);
   const events = state.events.filter((e) => sameDay(new Date(e.starts_at), state.selectedDate));
   el.dayEvents.innerHTML = events.length
-    ? events.map((e) => `<div class="list-item event-list-item" style="--event-color:${eventColor(e.color)}"><div><strong>${escapeHtml(e.title)}</strong><div class="muted">${escapeHtml(e.area || 'Sem área')}</div></div><div class="muted">${e.all_day ? 'Dia inteiro' : readableTime(e.starts_at)}</div></div>`).join('')
+    ? events.map((e) => `<article class="day-plan-card" style="--event-color:${eventColor(e.color)}"><div class="day-plan-head"><div><p class="eyebrow">${escapeHtml(e.event_type || 'Evento')}</p><strong>${escapeHtml(e.title)}</strong><div class="muted">${escapeHtml(e.area || 'Sem área')}</div></div><div class="muted">${e.all_day ? 'Dia inteiro' : readableTime(e.starts_at)}</div></div>${eventMeta(e) ? `<p class="plan-meta">${escapeHtml(eventMeta(e))}</p>` : ''}${checklistHtml(e)}${e.notes ? `<p class="muted">${escapeHtml(e.notes)}</p>` : ''}</article>`).join('')
     : '<p class="muted">Sem eventos para este dia.</p>';
 }
 
@@ -276,7 +363,7 @@ function renderToday() {
   el.todayLabel.textContent = fmtDate(today);
   const events = state.events.filter((e) => sameDay(new Date(e.starts_at), today));
   el.todayEvents.innerHTML = events.length
-    ? events.map((e) => `<div class="list-item event-list-item" style="--event-color:${eventColor(e.color)}"><span>${escapeHtml(e.title)}</span><span class="muted">${e.all_day ? 'Dia inteiro' : readableTime(e.starts_at)}</span></div>`).join('')
+    ? events.map((e) => `<article class="day-plan-card" style="--event-color:${eventColor(e.color)}"><div class="day-plan-head"><div><p class="eyebrow">${escapeHtml(e.event_type || 'Evento')}</p><strong>${escapeHtml(e.title)}</strong></div><span class="muted">${e.all_day ? 'Dia inteiro' : readableTime(e.starts_at)}</span></div>${eventMeta(e) ? `<p class="plan-meta">${escapeHtml(eventMeta(e))}</p>` : ''}${checklistHtml(e)}</article>`).join('')
     : '<p class="muted">Sem eventos para hoje.</p>';
 }
 
@@ -297,6 +384,20 @@ function syncAreaColor() {
   if (el.areaColorDot) el.areaColorDot.style.setProperty('--event-color', palette.hex);
   if (el.areaColorName) el.areaColorName.textContent = palette.name;
   if (el.areaColorNote) el.areaColorNote.textContent = `${area} fica com ${palette.name.toLowerCase()} por defeito, para manter o calendário harmonioso.`;
+}
+
+function syncSmartDefaults() {
+  const type = el.eventForm.elements.event_type?.value || 'Normal';
+  const prepare = el.eventForm.elements.prepare_days_before;
+  const recurrence = el.eventForm.elements.recurrence;
+  if (!prepare || !recurrence) return;
+
+  if (type === 'Aniversário') { prepare.value = '14'; recurrence.value = 'yearly'; }
+  if (type === 'Natal') { prepare.value = '90'; recurrence.value = 'yearly'; }
+  if (type === 'Ocasião especial') { prepare.value = '30'; }
+  if (type === 'Viagem') { prepare.value = '30'; }
+  if (type === 'Consulta') { prepare.value = '7'; }
+  if (type === 'Rotina') { prepare.value = '7'; recurrence.value = 'weekly'; }
 }
 
 function openEventModal(date = state.selectedDate) {
@@ -348,22 +449,30 @@ async function handleAddEvent(ev) {
     const fd = new FormData(el.eventForm);
     const startsAt = String(fd.get('starts_at'));
     const endsAtRaw = String(fd.get('ends_at'));
-    const payload = {
+    const recurrence = String(fd.get('recurrence') || 'none');
+    const checklist = parseChecklist(fd.get('checklist_text'));
+    const basePayload = {
       user_id: state.session.user.id,
       title: String(fd.get('title')).trim(),
+      event_type: String(fd.get('event_type') || 'Normal'),
       area: String(fd.get('area')).trim() || null,
       notes: String(fd.get('notes')).trim() || null,
       color: String(fd.get('color')),
       starts_at: new Date(startsAt).toISOString(),
       ends_at: endsAtRaw ? new Date(endsAtRaw).toISOString() : null,
       all_day: fd.get('all_day') === 'on',
+      prepare_days_before: Number(fd.get('prepare_days_before') || 0),
+      recurrence,
+      checklist,
+      status: Number(fd.get('prepare_days_before') || 0) > 0 ? 'por_preparar' : 'normal',
     };
 
+    const payload = buildRecurringPayload(basePayload, recurrence);
     await createEvent(payload);
-    el.eventFeedback.textContent = 'Evento guardado.';
+    el.eventFeedback.textContent = payload.length > 1 ? `${payload.length} eventos guardados.` : 'Evento guardado.';
     await refreshEventsForCurrentScope();
     render();
-    setTimeout(closeEventModal, 450);
+    setTimeout(closeEventModal, 650);
   } catch (error) {
     el.eventFeedback.textContent = error?.message ? `Erro: ${error.message}` : 'Não foi possível guardar o evento.';
   } finally {
@@ -380,6 +489,7 @@ async function boot() {
   el.selectedDayEventBtn.addEventListener('click', () => openEventModal(state.selectedDate));
   document.querySelectorAll('[data-close-modal]').forEach((node) => node.addEventListener('click', closeEventModal));
   el.eventForm.elements.area.addEventListener('change', syncAreaColor);
+  el.eventForm.elements.event_type.addEventListener('change', syncSmartDefaults);
 
   document.getElementById('prev-year').addEventListener('click', () => navigateCalendar(() => {
     state.currentDate = new Date(state.currentDate.getFullYear() - 1, 0, 1);
