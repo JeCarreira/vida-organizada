@@ -87,9 +87,10 @@ export async function listEventsByRange(startIso, endIso) {
 }
 
 export async function createEvent(payload) {
+  const rows = Array.isArray(payload) ? payload : [payload];
   const { error } = await withTimeout(
-    requireClient().from('events').insert(payload),
-    'gravação do evento'
+    requireClient().from('events').insert(rows),
+    rows.length > 1 ? 'gravação dos eventos recorrentes' : 'gravação do evento'
   );
 
   if (error) throw error;
