@@ -20,11 +20,18 @@ function requireClient() {
 
 export function formatAuthError(error) {
   const message = error?.message || '';
+  const code = error?.code ? ` (${error.code})` : '';
+
   if (message.includes('Invalid login credentials')) return 'Email ou palavra-passe inválidos.';
   if (message.includes('Email not confirmed')) return 'Confirma o teu email antes de iniciar sessão.';
-  if (message.includes('User already registered')) return 'Este email já está registado. Tenta iniciar sessão.';
+  if (message.includes('User already registered') || message.includes('already registered')) return 'Este email já está registado. Tenta iniciar sessão.';
   if (message.includes('Password should be at least')) return 'A palavra-passe deve ter pelo menos 6 caracteres.';
-  return 'Não foi possível concluir a autenticação. Tenta novamente.';
+  if (message.includes('Signup requires a valid password')) return 'A palavra-passe não é válida. Usa pelo menos 6 caracteres.';
+  if (message.includes('Database error saving new user')) return 'Erro ao criar o utilizador na base de dados. Verifica se o schema.sql foi aplicado no Supabase.';
+  if (message.includes('Signups not allowed')) return 'O registo de novas contas está desligado no Supabase.';
+  if (message.includes('rate limit')) return 'Muitas tentativas seguidas. Espera uns minutos e tenta novamente.';
+
+  return `Erro Supabase${code}: ${message || 'não identificado'}`;
 }
 
 export async function getSession() {
