@@ -111,3 +111,16 @@ export async function updateEvent(eventId, patch) {
   if (error) throw error;
   return data;
 }
+
+export async function deleteEvent(eventId) {
+  const { error } = await withTimeout(
+    requireClient()
+      .from('events')
+      .delete()
+      .eq('id', eventId),
+    'eliminação do evento'
+  );
+
+  if (error) throw error;
+  return true;
+}
