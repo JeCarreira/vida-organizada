@@ -190,3 +190,39 @@ body {
 .page-tone-papers{border-left:6px solid #a99d91}
 .page-tone-prep{border-left:6px solid #d8c49c}
 .page-tone-low-energy{border-left:6px solid #9eb7ce}
+
+/* Fase 3.1 — editorial polish */
+.sidebar{background:linear-gradient(180deg,#fdf8f1 0%,#f7efe4 100%);}
+.menu-item{border-radius:10px;transition:all .16s ease}
+.menu-item:hover{background:#efe3d2;border-color:#ddcdb8}
+.editorial-block,.life-page{position:relative;overflow:hidden}
+.editorial-block::after,.life-page::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(106,75,51,.05) .6px,transparent .6px);background-size:7px 7px;opacity:.35}
+.life-page h3{margin:0;font-size:clamp(1.25rem,2.5vw,1.9rem)}
+.life-page .muted{font-size:.95rem;line-height:1.55}
+.inline-actions .text-btn,.inline-actions .primary-btn{background:#fffaf2}
+.inline-actions .text-btn:hover,.inline-actions .primary-btn:hover{filter:brightness(.98)}
+#dashboard-priority-board .day-plan-card,#today-events .day-plan-card{border-radius:12px;background:#fffaf4}
+#prep-summary .stat,#dashboard-stats .stat{border-radius:12px;box-shadow:0 8px 20px rgba(47,39,32,.05)}
+
+.page-hero{padding:22px;border:1px solid var(--line);border-radius:14px;margin-bottom:14px;background:#fff9f1}
+.page-hero h3{margin:4px 0 8px;font-size:clamp(1.35rem,2.8vw,2.2rem)}
+.page-hero--dashboard{background:linear-gradient(145deg,#fff6e5,#f4ead7)}
+.page-hero--home{background:linear-gradient(145deg,#faf1e5,#f0e4d4)}
+.page-hero--kids{background:linear-gradient(145deg,#edf5fb,#e4efe7)}
+.page-hero--family{background:linear-gradient(145deg,#f9ecee,#f4e3dc)}
+.page-hero--wellbeing{background:linear-gradient(145deg,#eef6ec,#f7f5ea)}
+.page-hero--couple{background:linear-gradient(145deg,#f1edf8,#f8f2f6)}
+.page-hero--project{background:linear-gradient(145deg,#f8e7dc,#f3deca)}
+.page-hero--papers{background:linear-gradient(145deg,#efebe6,#f6f2eb)}
+.page-hero--prep{background:linear-gradient(145deg,#fbf1df,#f6eddf)}
+.page-hero--low-energy{background:linear-gradient(145deg,#edf3f8,#f2f0ee)}
+.page-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.page-card{border:1px solid var(--line);padding:14px;border-radius:12px;background:#fffaf3}
+.page-card--large{grid-column:1/-1}
+.page-card--note{background:#f7efe2}
+.page-card--soft{background:#f8f3ea}
+.page-card--accent{background:#f4e7cd}
+.page-tag{display:inline-block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#6c5a4c}
+.page-kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin:0;color:#6c5a4c}
+.page-note{color:var(--soft-ink);margin:.25rem 0 0}
+.page-actions{margin-top:10px}

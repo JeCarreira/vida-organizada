@@ -129,20 +129,20 @@ function franceOccasions(year) {
   ];
 }
 
-function zoneCSchoolDates() {
+function zoneBSchoolDates() {
   return [
-    ['Férias de verão — início França Zona C', '2026-07-04', 'Escola / filhos', 'Filhos', 60],
-    ['Rentrée scolaire — França Zona C', '2026-09-01', 'Escola / filhos', 'Filhos', 60],
-    ['Vacances de la Toussaint — Zona C começa', '2026-10-17', 'Escola / filhos', 'Filhos', 30],
-    ['Vacances de la Toussaint — Zona C termina', '2026-11-02', 'Escola / filhos', 'Filhos', 7],
-    ['Vacances de Noël — Zona C começa', '2026-12-19', 'Escola / filhos', 'Filhos', 45],
-    ['Vacances de Noël — Zona C termina', '2027-01-04', 'Escola / filhos', 'Filhos', 7],
-    ['Vacances d’hiver — Zona C começa', '2027-02-06', 'Escola / filhos', 'Filhos', 45],
-    ['Vacances d’hiver — Zona C termina', '2027-02-22', 'Escola / filhos', 'Filhos', 7],
-    ['Vacances de printemps — Zona C começa', '2027-04-03', 'Escola / filhos', 'Filhos', 45],
-    ['Vacances de printemps — Zona C termina', '2027-04-19', 'Escola / filhos', 'Filhos', 7],
+    ['Férias de verão — início França Zone B', '2026-07-04', 'Escola / filhos', 'Filhos', 60],
+    ['Rentrée scolaire — França Zone B', '2026-09-01', 'Escola / filhos', 'Filhos', 60],
+    ['Vacances de la Toussaint — Zone B começa', '2026-10-17', 'Escola / filhos', 'Filhos', 30],
+    ['Vacances de la Toussaint — Zone B termina', '2026-11-02', 'Escola / filhos', 'Filhos', 7],
+    ['Vacances de Noël — Zone B começa', '2026-12-19', 'Escola / filhos', 'Filhos', 45],
+    ['Vacances de Noël — Zone B termina', '2027-01-04', 'Escola / filhos', 'Filhos', 7],
+    ['Vacances d’hiver — Zone B começa', '2027-02-06', 'Escola / filhos', 'Filhos', 45],
+    ['Vacances d’hiver — Zone B termina', '2027-02-22', 'Escola / filhos', 'Filhos', 7],
+    ['Vacances de printemps — Zone B começa', '2027-04-03', 'Escola / filhos', 'Filhos', 45],
+    ['Vacances de printemps — Zone B termina', '2027-04-19', 'Escola / filhos', 'Filhos', 7],
     ['Ponte escolar em França — sem aulas', '2027-05-07', 'Escola / filhos', 'Filhos', 14],
-    ['Férias de verão — início França Zona C', '2027-07-03', 'Escola / filhos', 'Filhos', 60],
+    ['Férias de verão — início França Zone B', '2027-07-03', 'Escola / filhos', 'Filhos', 60],
   ];
 }
 
@@ -348,7 +348,7 @@ function renderTodaySmart() {
 
   page.innerHTML = `
     <div class="life-hero">
-      <p class="eyebrow">Execução diária inteligente</p>
+      <p class="eyebrow">Painel diário</p>
       <h3>Hoje fazes o próximo passo, não a vida toda.</h3>
       <p>Este painel cruza calendário, checklists, preparação antecipada e energia real. A ideia é reduzir ruído e mostrar só o que ajuda hoje.</p>
     </div>
@@ -376,7 +376,7 @@ function renderHomeRoutines() {
   const routineEvents = cache.filter((event) => ['Casa', 'Rotinas'].includes(event.area));
   page.innerHTML = `
     <div class="life-hero">
-      <p class="eyebrow">Casa & Rotinas</p>
+      <p class="eyebrow">Casa</p>
       <h3>A casa com versão realista, não perfeita.</h3>
       <p>Rotinas recorrentes, reset semanal, roupa, refeições e manutenção — sempre com versão mínima para semanas difíceis.</p>
     </div>
@@ -397,7 +397,7 @@ function renderFamilySchool() {
   const familyEvents = cache.filter((event) => ['Filhos', 'Família'].includes(event.area));
   page.innerHTML = `
     <div class="life-hero">
-      <p class="eyebrow">Filhos / Escola / Família</p>
+      <p class="eyebrow">Filhos & Escola</p>
       <h3>Tudo o que envolve crianças, escola, terapias e datas de França.</h3>
       <p>Inclui terapias do Martim e da Ariana, material escolar, férias, feriados, Dia da Mãe/Pai em França, Páscoa, Carnaval, Halloween, Natal e ocasiões familiares.</p>
     </div>
@@ -494,7 +494,7 @@ const templateHandlers = {
   'france-dates': () => {
     const years = [new Date().getFullYear(), new Date().getFullYear() + 1];
     const publicDates = years.flatMap((year) => franceOccasions(year).map(([title, date, event_type, area, prepare]) => eventPayload({ title, date, area, event_type, prepare, recurrence: event_type === 'Natal' || title.includes('Dia') || title.includes('Fête') ? 'yearly' : 'none', checklist: baseChecklist(title) })));
-    const schoolDates = zoneCSchoolDates().map(([title, date, event_type, area, prepare]) => eventPayload({ title, date: new Date(`${date}T09:00:00`), area, event_type, prepare, checklist: baseChecklist(title) }));
+    const schoolDates = zoneBSchoolDates().map(([title, date, event_type, area, prepare]) => eventPayload({ title, date: new Date(`${date}T09:00:00`), area, event_type, prepare, checklist: baseChecklist(title) }));
     safeCreate([...publicDates, ...schoolDates], 'Datas de França');
   },
   'family-occasions': () => safeCreate(eventPayload({ title: 'Mapa de ocasiões da família', date: addDays(new Date(), 7), area: 'Família', event_type: 'Ocasião especial', prepare: 60, checklist: ['Listar aniversários importantes', 'Listar dias especiais da escola e família', 'Criar orçamento para presentes do trimestre', 'Ver presentes, cartões e lembranças com antecedência', 'Separar datas que precisam de roupa, bolo, comida ou deslocação'] }), 'Mapa de ocasiões'),
