@@ -226,3 +226,22 @@ body {
 .page-kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;margin:0;color:#6c5a4c}
 .page-note{color:var(--soft-ink);margin:.25rem 0 0}
 .page-actions{margin-top:10px}
+
+.home-system .page-hero{border-color:#ccb28f}
+.home-layout .page-card{background:#fff8ee}
+.home-reset-card{box-shadow:inset 0 0 0 1px #d9c2a5}
+.home-minimum-card{box-shadow:inset 0 0 0 1px #cbb38f}
+.home-routine-list{margin:.6rem 0 1rem;padding-left:1.1rem;line-height:1.5}
+.home-routine-list li{margin:.2rem 0}
+
+.kids-dossier .page-hero{border-color:#a7bfd0}
+.kids-zone-badge{display:inline-block;background:#e7f1f8;border:1px solid #b4cad9;color:#36556b;padding:6px 10px;border-radius:999px;font-size:.8rem;font-weight:600}
+.kids-therapy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.kids-child-card{background:#f5fbff;border-color:#bfd4e1}
+.kids-school-card{background:#f1f8f1}
+.kids-document-card{background:#f8f6f0}
+.kids-dossier ul{margin:.6rem 0 1rem;padding-left:1.1rem;line-height:1.5}
+
+@media (max-width: 900px){
+  .kids-therapy-grid{grid-template-columns:1fr}
+}
