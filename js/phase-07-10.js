@@ -248,20 +248,7 @@ function injectNav() {
   const menu = document.getElementById('menu');
   if (!menu || menu.dataset.lifeNav === 'true') return;
   menu.dataset.lifeNav = 'true';
-  const entries = [
-    ['life-today', 'Hoje inteligente'],
-    ['life-home', 'Casa & Rotinas'],
-    ['life-family', 'Filhos / Escola / Família'],
-    ['life-finance', 'Finanças'],
-  ];
-  entries.forEach(([id, label]) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'life-menu-item';
-    button.dataset.lifePage = id;
-    button.textContent = label;
-    menu.appendChild(button);
-  });
+  // Navegação paralela removida: a sidebar principal já cobre estas áreas.
 }
 
 function injectPages() {
@@ -419,7 +406,7 @@ function renderFamilySchool() {
       <article class="life-card"><h4>Terapia da Ariana</h4><p>Dossier recorrente para sessão, evolução, documentos e preparação.</p>${templateButton('therapy-ariana')}</article>
       <article class="life-card"><h4>Material escolar Setembro</h4><p>Comprar com antecedência, etiquetar, rever roupa e preparar rotinas.</p>${templateButton('school-september')}</article>
       <article class="life-card"><h4>Guarda-roupa dos miúdos</h4><p>Ver tamanhos, peças em falta, estação, escola e calçado.</p>${templateButton('kids-wardrobe')}</article>
-      <article class="life-card"><h4>Datas de França 2026/2027</h4><p>Feriados, ocasiões familiares e férias escolares Zona C.</p>${templateButton('france-dates', 'Importar datas França')}</article>
+      <article class="life-card"><h4>Datas de França 2026/2027</h4><p>Feriados, ocasiões familiares e férias escolares Oise · Académie d’Amiens · Zone B.</p>${templateButton('france-dates', 'Importar datas França Zone B')}</article>
       <article class="life-card"><h4>Ocasiões da família</h4><p>Aniversários, festas, presentes, lembranças, roupas e compras.</p>${templateButton('family-occasions')}</article>
     </div>
     <section class="life-card"><h4>Família e escola no calendário</h4>${familyEvents.length ? familyEvents.slice(0, 12).map(eventMiniCard).join('') : '<p class="muted">Ainda não tens eventos familiares suficientes para analisar.</p>'}</section>`;
