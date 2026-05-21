@@ -204,3 +204,18 @@ body {
 .page-tone-prep .area-card{background:#fff7e8}
 .page-tone-low-energy .area-card{background:#eef4fa}
 @media (max-width:900px){.area-grid.two{grid-template-columns:1fr}}
+.area-shell{position:relative}
+.area-note{font-size:.95rem;color:var(--soft-ink)}
+.area-card--featured{border-left:5px solid #c58c66;box-shadow:0 8px 20px rgba(106,75,51,.08)}
+.area-card--soft{opacity:.95}
+.area-section-title{position:relative;display:inline-block;padding-bottom:4px}
+.area-section-title::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:6px;background:linear-gradient(90deg,rgba(201,140,102,.45),transparent)}
+.area-empty{padding:10px;border:1px dashed #ccb9a3;border-radius:10px;background:rgba(255,255,255,.45);color:var(--soft-ink)}
+.handwritten-note{font-style:italic;letter-spacing:.2px}
+.marker-underline{display:inline;background:linear-gradient(transparent 62%, rgba(215,185,120,.45) 62%)}
+.paper-texture{background-image:linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.35)),repeating-linear-gradient(0deg,rgba(106,75,51,.04),rgba(106,75,51,.04) 1px,transparent 1px,transparent 8px)}
+.dossier-card{border-left:6px solid #9dbfd4;background:linear-gradient(180deg,#f4f9fd,#eef5fb)}
+.calm-card{border-left:6px solid #9fbe9a;background:linear-gradient(180deg,#f3faf2,#edf7ec)}
+.project-card{border-left:6px solid #c58c66;background:linear-gradient(180deg,#fff4ee,#fbe9de)}
+.prep-card{border-left:6px solid #d8c49c;background:linear-gradient(180deg,#fff9ef,#fff3dc)}
+.planning-shell .calendar-header,.planning-shell .planning-tabs{background:rgba(255,255,255,.52);border-radius:10px;padding:8px 10px}

@@ -370,7 +370,7 @@ function renderHomeRoutines() {
   const routineEvents = cache.filter((event) => ['Casa', 'Rotinas'].includes(event.area));
   page.innerHTML = `
     <div class="life-hero">
-      <p class="eyebrow">Casa & Rotinas</p>
+      <p class="eyebrow">Casa</p>
       <h3>A casa com versão realista, não perfeita.</h3>
       <p>Rotinas recorrentes, reset semanal, roupa, refeições e manutenção — sempre com versão mínima para semanas difíceis.</p>
     </div>
@@ -391,7 +391,7 @@ function renderFamilySchool() {
   const familyEvents = cache.filter((event) => ['Filhos', 'Família'].includes(event.area));
   page.innerHTML = `
     <div class="life-hero">
-      <p class="eyebrow">Filhos / Escola / Família</p>
+      <p class="eyebrow">Filhos & Escola + Família</p>
       <h3>Tudo o que envolve crianças, escola, terapias e datas de França.</h3>
       <p>Inclui terapias do Martim e da Ariana, material escolar, férias, feriados, Dia da Mãe/Pai em França, Páscoa, Carnaval, Halloween, Natal e ocasiões familiares.</p>
     </div>
