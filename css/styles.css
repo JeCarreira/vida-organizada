@@ -177,3 +177,30 @@ body {
   .modal { align-items: end; padding: 0; }
   .modal-panel { width: 100vw; max-height: 90vh; border-radius: 18px 18px 0 0; }
 }
+
+.life-page{display:grid;gap:12px;background:var(--paper,#f8f2e9);border-radius:14px;padding:16px;border:1px solid #e6d9ca}
+.inline-actions{display:flex;flex-wrap:wrap;gap:8px}
+.page-tone-dashboard{border-left:6px solid #d7b978}
+.page-tone-home{border-left:6px solid #b9936a}
+.page-tone-kids{border-left:6px solid #9dbfd4}
+.page-tone-family{border-left:6px solid #cfa0b0}
+.page-tone-wellbeing{border-left:6px solid #9fbe9a}
+.page-tone-couple{border-left:6px solid #b6a4d1}
+.page-tone-project{border-left:6px solid #c58c66}
+.page-tone-papers{border-left:6px solid #a99d91}
+.page-tone-prep{border-left:6px solid #d8c49c}
+.page-tone-low-energy{border-left:6px solid #9eb7ce}
+.area-hero{padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.45)}
+.area-grid{display:grid;gap:10px}
+.area-grid.two{grid-template-columns:1fr 1fr}
+.area-card{background:#fffaf3;border:1px solid #e9dccf;border-radius:12px;padding:12px}
+.page-tone-home .area-card{background:#fbf4ea}
+.page-tone-kids .area-card{background:#f1f7fb}
+.page-tone-family .area-card{background:#fdf1f5}
+.page-tone-wellbeing .area-card{background:#f2f8f1}
+.page-tone-couple .area-card{background:#f4f1fb}
+.page-tone-project .area-card{background:#fdf1ea}
+.page-tone-papers .area-card{background:#f5f1ed}
+.page-tone-prep .area-card{background:#fff7e8}
+.page-tone-low-energy .area-card{background:#eef4fa}
+@media (max-width:900px){.area-grid.two{grid-template-columns:1fr}}
