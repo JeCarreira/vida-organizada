@@ -245,3 +245,5 @@ body {
 @media (max-width: 900px){
   .kids-therapy-grid{grid-template-columns:1fr}
 }
+
+/* fase 5 limpa: manutenção de estrutura Casa/Kids sem mudança funcional */
