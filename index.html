@@ -1,2013 +1,308 @@
-<!DOCTYPE html>
-<html lang="pt">
+<!doctype html>
+<html lang="pt-PT">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>A Minha Vida ✨</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-      /* ── Paleta Outono ── */
-      --bg:#f5f0e8;--white:#fdf9f4;--card:#faf6ef;
-      --text:#2a1f14;--muted:#8c7b6a;--border:rgba(68,45,28,0.1);
-
-      /* Cowhide Cocoa — castanho escuro principal */
-      --cocoa:#442D1C;--cocoa-l:#7a5c40;--cocoa-ll:#c4a882;
-
-      /* Spiced Wine — bordô/vinho */
-      --wine:#743014;--wine-l:#a05030;--wine-ll:#d4937a;
-
-      /* Toasted Caramel — caramelo quente */
-      --caramel:#84592B;--caramel-l:#b07840;--caramel-ll:#dbb88a;
-
-      /* Olive Harvest — verde oliva */
-      --olive:#9D9167;--olive-l:#b8aa88;--olive-ll:#e0d8c4;
-
-      /* Golden Batter — creme dourado */
-      --golden:#E8D1A7;--golden-l:#c4a870;--golden-t:#5a3e18;
-
-      /* Aliases para manter compatibilidade com o código existente */
-      --rose:var(--golden);--rose-d:var(--caramel);--rose-t:var(--cocoa);
-      --lav:#d4c4b0;--lav-d:var(--caramel-l);--lav-t:var(--cocoa);
-      --mint:#c8d4b8;--mint-d:#7a9860;--mint-t:#2a3c18;
-      --sky:#c4d0d8;--sky-d:#6888a0;--sky-t:#1c3040;
-      --peach:#e4c4a0;--peach-d:var(--caramel);--peach-t:var(--cocoa);
-      --yellow:var(--golden);--yellow-d:var(--golden-l);--yellow-t:var(--golden-t);
-      --sand:var(--golden);--sand-d:var(--caramel);--sand-t:var(--cocoa);
-      --sage:#c4c8a8;--sage-d:#889870;--sage-t:#283818;
-      --gold:var(--golden);--gold-d:var(--golden-l);--gold-t:var(--golden-t);
-    }
-    body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;color:var(--text);}
-    h1,h2,h3,.serif{font-family:'Playfair Display',serif;}
-    #loading{position:fixed;inset:0;background:var(--sand);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity 0.5s;}
-    #loading h1{font-family:'Playfair Display',serif;font-size:32px;color:var(--sand-t);font-style:italic;}
-    #loading p{color:var(--sand-d);margin-top:8px;font-size:14px;font-weight:300;}
-    .spinner{width:32px;height:32px;border:2px solid var(--sand-d);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;}
-    @keyframes spin{to{transform:rotate(360deg);}}
-    .sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 16px;z-index:10;}
-    .sidebar-logo{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--text);margin-bottom:6px;padding:0 8px;}
-    .sidebar-sub{font-size:11px;color:var(--muted);padding:0 8px;margin-bottom:28px;font-weight:300;}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--muted);font-weight:400;border:none;background:none;width:100%;text-align:left;transition:all 0.15s;margin-bottom:2px;font-family:'Inter',sans-serif;}
-    .nav-item:hover{background:var(--golden);color:var(--cocoa);}
-    .nav-item.active{background:var(--wine);color:#fdf9f4;font-weight:500;}
-    .nav-icon{font-size:15px;width:20px;text-align:center;}
-    .nav-divider{height:1px;background:var(--border);margin:12px 0;}
-    .main{margin-left:220px;padding:32px 28px;max-width:1080px;}
-    @media(max-width:768px){.sidebar{display:none;}.main{margin-left:0;padding:14px;}.mob-nav{display:flex!important;}}
-    .mob-nav{display:none;gap:4px;padding:10px;background:var(--white);border-bottom:1px solid var(--border);flex-wrap:wrap;position:sticky;top:0;z-index:10;}
-    .mob-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);font-size:12px;cursor:pointer;font-family:inherit;color:var(--muted);}
-    .mob-btn.active{background:var(--wine);color:#fdf9f4;border-color:var(--wine-l);}
-    .page{display:none;}.page.active{display:block;}
-    .card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:16px;}
-    .card-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-    .pill{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-    @media(max-width:600px){.grid-2{grid-template-columns:1fr;}}
-    .dash-hero{background:linear-gradient(135deg,var(--caramel) 0%,var(--wine) 100%);border-radius:20px;border:none;padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden;}
-    .dash-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.08);}
-    .dash-hero::after{content:'';position:absolute;bottom:-60px;right:60px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.05);}
-    .dash-date{font-size:11px;color:rgba(253,249,244,0.7);font-weight:300;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;}
-    .dash-greeting{font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:#fdf9f4;margin-bottom:6px;}
-    .dash-quote{font-size:13px;color:rgba(253,249,244,0.75);font-weight:300;font-style:italic;}
-    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
-    @media(max-width:700px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
-    .stat-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:16px;}
-    .stat-label{font-size:10px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;}
-    .stat-value{font-family:'Playfair Display',serif;font-size:28px;color:var(--text);}
-    .stat-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-    .dash-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-    @media(max-width:700px){.dash-2col{grid-template-columns:1fr;}}
-    .upcoming-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
-    .upcoming-item:last-child{border:none;}
-    .upcoming-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-    .mini-bar{height:4px;border-radius:2px;background:var(--border);flex:1;margin:0 10px;overflow:hidden;}
-    .mini-bar-fill{height:100%;}
-    .habit-mini{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
-    .habit-mini:last-child{border:none;}
-    .wheel-wrap{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;}
-    @media(max-width:800px){.wheel-wrap{grid-template-columns:1fr;}}
-    .wheel-box{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:24px;text-align:center;}
-    .wheel-avg{font-family:'Playfair Display',serif;font-size:38px;color:var(--text);}
-    .wheel-avg-label{font-size:12px;color:var(--muted);margin-bottom:16px;font-weight:300;}
-    .wheel-actions{display:flex;gap:8px;margin-top:16px;}
-    .btn-primary{flex:1;padding:10px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;background:var(--wine);color:#fdf9f4;transition:all 0.2s;}
-    .btn-primary:hover{background:var(--cocoa);}
-    .btn-secondary{padding:10px 14px;border-radius:10px;border:1px solid var(--border);cursor:pointer;font-family:inherit;font-size:13px;background:var(--card);color:var(--muted);transition:all 0.2s;}
-    .btn-secondary:hover{background:var(--bg);}
-    .area-slider{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:13px 15px;margin-bottom:8px;}
-    .area-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-    .area-name{font-size:13px;font-weight:500;}
-    .area-score{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;}
-    input[type=range]{width:100%;height:4px;border-radius:2px;outline:none;cursor:pointer;-webkit-appearance:none;background:var(--border);}
-    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;cursor:pointer;}
-    .wheel-insight{background:var(--lav);border-radius:14px;padding:14px 16px;margin-top:14px;font-size:13px;color:var(--lav-t);font-style:italic;line-height:1.6;border:1px solid rgba(154,114,192,0.2);}
-    .q-section{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-top:16px;}
-    .q-item{margin-bottom:14px;}
-    .q-label{font-size:13px;color:var(--text);margin-bottom:7px;font-style:italic;}
-    .q-options{display:flex;gap:6px;flex-wrap:wrap;}
-    .q-opt{padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:12px;cursor:pointer;background:var(--bg);font-family:inherit;transition:all 0.15s;color:var(--muted);}
-    .q-opt.sel{background:var(--sand);border-color:var(--sand-d);color:var(--sand-t);}
-    .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-top:14px;}
-    .hist-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:14px;cursor:pointer;transition:all 0.2s;}
-    .hist-card:hover{border-color:var(--sand-d);}
-    .hist-date{font-size:11px;color:var(--muted);margin-bottom:5px;}
-    .hist-avg{font-family:'Playfair Display',serif;font-size:22px;color:var(--text);}
-    .hist-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;}
-    .hist-tag{font-size:10px;padding:2px 7px;border-radius:10px;}
-    .form-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
-    .form-input{flex:1;min-width:100px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:13px;background:var(--bg);color:var(--text);outline:none;}
-    .form-input:focus{border-color:var(--sand-d);}
-    .btn-add{padding:9px 16px;border-radius:10px;border:none;cursor:pointer;background:var(--wine);color:#fdf9f4;font-family:inherit;font-weight:500;font-size:13px;transition:all 0.2s;white-space:nowrap;}
-    .btn-add:hover{background:var(--cocoa);color:#fdf9f4;}
-    .color-pick{display:flex;gap:6px;align-items:center;}
-    .color-dot{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.15s;flex-shrink:0;}
-    .color-dot.selected,.color-dot:hover{transform:scale(1.25);border-color:var(--cocoa);}
-    .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
-    .cal-nav{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:16px;color:var(--muted);}
-    .cal-month{font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--cocoa);}
-    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-    .cal-day-name{text-align:center;font-size:10px;font-weight:500;color:var(--muted);padding:4px 0;text-transform:uppercase;letter-spacing:0.05em;}
-    .cal-day-wrap{position:relative;display:flex;justify-content:center;}
-    .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;cursor:pointer;color:var(--text);font-family:inherit;border:none;background:none;width:100%;transition:all 0.15s;}
-    .cal-day:hover{background:var(--golden);}
-    .cal-day.today{background:var(--caramel);font-weight:600;color:#fdf9f4;}
-    .cal-day.selected{background:var(--wine);color:#fdf9f4;font-weight:600;}
-    .cal-day.other-month{color:#ccc;}
-    .evt-dot{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--wine);}
-    .event-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;font-size:12px;margin:3px;cursor:pointer;font-family:inherit;border:none;}
-    .time-task{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;font-size:13px;margin-bottom:6px;}
-    .check-btn{width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.2s;}
-    .check-btn.done{background:currentColor;}
-    .check-btn.done::after{content:'✓';color:white;font-size:9px;}
-    .task-text{flex:1;font-size:13px;}
-    .task-text.done{text-decoration:line-through;opacity:0.4;}
-    .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
-    @media(max-width:600px){.week-grid{grid-template-columns:repeat(3,1fr);}}
-    .week-day{border-radius:12px;overflow:hidden;}
-    .week-day-header{padding:8px 6px;text-align:center;font-size:11px;font-weight:500;}
-    .week-day-body{padding:6px;min-height:70px;}
-    .week-task{font-size:10px;padding:3px 7px;border-radius:6px;margin-bottom:3px;line-height:1.4;cursor:pointer;border:none;width:100%;text-align:left;font-family:inherit;}
-    .habit-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
-    .habit-nm{font-size:13px;font-style:italic;min-width:110px;flex:1;}
-    .habit-dots{display:flex;gap:3px;flex-wrap:wrap;}
-    .habit-dot{width:24px;height:24px;border-radius:50%;border:1.5px solid;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;font-weight:500;transition:all 0.15s;background:none;font-family:inherit;}
-    .progress-bar{height:5px;border-radius:3px;background:var(--border);overflow:hidden;}
-    .progress-fill{height:100%;border-radius:3px;transition:width 0.4s;}
-    .meta-card{border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
-    .note-area{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:'Playfair Display',serif;font-size:13px;color:var(--text);line-height:1.7;resize:vertical;min-height:90px;background:var(--bg);}
-    .note-area:focus{outline:none;border-color:var(--sand-d);}
-    .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:500;font-style:italic;margin:2px;}
-    .mood-btn{padding:7px 13px;border-radius:20px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:12px;font-family:inherit;transition:all 0.15s;}
-    .mood-btn.active,.mood-btn:hover{background:var(--rose);border-color:var(--rose-d);color:var(--rose-t);}
-    #save-indicator{position:fixed;bottom:20px;right:20px;background:var(--caramel);color:#fdf9f4;padding:8px 16px;border-radius:20px;font-size:12px;font-style:italic;opacity:0;transition:opacity 0.3s;border:1px solid var(--caramel-l);z-index:100;}
-    #save-indicator.show{opacity:1;}
-    .slabel{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
-    .rtab{padding:8px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.25);cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;color:var(--cocoa);transition:all 0.2s;}
-    .rtab.active{background:var(--wine);color:#fdf9f4;border-color:var(--wine);}
-    .rtab-content{}
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vida de Mãe Leve — Sistema Pessoal</title>
+  <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
-
-<div id="loading">
-  <div class="spinner"></div>
-  <h1>A Minha Vida</h1>
-  <p>A carregar os teus dados... 🌸</p>
-</div>
-<div id="save-indicator">✨ Guardado!</div>
-
-<div class="mob-nav" id="mob-nav">
-  <button class="mob-btn active" onclick="showPage('dashboard',this)">🏠 Início</button>
-  <button class="mob-btn" onclick="showPage('roda',this)">⭕ Roda</button>
-  <button class="mob-btn" onclick="showPage('calendario',this)">📅</button>
-  <button class="mob-btn" onclick="showPage('diadia',this)">☀️</button>
-  <button class="mob-btn" onclick="showPage('semana',this)">🗓</button>
-  <button class="mob-btn" onclick="showPage('habitos',this)">✨</button>
-  <button class="mob-btn" onclick="showPage('metas',this)">🎯</button>
-  <button class="mob-btn" onclick="showPage('notas',this)">📝</button>
-  <button class="mob-btn" onclick="showPage('bemestar',this)">🌿</button>
-  <button class="mob-btn" onclick="showPage('glowup',this)">💅</button>
-  <button class="mob-btn" onclick="showPage('casa',this)">🏡</button>
-  <button class="mob-btn" onclick="showPage('sonhos',this)">🌠</button>
-</div>
-
-<div class="sidebar">
-  <div class="sidebar-logo">A Minha Vida ✨</div>
-  <div class="sidebar-sub">o teu espaço organizado</div>
-  <button class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">🏠</span> Dashboard</button>
-  <button class="nav-item" onclick="showPage('roda',this)"><span class="nav-icon">⭕</span> Roda da Vida</button>
-  <div class="nav-divider"></div>
-  <button class="nav-item" onclick="showPage('calendario',this)"><span class="nav-icon">📅</span> Calendário</button>
-  <button class="nav-item" onclick="showPage('diadia',this)"><span class="nav-icon">☀️</span> Dia a Dia</button>
-  <button class="nav-item" onclick="showPage('semana',this)"><span class="nav-icon">🗓</span> Semana</button>
-  <div class="nav-divider"></div>
-  <button class="nav-item" onclick="showPage('habitos',this)"><span class="nav-icon">✨</span> Hábitos</button>
-  <button class="nav-item" onclick="showPage('metas',this)"><span class="nav-icon">🎯</span> Metas</button>
-  <div class="nav-divider"></div>
-  <button class="nav-item" onclick="showPage('bemestar',this)"><span class="nav-icon">🌿</span> Bem-estar</button>
-  <button class="nav-item" onclick="showPage('glowup',this)"><span class="nav-icon">💅</span> Glow Up</button>
-  <button class="nav-item" onclick="showPage('casa',this)"><span class="nav-icon">🏡</span> A Minha Casa</button>
-  <div class="nav-divider"></div>
-  <button class="nav-item" onclick="showPage('notas',this)"><span class="nav-icon">📝</span> Notas</button>
-  <button class="nav-item" onclick="showPage('sonhos',this)"><span class="nav-icon">🌠</span> Sonhos & Visão</button>
-</div>
-
-<div class="main">
-
-<!-- DASHBOARD -->
-<div id="page-dashboard" class="page active">
-  <div class="dash-hero">
-    <div class="dash-date" id="dash-date"></div>
-    <div class="dash-greeting" id="dash-greeting"></div>
-    <div class="dash-quote" id="dash-quote"></div>
-  </div>
-  <div class="stat-grid">
-    <div class="stat-card"><div class="stat-label">Hábitos marcados</div><div class="stat-value" id="stat-habits">—</div><div class="stat-sub">este mês</div></div>
-    <div class="stat-card"><div class="stat-label">Tarefas feitas</div><div class="stat-value" id="stat-tasks">—</div><div class="stat-sub">hoje</div></div>
-    <div class="stat-card"><div class="stat-label">Roda da Vida</div><div class="stat-value" id="stat-wheel">—</div><div class="stat-sub">média atual</div></div>
-    <div class="stat-card"><div class="stat-label">Metas ativas</div><div class="stat-value" id="stat-metas">—</div><div class="stat-sub">em progresso</div></div>
-  </div>
-  <div class="dash-2col">
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--rose-d)"></div> Eventos de hoje</div>
-      <div id="dash-events"><div style="font-size:13px;color:var(--muted);font-style:italic">Sem eventos hoje</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--mint-d)"></div> Hábitos — progresso</div>
-      <div id="dash-habits"><div style="font-size:13px;color:var(--muted);font-style:italic">Sem hábitos ainda</div></div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div> Intenção do dia</div>
-    <textarea class="note-area" id="intencao" placeholder="Hoje quero focar em..." oninput="debounceSave('intencao',this.value)"></textarea>
-  </div>
-</div>
-
-<!-- RODA DA VIDA -->
-<div id="page-roda" class="page">
-
-  <!-- HERO -->
-  <div style="background:linear-gradient(135deg,var(--caramel),var(--cocoa));border-radius:20px;padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.15)"></div>
-    <div style="font-family:'Playfair Display',serif;font-size:26px;font-style:italic;color:#fdf9f4">Roda da Vida ⭕</div>
-    <div style="font-size:13px;color:rgba(253,249,244,0.75);margin-top:6px;font-weight:300;max-width:500px;line-height:1.6">
-      A tua roda da vida é o espelho da tua realidade agora. Avalia cada área de 1 a 10, descobre onde crescer, cria um plano de ação e acompanha a tua evolução ao longo do tempo.
-    </div>
-    <!-- TABS -->
-    <div style="display:flex;gap:8px;margin-top:20px;flex-wrap:wrap">
-      <button class="rtab active" onclick="showRTab('visao',this)">🎯 Visão Geral</button>
-      <button class="rtab" onclick="showRTab('reflexao',this)">🧘 Reflexão Profunda</button>
-      <button class="rtab" onclick="showRTab('plano',this)">📋 Plano de Ação</button>
-      <button class="rtab" onclick="showRTab('historico',this)">📊 Histórico</button>
-    </div>
-  </div>
-
-  <!-- TAB: VISÃO GERAL -->
-  <div id="rtab-visao" class="rtab-content">
-    <div class="wheel-wrap">
-      <div class="wheel-box">
-        <canvas id="wheelCanvas" width="300" height="300"></canvas>
-        <div style="margin-top:16px">
-          <div class="wheel-avg" id="wheel-avg">—</div>
-          <div class="wheel-avg-label">média geral de equilíbrio</div>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:14px">
-          <button class="btn-primary" onclick="saveWheel()">💾 Guardar registo</button>
-          <button class="btn-secondary" onclick="showRTab('historico',null)">📊 Histórico</button>
-        </div>
-        <div style="margin-top:14px;padding:10px 12px;background:var(--bg);border-radius:10px;font-size:11px;color:var(--muted);text-align:left;line-height:1.6">
-          💡 <em>Recomendado: refaz a tua roda a cada 1-3 meses para acompanhar a evolução</em>
-        </div>
+  <div id="app" class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+      <div class="brand">
+        <p class="brand-kicker">Sistema Pessoal</p>
+        <h1>Vida de Mãe Leve</h1>
       </div>
-      <div>
-        <div style="font-size:11px;color:var(--muted);font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px">Ajusta as áreas da tua vida</div>
-        <div id="wheel-sliders"></div>
+      <nav class="menu" id="menu">
+        <button class="menu-item is-active" data-page="dashboard">Painel diário</button>
+        <button class="menu-item" data-page="planning">Planeamento</button>
+        <button class="menu-item" data-page="home">Casa</button>
+        <button class="menu-item" data-page="kids">Filhos &amp; Escola</button>
+        <button class="menu-item" data-page="family">Família &amp; Datas especiais</button>
+        <button class="menu-item" data-page="wellbeing">Eu &amp; Bem-estar</button>
+        <button class="menu-item" data-page="couple">Casal</button>
+        <button class="menu-item" data-page="project">Projeto / Marca</button>
+        <button class="menu-item" data-page="papers">Papéis &amp; Organização</button>
+        <button class="menu-item" data-page="prep">Preparações &amp; compras pontuais</button>
+        <button class="menu-item" data-page="low-energy">Modo sem energia</button>
+      </nav>
+      <div class="sidebar-footer">
+        <p id="auth-email" class="muted"></p>
+        <button id="logout-btn" class="text-btn" type="button">Terminar sessão</button>
       </div>
-    </div>
+    </aside>
 
-    <!-- INSIGHT CARD -->
-    <div id="wheel-insight" style="margin-top:16px"></div>
-
-    <!-- ÁREA EM DESTAQUE -->
-    <div id="area-detail" style="margin-top:16px;display:none"></div>
-  </div>
-
-  <!-- TAB: REFLEXÃO PROFUNDA -->
-  <div id="rtab-reflexao" class="rtab-content" style="display:none">
-    <div style="margin-bottom:16px">
-      <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--text);margin-bottom:4px">Questionário de Reflexão</div>
-      <div style="font-size:13px;color:var(--muted);font-weight:300">Para cada área, responde com honestidade. Estas perguntas vêm das melhores práticas de coaching de vida.</div>
-    </div>
-    <div id="q-body"></div>
-    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-      <button class="btn-primary" onclick="applyQ()">✨ Aplicar respostas à roda</button>
-      <button class="btn-secondary" onclick="showRTab('visao',null)">Ver roda atualizada</button>
-    </div>
-  </div>
-
-  <!-- TAB: PLANO DE AÇÃO -->
-  <div id="rtab-plano" class="rtab-content" style="display:none">
-    <div style="margin-bottom:16px">
-      <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--text);margin-bottom:4px">Plano de Ação por Área</div>
-      <div style="font-size:13px;color:var(--muted);font-weight:300">Para cada área, define até 3 ações concretas. Foca nas áreas com pontuação mais baixa primeiro.</div>
-    </div>
-    <div id="plano-body"></div>
-  </div>
-
-  <!-- TAB: HISTÓRICO -->
-  <div id="rtab-historico" class="rtab-content" style="display:none">
-    <div style="margin-bottom:16px">
-      <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--text);margin-bottom:4px">A tua evolução ao longo do tempo</div>
-      <div style="font-size:13px;color:var(--muted);font-weight:300">Cada registo é um retrato do teu momento. Clica para carregar e comparar.</div>
-    </div>
-    <div id="hist-compare" style="display:none;margin-bottom:16px;padding:16px;background:var(--lav);border-radius:14px">
-      <div style="font-size:13px;font-style:italic;color:var(--lav-t);margin-bottom:8px">A comparar com registo anterior:</div>
-      <div id="hist-compare-body"></div>
-    </div>
-    <div class="hist-grid" id="hist-grid"></div>
-    <div style="margin-top:20px;padding:16px;background:var(--card);border-radius:14px;border:1px solid var(--border)">
-      <canvas id="histChart" height="120"></canvas>
-    </div>
-  </div>
-
-</div>
-
-<!-- CALENDÁRIO -->
-<div id="page-calendario" class="page">
-
-  <!-- HEADER -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <div style="display:flex;align-items:center;gap:12px">
-      <button onclick="changeMonth(-1)" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted);display:flex;align-items:center;justify-content:center">‹</button>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--cocoa)" id="cal-month-label"></div>
-      <button onclick="changeMonth(1)" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted);display:flex;align-items:center;justify-content:center">›</button>
-      <button onclick="goToday()" style="padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:12px;color:var(--muted);font-family:inherit">Hoje</button>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <div class="color-pick" id="color-pick" style="gap:6px">
-        <button class="color-dot selected" style="background:#743014" onclick="selectColor(this,'wine')"></button>
-        <button class="color-dot" style="background:#84592B" onclick="selectColor(this,'caramel')"></button>
-        <button class="color-dot" style="background:#7a9860" onclick="selectColor(this,'mint')"></button>
-        <button class="color-dot" style="background:#6888a0" onclick="selectColor(this,'sky')"></button>
-        <button class="color-dot" style="background:#9D9167" onclick="selectColor(this,'olive')"></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CALENDÁRIO GRID -->
-  <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden">
-    <!-- Nomes dos dias -->
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)">
-      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">DOM</div>
-      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">SEG</div>
-      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">TER</div>
-      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">QUA</div>
-      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">QUI</div>
-      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">SEX</div>
-      <div style="text-align:center;padding:10px 4px;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.05em">SÁB</div>
-    </div>
-    <!-- Dias -->
-    <div id="cal-grid-body" style="display:grid;grid-template-columns:repeat(7,1fr)"></div>
-  </div>
-
-  <!-- PAINEL DO DIA SELECIONADO -->
-  <div id="cal-day-panel" style="margin-top:16px;display:none">
-    <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <main class="main" id="main-content">
+      <header class="topbar">
+        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Abrir menu">Menu</button>
         <div>
-          <div style="font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--cocoa)" id="panel-date-label"></div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px" id="panel-day-name"></div>
+          <p class="topbar-kicker" id="topbar-date"></p>
+          <h2 id="page-title">Painel diário</h2>
         </div>
-        <button onclick="goToDiaDia()" style="padding:7px 14px;border-radius:10px;border:1px solid var(--border);background:var(--wine);color:#fdf9f4;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500">Ver no Dia a Dia →</button>
-      </div>
+      </header>
 
-      <!-- Eventos do dia -->
-      <div id="panel-events-list" style="margin-bottom:16px"></div>
-
-      <!-- Adicionar evento -->
-      <div style="border-top:1px solid var(--border);padding-top:14px">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Adicionar evento</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input id="evt-name" class="form-input" placeholder="Nome do evento..." style="flex:2;min-width:140px"/>
-          <input id="evt-time" class="form-input" type="time" style="max-width:100px"/>
-          <button class="btn-add" onclick="addEvent()">+ Adicionar</button>
+      <section class="page is-active" data-page="dashboard">
+        <div class="editorial-block page-tone-dashboard">
+          <p class="eyebrow">O teu dia, com direção.</p>
+          <h3 id="dashboard-greeting"></h3>
+          <p id="dashboard-phrase">Não é para fazer tudo. É para saber o que vem primeiro.</p>
+          <div class="inline-actions">
+            <button class="primary-btn" type="button" data-action="open-event">Criar evento</button>
+            <button class="text-btn" type="button" data-action="go-planning">Ver planeamento</button>
+            <button class="text-btn" type="button" data-action="go-low-energy">Ativar modo sem energia</button>
+            <button class="text-btn" type="button" data-action="filter-prep">Ver preparações pendentes</button>
+          </div>
         </div>
-        <!-- Tarefas do dia a dia ligadas -->
-        <div id="panel-tasks-preview" style="margin-top:12px"></div>
-      </div>
-    </div>
+        <div class="stats" id="dashboard-stats"></div>
+        <div class="today-board" id="dashboard-priority-board"></div>
+        <div>
+          <h4>Próximos eventos</h4>
+          <div id="dashboard-upcoming" class="list"></div>
+        </div>
+      </section>
+
+      <section class="page" data-page="planning">
+        <div class="editorial-block compact planning-intro">
+          <div>
+            <p class="eyebrow">Planeamento</p>
+            <h3>Do ano ao dia de hoje, sem perderes o fio.</h3>
+            <p>Começa pela visão geral, aproxima para o mês, organiza a semana e executa apenas o que cabe no teu dia.</p>
+          </div>
+          <button id="quick-event-btn" class="primary-btn" type="button">Novo evento</button>
+        </div>
+
+        <div class="planning-tabs" role="tablist" aria-label="Vistas de planeamento">
+          <button class="planning-tab is-active" type="button" data-planning-view="year">Ano</button>
+          <button class="planning-tab" type="button" data-planning-view="month">Mês</button>
+          <button class="planning-tab" type="button" data-planning-view="week">Semana</button>
+          <button class="planning-tab" type="button" data-planning-view="today">Hoje</button>
+        </div>
+
+        <div class="planning-view is-active" data-planning-view="year">
+          <div class="calendar-header">
+            <button id="prev-year" class="text-btn" type="button">Ano anterior</button>
+            <h3 id="year-label"></h3>
+            <button id="next-year" class="text-btn" type="button">Ano seguinte</button>
+          </div>
+          <div id="year-grid" class="year-grid"></div>
+        </div>
+
+        <div class="planning-view" data-planning-view="month">
+          <div class="calendar-header">
+            <button id="prev-month" class="text-btn" type="button">Mês anterior</button>
+            <h3 id="calendar-label"></h3>
+            <button id="next-month" class="text-btn" type="button">Mês seguinte</button>
+          </div>
+          <div class="weekday-row" aria-hidden="true">
+            <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+          </div>
+          <div id="calendar-grid" class="calendar-grid"></div>
+          <section class="selected-day-panel">
+            <div>
+              <h4>Eventos do dia selecionado</h4>
+              <p id="selected-day-label" class="muted"></p>
+            </div>
+            <button id="selected-day-event-btn" class="text-btn" type="button">Criar neste dia</button>
+          </section>
+          <div id="day-events" class="list"></div>
+        </div>
+
+        <div class="planning-view" data-planning-view="week">
+          <div class="calendar-header">
+            <button id="prev-week" class="text-btn" type="button">Semana anterior</button>
+            <h3 id="week-label"></h3>
+            <button id="next-week" class="text-btn" type="button">Semana seguinte</button>
+          </div>
+          <div id="week-grid" class="week-grid"></div>
+        </div>
+
+        <div class="planning-view" data-planning-view="today">
+          <div class="editorial-block compact">
+            <p class="eyebrow">Hoje</p>
+            <h3 id="today-label"></h3>
+            <p>O teu painel de execução: o que acontece hoje, o que já devia estar a ser preparado e o próximo passo simples.</p>
+          </div>
+          <div id="today-events" class="today-board"></div>
+        </div>
+      </section>
+      <section class="page life-page page-tone-home" data-page="home"><h3>A casa a funcionar, não perfeita.</h3><p class="muted">Rotinas simples para a casa não pesar toda em ti.</p><p class="muted">O objetivo não é uma casa impecável. É uma casa que respira melhor.</p><div class="home-system"><article class="home-reset-card"><h4>Reset semanal</h4><p class="muted">Fecha a semana com uma ronda rápida para começar a próxima sem arrasto.</p><button class="text-btn" type="button" data-action="quick-fill" data-title="Reset semanal da casa" data-area="Casa" data-type="Rotina">Criar reset semanal</button></article><article class="home-reset-card"><h4>Roupa</h4><p class="muted">Define dias e ritmo fixo para não acumular pilhas de decisão.</p><button class="text-btn" type="button" data-action="quick-fill" data-title="Tarefa de roupa" data-area="Casa" data-type="Rotina">Criar tarefa de roupa</button></article><article class="home-reset-card"><h4>Limpeza por zonas</h4><p class="muted">Divide por áreas para manter continuidade sem maratonas.</p><button class="text-btn" type="button" data-action="quick-fill" data-title="Limpeza por zonas" data-area="Casa" data-type="Rotina">Criar limpeza por zonas</button></article><article class="home-reset-card"><h4>Manutenção</h4><p class="muted">Pequenas verificações evitam urgências e custos maiores.</p><button class="text-btn" type="button" data-action="quick-fill" data-title="Manutenção da casa" data-area="Casa" data-type="Normal">Criar manutenção</button></article><article class="home-minimum-card"><h4>Casa mínima</h4><p class="muted">Plano de mínimos para dias cheios, sem culpa.</p><button class="text-btn" type="button" data-action="quick-fill" data-title="Modo mínimo da casa" data-area="Casa" data-type="Rotina">Criar modo mínimo da casa</button></article><article class="home-reset-card"><h4>Pequenos projetos da casa</h4><ul class="home-routine-list"><li>Escolher uma micro-melhoria por semana.</li><li>Definir orçamento simples por projeto.</li><li>Fechar cada tarefa em menos de 45 minutos.</li></ul></article></div></section>
+      <section class="page life-page page-tone-kids" data-page="kids"><h3>O ritmo deles, sem te fugir da cabeça.</h3><p class="muted">Escola, terapias, roupa, consultas e tudo o que precisa de margem.</p><p class="muted">Preparar antes para não andares sempre a correr em cima.</p><div class="kids-zone-badge">Oise · Académie d’Amiens · Zone B</div><div class="kids-dossier"><article class="kids-school-card"><h4>Escola</h4><p class="muted">Rotinas semanais, recados e janelas de preparação.</p></article><article class="kids-document-card"><h4>Terapias</h4><p class="muted">Visão geral para não perder marcações e follow-up.</p></article><div class="kids-therapy-grid"><article class="kids-child-card"><h4>Terapia Martim</h4><button class="text-btn" type="button" data-action="quick-fill" data-title="Terapia Martim" data-area="Filhos" data-type="Consulta">Criar terapia Martim</button></article><article class="kids-child-card"><h4>Terapia Ariana</h4><button class="text-btn" type="button" data-action="quick-fill" data-title="Terapia Ariana" data-area="Filhos" data-type="Consulta">Criar terapia Ariana</button></article></div><article class="kids-school-card"><h4>Material escolar</h4><button class="text-btn" type="button" data-action="quick-fill" data-title="Preparar material escolar" data-area="Filhos" data-type="Escola / filhos">Preparar material escolar</button></article><article class="kids-school-card"><h4>Roupa dos miúdos</h4><button class="text-btn" type="button" data-action="quick-fill" data-title="Preparar guarda-roupa dos miúdos" data-area="Filhos" data-type="Escola / filhos">Preparar guarda-roupa dos miúdos</button></article><article class="kids-document-card"><h4>Consultas</h4><button class="text-btn" type="button" data-action="quick-fill" data-title="Consulta filhos" data-area="Filhos" data-type="Consulta">Criar consulta</button></article><article class="kids-document-card"><h4>Férias escolares França</h4><button class="text-btn" type="button" data-action="show-zone-b">Importar datas França Zone B</button></article><article class="kids-document-card"><h4>Documentos das crianças</h4><p class="muted">Centraliza seguros, comprovativos e papéis escolares.</p></article></div><div id="zone-b-feedback" class="muted"></div></section>
+      <section class="page life-page page-tone-family" data-page="family"><h3>O que importa lembrar e preparar com carinho.</h3><div class="inline-actions"><button class="text-btn" type="button" data-action="quick-fill" data-title="Aniversário" data-area="Família" data-type="Aniversário">Criar aniversário</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Preparar Natal" data-area="Família" data-type="Natal">Preparar Natal</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Preparar Páscoa" data-area="Família" data-type="Ocasião especial">Preparar Páscoa</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Preparar Halloween" data-area="Família" data-type="Ocasião especial">Preparar Halloween</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Data especial da família" data-area="Família" data-type="Ocasião especial">Criar data especial</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Lista de presentes" data-area="Família" data-type="Ocasião especial">Criar lista de presentes</button></div></section>
+      <section class="page life-page page-tone-wellbeing" data-page="wellbeing"><h3>Tu também entras no plano.</h3><div class="inline-actions"><button class="text-btn" type="button" data-action="quick-fill" data-title="Rotina de autocuidado" data-area="Bem-estar" data-type="Rotina">Criar rotina de autocuidado</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Lembrete de descanso" data-area="Bem-estar" data-type="Rotina">Criar lembrete de descanso</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Movimento diário" data-area="Bem-estar" data-type="Rotina">Criar movimento</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Check-in de energia" data-area="Eu" data-type="Rotina">Criar check-in de energia</button></div></section>
+      <section class="page life-page page-tone-couple" data-page="couple"><h3>O casal também precisa de lugar.</h3><div class="inline-actions"><button class="text-btn" type="button" data-action="quick-fill" data-title="Date night" data-area="Casamento" data-type="Ocasião especial">Criar date night</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Conversa importante" data-area="Casamento" data-type="Normal">Criar conversa importante</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Plano a dois" data-area="Casamento" data-type="Projeto">Criar plano a dois</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Gesto pequeno" data-area="Casamento" data-type="Rotina">Criar lembrete de gesto pequeno</button></div></section>
+      <section class="page life-page page-tone-project" data-page="project"><h3>O teu projeto também entra no plano.</h3><div class="inline-actions"><button class="text-btn" type="button" data-action="quick-fill" data-title="Bloco de foco criativo" data-area="Projeto / Marca" data-type="Projeto">Criar bloco de foco</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Tarefa do projeto" data-area="Projeto / Marca" data-type="Projeto">Criar tarefa do projeto</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Ideia de conteúdo" data-area="Projeto / Marca" data-type="Projeto">Criar ideia de conteúdo</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Revisão semanal do projeto" data-area="Projeto / Marca" data-type="Projeto">Criar revisão semanal do projeto</button></div></section>
+      <section class="page life-page page-tone-papers" data-page="papers"><h3>O que precisa de estar tratado.</h3><div class="inline-actions"><button class="text-btn" type="button" data-action="quick-fill" data-title="Lembrete burocrático" data-area="Papéis e burocracia" data-type="Normal">Criar lembrete burocrático</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Prazo importante" data-area="Papéis e burocracia" data-type="Normal">Criar prazo</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Checklist de documento" data-area="Papéis e burocracia" data-type="Normal">Criar checklist de documento</button><button class="text-btn" type="button" data-action="quick-fill" data-title="Pasta/tema" data-area="Papéis e burocracia" data-type="Projeto">Criar pasta/tema</button></div></section>
+      <section class="page life-page page-tone-prep" data-page="prep"><h3>Comprar e preparar sem deixar tudo para o fim.</h3><p class="muted">Preparar antes é cuidar da tua paz depois.</p><div id="prep-summary" class="stats"></div></section>
+      <section class="page life-page page-tone-low-energy" data-page="low-energy"><h3>Hoje pode ser mais simples.</h3><p class="muted">Não é para fazer tudo. É para saber o que vem primeiro.</p><div class="inline-actions"><button class="primary-btn" type="button" data-action="quick-fill" data-title="Modo sem energia: 3 ações mínimas" data-area="Rotinas" data-type="Rotina">Fazer só isto</button><button class="text-btn" type="button" data-action="defer-rest">Adiar o resto sem culpa</button></div><p id="defer-feedback" class="muted"></p></section>
+    </main>
   </div>
-</div>
 
-<!-- DIA A DIA -->
-<div id="page-diadia" class="page">
-
-  <!-- HEADER do dia com navegação -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <div style="display:flex;align-items:center;gap:10px">
-      <button onclick="changeDay(-1)" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted)">‹</button>
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--cocoa)" id="diadia-date-label"></div>
-        <div style="font-size:11px;color:var(--muted)" id="diadia-day-name"></div>
+  <section id="event-modal" class="modal is-hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Novo evento</p>
+          <h3 id="event-modal-title">Criar no calendário</h3>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">×</button>
       </div>
-      <button onclick="changeDay(1)" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted)">›</button>
-      <button onclick="goTodayDia()" style="padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:12px;color:var(--muted);font-family:inherit">Hoje</button>
-    </div>
-    <div id="diadia-mood-strip" style="display:flex;gap:6px;flex-wrap:wrap">
-      <button class="mood-btn" onclick="setMood(this,'🌸 Ótima')">🌸 Ótima</button>
-      <button class="mood-btn" onclick="setMood(this,'😊 Bem')">😊 Bem</button>
-      <button class="mood-btn" onclick="setMood(this,'😐 Ok')">😐 Ok</button>
-      <button class="mood-btn" onclick="setMood(this,'😔 Cansada')">😔 Cansada</button>
-      <button class="mood-btn" onclick="setMood(this,'😩 Difícil')">😩 Difícil</button>
-    </div>
-  </div>
 
-  <!-- EVENTOS DO DIA (vêm do calendário) -->
-  <div id="diadia-events-strip" style="margin-bottom:12px"></div>
+      <form id="event-form" class="form">
+        <label>Data e hora de início
+          <input name="starts_at" type="datetime-local" required />
+        </label>
+        <label>Data e hora de fim (opcional)
+          <input name="ends_at" type="datetime-local" />
+        </label>
+        <label>Título
+          <input name="title" type="text" maxlength="120" required placeholder="Ex.: aniversário Matilde, preparar Natal, férias de verão..." />
+        </label>
 
-  <!-- BLOCOS HORÁRIO COMPLETO -->
-  <div class="grid-2">
-    <div>
-      <!-- TIMELINE -->
-      <div class="card" style="padding:0;overflow:hidden">
-        <div id="timeline-blocks"></div>
-        <!-- Adicionar bloco de horário -->
-        <div style="padding:14px;border-top:1px solid var(--border)">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">Adicionar ao horário</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <input type="time" id="rotina-hora" class="form-input" style="max-width:90px"/>
-            <input id="rotina-task" class="form-input" placeholder="Tarefa ou evento..." onkeydown="if(event.key==='Enter')addRotina()"/>
-            <select id="rotina-cat" class="form-input" style="max-width:110px">
-              <option value="trabalho">💼 Trabalho</option>
-              <option value="saude">💚 Saúde</option>
-              <option value="casa">🏡 Casa</option>
-              <option value="pessoal">🌸 Pessoal</option>
-              <option value="lazer">✨ Lazer</option>
+        <div class="form-row">
+          <label>Tipo
+            <select name="event_type" required>
+              <option value="Normal">Normal</option>
+              <option value="Aniversário">Aniversário</option>
+              <option value="Ocasião especial">Ocasião especial</option>
+              <option value="Natal">Natal</option>
+              <option value="Viagem">Viagem</option>
+              <option value="Consulta">Consulta</option>
+              <option value="Escola / filhos">Escola / filhos</option>
+              <option value="Projeto">Projeto</option>
+              <option value="Rotina">Rotina</option>
             </select>
-            <button class="btn-add" onclick="addRotina()" style="padding:8px 12px">+</button>
+          </label>
+          <label>Área
+            <select name="area" required>
+              <option value="Casa">Casa</option>
+              <option value="Família">Família</option>
+              <option value="Filhos">Filhos</option>
+              <option value="Eu">Eu</option>
+              <option value="Bem-estar">Bem-estar</option>
+              <option value="Casamento">Casamento</option>
+              <option value="Projeto / Marca">Projeto / Marca</option>
+              <option value="Papéis e burocracia">Papéis e burocracia</option>
+              <option value="Finanças">Finanças</option>
+              <option value="Rotinas">Rotinas</option>
+              <option value="Social / Comunidade">Social / Comunidade</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </label>
+        </div>
+
+        <section class="area-color-card" aria-live="polite">
+          <span id="area-color-dot" class="area-color-dot"></span>
+          <div>
+            <p class="eyebrow">Cor da área</p>
+            <strong id="area-color-name">Areia quente</strong>
+            <p id="area-color-note" class="muted">A cor é escolhida automaticamente pela área, para o calendário ficar consistente.</p>
           </div>
-        </div>
-      </div>
-    </div>
+        </section>
 
-    <div>
-      <!-- TAREFAS por período -->
-      <div class="card" style="margin-bottom:12px">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">☀️ Manhã</div>
-        <div id="manha-tasks"></div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="manha-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('manha')"/>
-          <button class="btn-add" onclick="addTask('manha')" style="padding:7px 10px">+</button>
-        </div>
-      </div>
-      <div class="card" style="margin-bottom:12px">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">🌤 Tarde</div>
-        <div id="tarde-tasks"></div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="tarde-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('tarde')"/>
-          <button class="btn-add" onclick="addTask('tarde')" style="padding:7px 10px">+</button>
-        </div>
-      </div>
-      <div class="card">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">🌙 Noite</div>
-        <div id="noite-tasks"></div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="noite-input" class="form-input" placeholder="Nova tarefa..." style="font-size:12px" onkeydown="if(event.key==='Enter')addTask('noite')"/>
-          <button class="btn-add" onclick="addTask('noite')" style="padding:7px 10px">+</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- INTENÇÃO DO DIA -->
-  <div class="card">
-    <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px">✨ Intenção do dia</div>
-    <textarea class="note-area" id="intencao" placeholder="Hoje quero focar em..." style="min-height:60px" oninput="debounceSave('intencao',this.value)"></textarea>
-  </div>
-</div>
-
-<!-- SEMANA -->
-<div id="page-semana" class="page">
-
-  <!-- HEADER -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <div style="display:flex;align-items:center;gap:10px">
-      <button onclick="changeWeek(-1)" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted)">‹</button>
-      <div style="font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:var(--cocoa)" id="week-label">Esta semana</div>
-      <button onclick="changeWeek(1)" style="width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:16px;color:var(--muted)">›</button>
-      <button onclick="goThisWeek()" style="padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:12px;color:var(--muted);font-family:inherit">Esta semana</button>
-    </div>
-    <button onclick="showPage('calendario',null)" style="padding:7px 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted)">→ Ver no Calendário</button>
-  </div>
-
-  <!-- GRADE SEMANAL com eventos do calendário -->
-  <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden;margin-bottom:16px">
-    <div id="week-grid-full"></div>
-  </div>
-
-  <!-- Adicionar tarefa à semana -->
-  <div class="card">
-    <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">Adicionar tarefa à semana</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <select id="week-day-sel" class="form-input" style="max-width:120px">
-        <option value="0">Segunda</option><option value="1">Terça</option><option value="2">Quarta</option>
-        <option value="3">Quinta</option><option value="4">Sexta</option><option value="5">Sábado</option><option value="6">Domingo</option>
-      </select>
-      <input id="week-task-input" class="form-input" placeholder="Tarefa..." onkeydown="if(event.key==='Enter')addWeekTask()"/>
-      <div class="color-pick" id="week-color-pick">
-        <button class="color-dot selected" style="background:#743014" onclick="selWCol(this,'wine')"></button>
-        <button class="color-dot" style="background:#84592B" onclick="selWCol(this,'caramel')"></button>
-        <button class="color-dot" style="background:#7a9860" onclick="selWCol(this,'mint')"></button>
-        <button class="color-dot" style="background:#6888a0" onclick="selWCol(this,'sky')"></button>
-      </div>
-      <button class="btn-add" onclick="addWeekTask()">+</button>
-    </div>
-  </div>
-
-  <!-- Reflexão semanal -->
-  <div class="card" style="background:var(--golden);border:none">
-    <div style="font-size:11px;font-weight:600;color:var(--cocoa);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px">📝 Reflexão semanal</div>
-    <div class="grid-2" style="gap:10px">
-      <div><div style="font-size:11px;color:var(--caramel);margin-bottom:5px">O que correu bem ✨</div><textarea class="note-area" id="semana-bem" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="..." oninput="debounceSave('semana_bem',this.value)"></textarea></div>
-      <div><div style="font-size:11px;color:var(--caramel);margin-bottom:5px">O que melhorar 💭</div><textarea class="note-area" id="semana-melhorar" style="background:rgba(255,255,255,0.5);min-height:70px" placeholder="..." oninput="debounceSave('semana_melhorar',this.value)"></textarea></div>
-    </div>
-  </div>
-</div>
-
-<!-- HÁBITOS -->
-<div id="page-habitos" class="page">
-  <div class="card" style="background:var(--mint);border:none">
-    <div class="card-title" style="color:var(--mint-t)"><div class="pill" style="background:var(--mint-d)"></div> Hábitos — <span id="habit-month-label"></span></div>
-    <div id="habits-container"></div>
-    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-      <input id="habit-input" class="form-input" placeholder="Novo hábito..." style="background:rgba(255,255,255,0.7)" onkeydown="if(event.key==='Enter')addHabit()"/>
-      <button class="btn-add" onclick="addHabit()" style="background:var(--mint-d);color:white">+ Hábito</button>
-    </div>
-  </div>
-  <div class="card"><div class="card-title"><div class="pill" style="background:var(--rose-d)"></div> Progresso do mês</div><div id="habit-progress"></div></div>
-</div>
-
-<!-- METAS -->
-<div id="page-metas" class="page">
-  <div class="card" style="background:var(--lav);border:none;margin-bottom:16px">
-    <div style="font-family:'Playfair Display',serif;font-size:20px;font-style:italic;color:var(--lav-t)">🎯 As minhas metas</div>
-    <div style="font-size:12px;color:var(--lav-d);margin-top:4px;font-weight:300">Sonhos com prazo tornam-se objetivos</div>
-  </div>
-  <div id="metas-list"></div>
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> Nova meta</div>
-    <div class="form-row">
-      <input id="meta-emoji" class="form-input" placeholder="🌟" style="max-width:52px;text-align:center"/>
-      <input id="meta-titulo" class="form-input" placeholder="A minha meta..."/>
-      <input id="meta-prazo" class="form-input" placeholder="Prazo / detalhes"/>
-    </div>
-    <div class="form-row">
-      <span style="font-size:12px;color:var(--muted)">Progresso:</span>
-      <input type="range" id="meta-progress" min="0" max="100" value="0" style="flex:1" oninput="document.getElementById('mpv').textContent=this.value+'%'"/>
-      <span id="mpv" style="font-size:12px;font-weight:500;min-width:32px">0%</span>
-      <div class="color-pick" id="meta-color-pick">
-        <button class="color-dot selected" style="background:var(--rose)" onclick="selMCol(this,'rose')"></button>
-        <button class="color-dot" style="background:var(--lav)" onclick="selMCol(this,'lav')"></button>
-        <button class="color-dot" style="background:var(--mint)" onclick="selMCol(this,'mint')"></button>
-        <button class="color-dot" style="background:var(--peach)" onclick="selMCol(this,'peach')"></button>
-      </div>
-      <button class="btn-add" onclick="addMeta()">+ Adicionar</button>
-    </div>
-  </div>
-</div>
-
-<!-- NOTAS -->
-<div id="page-notas" class="page">
-  <div class="card" style="background:var(--mint);border:none">
-    <div class="card-title" style="color:var(--mint-t)"><div class="pill" style="background:var(--mint-d)"></div> Desejos e ideias</div>
-    <textarea class="note-area" id="desejos" style="background:rgba(255,255,255,0.6);min-height:100px" placeholder="Quero aprender...&#10;Quero visitar..." oninput="debounceSave('desejos',this.value)"></textarea>
-  </div>
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> Afirmações positivas</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px" id="afirmacoes"></div>
-    <div style="display:flex;gap:6px;margin-top:10px">
-      <input id="afirm-input" class="form-input" placeholder="Nova afirmação..." onkeydown="if(event.key==='Enter')addAfirmacao()"/>
-      <button class="btn-add" onclick="addAfirmacao()">+</button>
-    </div>
-  </div>
-</div>
-
-<!-- BEM-ESTAR -->
-<div id="page-bemestar" class="page">
-  <div class="card" style="background:var(--mint);border:none;margin-bottom:16px">
-    <div style="font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--mint-t)">🌿 Bem-estar & Autocuidado</div>
-    <div style="font-size:13px;color:var(--mint-d);margin-top:4px;font-weight:300">Cuida do teu corpo e da tua mente — cada pequeno gesto conta</div>
-  </div>
-  <div class="grid-2">
-    <!-- ÁGUA -->
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> 💧 Água hoje</div>
-      <div style="text-align:center;margin-bottom:12px">
-        <div style="font-family:'Playfair Display',serif;font-size:42px;color:var(--sky-d)" id="water-count">0</div>
-        <div style="font-size:12px;color:var(--muted)">copos de 250ml</div>
-        <div style="font-size:12px;color:var(--sky-d);margin-top:4px" id="water-pct">0% do objetivo (8 copos)</div>
-      </div>
-      <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:12px" id="water-cups"></div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button onclick="addWater()" class="btn-add" style="background:var(--sky);color:var(--sky-t)">+ Copo</button>
-        <button onclick="resetWater()" style="padding:9px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-family:inherit;font-size:13px;color:var(--muted)">Reset</button>
-      </div>
-    </div>
-    <!-- SONO -->
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div> 😴 Sono de ontem</div>
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
-        <div style="text-align:center">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Deitei</div>
-          <input type="time" id="sleep-bed" class="form-input" style="max-width:100px" onchange="calcSleep()"/>
-        </div>
-        <div style="font-size:24px;color:var(--muted)">→</div>
-        <div style="text-align:center">
-          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Acordei</div>
-          <input type="time" id="sleep-wake" class="form-input" style="max-width:100px" onchange="calcSleep()"/>
-        </div>
-      </div>
-      <div style="text-align:center;padding:12px;background:var(--lav);border-radius:12px">
-        <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--lav-t)" id="sleep-hours">—</div>
-        <div style="font-size:12px;color:var(--lav-d)" id="sleep-quality">horas de sono</div>
-      </div>
-      <textarea class="note-area" id="sono-nota" placeholder="Como foi o teu sono? Sonhaste com algo?" style="margin-top:10px;min-height:60px" oninput="debounceSave('sono_nota',this.value)"></textarea>
-    </div>
-  </div>
-
-  <!-- ROTINA DO DIA COM HORÁRIOS -->
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> 🕐 Rotina com horários</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">Planeia o teu dia hora a hora</div>
-    <div id="rotina-blocks"></div>
-    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-      <input type="time" id="rotina-hora" class="form-input" style="max-width:90px"/>
-      <input id="rotina-task" class="form-input" placeholder="O que vais fazer..." onkeydown="if(event.key==='Enter')addRotina()"/>
-      <select id="rotina-cat" class="form-input" style="max-width:120px">
-        <option value="trabalho">💼 Trabalho</option>
-        <option value="saude">💚 Saúde</option>
-        <option value="casa">🏡 Casa</option>
-        <option value="pessoal">🌸 Pessoal</option>
-        <option value="lazer">✨ Lazer</option>
-      </select>
-      <button class="btn-add" onclick="addRotina()">+</button>
-    </div>
-  </div>
-
-  <!-- AUTOCUIDADO CHECKLIST -->
-  <div class="card" style="background:var(--rose);border:none">
-    <div class="card-title" style="color:var(--rose-t)"><div class="pill" style="background:var(--rose-d)"></div> 🌸 Checklist de autocuidado</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="autocuidado-list"></div>
-  </div>
-
-  <!-- RASTREADOR LEITURAS/FILMES -->
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--gold-d)"></div> 📚 Leituras</div>
-      <div id="livros-list"></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="livro-input" class="form-input" placeholder="Livro ou artigo..." onkeydown="if(event.key==='Enter')addLivro()"/>
-        <button class="btn-add" onclick="addLivro()" style="padding:8px 12px">+</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> 🎬 Filmes & Séries</div>
-      <div id="filmes-list"></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="filme-input" class="form-input" placeholder="Filme ou série..." onkeydown="if(event.key==='Enter')addFilme()"/>
-        <button class="btn-add" onclick="addFilme()" style="padding:8px 12px;background:var(--sky);color:var(--sky-t)">+</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- FINANÇAS -->
-<!-- GLOW UP -->
-<div id="page-glowup" class="page">
-  <div style="background:linear-gradient(135deg,var(--wine),var(--cocoa));border-radius:20px;padding:28px 32px;margin-bottom:20px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.08)"></div>
-    <div style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:#fdf9f4">💅 O Meu Glow Up</div>
-    <div style="font-size:13px;color:rgba(253,249,244,0.75);margin-top:6px;font-weight:300;line-height:1.6">A tua evolução — física, mental e emocional. Porque és mãe, és dona de casa, <em>e também és mulher.</em></div>
-  </div>
-
-  <div class="grid-2">
-    <!-- SKINCARE -->
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--rose-d)"></div> 🌸 Rotina de Skincare</div>
-      <div style="display:flex;gap:10px;margin-bottom:12px">
-        <div style="flex:1">
-          <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Manhã ☀️</div>
-          <div id="skin-manha-list"></div>
-          <div style="display:flex;gap:4px;margin-top:6px">
-            <input id="skin-manha-inp" class="form-input" placeholder="Ex: Vitamina C..." style="font-size:11px" onkeydown="if(event.key==='Enter')addSkin('manha')"/>
-            <button onclick="addSkin('manha')" class="btn-add" style="padding:6px 10px;font-size:12px">+</button>
+        <section class="smart-planning-card">
+          <p class="eyebrow">Agente interno de preparação</p>
+          <div class="form-row">
+            <label>Começar a preparar
+              <select name="prepare_days_before">
+                <option value="0">No próprio dia</option>
+                <option value="1">1 dia antes</option>
+                <option value="3">3 dias antes</option>
+                <option value="7">1 semana antes</option>
+                <option value="14">2 semanas antes</option>
+                <option value="30">1 mês antes</option>
+                <option value="60">2 meses antes</option>
+                <option value="90">3 meses antes</option>
+              </select>
+            </label>
+            <label>Repetição
+              <select name="recurrence">
+                <option value="none">Não repetir</option>
+                <option value="daily">Todos os dias</option>
+                <option value="weekly">Todas as semanas</option>
+                <option value="monthly">Todos os meses</option>
+                <option value="yearly">Todos os anos</option>
+              </select>
+            </label>
           </div>
-        </div>
-        <div style="width:1px;background:var(--border)"></div>
-        <div style="flex:1">
-          <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Noite 🌙</div>
-          <div id="skin-noite-list"></div>
-          <div style="display:flex;gap:4px;margin-top:6px">
-            <input id="skin-noite-inp" class="form-input" placeholder="Ex: Retinol..." style="font-size:11px" onkeydown="if(event.key==='Enter')addSkin('noite')"/>
-            <button onclick="addSkin('noite')" class="btn-add" style="padding:6px 10px;font-size:12px">+</button>
+          <p class="muted">Escolhe o tipo e a antecedência. Depois gera uma checklist detalhada, pensada para não te esqueceres dos passos pequenos.</p>
+          <button id="generate-checklist-btn" type="button" class="text-btn">Gerar checklist sugerida</button>
+        </section>
+
+        <fieldset class="color-fieldset">
+          <legend>Ajuste opcional da cor</legend>
+          <p class="muted color-hint">A cor vem da área, mas podes ajustar este evento específico.</p>
+          <div class="color-grid">
+            <label class="color-chip"><input type="radio" name="color" value="casa" checked /><span class="color-dot-visual" style="--event-color:#d9c7a6"></span><span>Areia quente</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="familia" /><span class="color-dot-visual" style="--event-color:#c7d3b5"></span><span>Sálvia familiar</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="filhos" /><span class="color-dot-visual" style="--event-color:#c9dbe7"></span><span>Azul bebé elegante</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="eu" /><span class="color-dot-visual" style="--event-color:#d6b1bb"></span><span>Rosa antigo</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="bem-estar" /><span class="color-dot-visual" style="--event-color:#afc8a5"></span><span>Verde spa</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="casamento" /><span class="color-dot-visual" style="--event-color:#c6c5dd"></span><span>Lavanda fina</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="projeto" /><span class="color-dot-visual" style="--event-color:#c58c66"></span><span>Terracota premium</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="papeis" /><span class="color-dot-visual" style="--event-color:#b8afa6"></span><span>Taupe burocracia</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="financas" /><span class="color-dot-visual" style="--event-color:#8f9b74"></span><span>Oliva dourado</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="rotinas" /><span class="color-dot-visual" style="--event-color:#e7ddbf"></span><span>Linho rotina</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="social" /><span class="color-dot-visual" style="--event-color:#eab8a5"></span><span>Pêssego social</span></label>
+            <label class="color-chip"><input type="radio" name="color" value="outro" /><span class="color-dot-visual" style="--event-color:#bbb2a8"></span><span>Neutro suave</span></label>
           </div>
-        </div>
-      </div>
-      <div style="padding:10px;background:var(--rose);border-radius:10px;font-size:12px;color:var(--rose-t);font-style:italic">
-        💡 Clica em cada passo para marcar como feito hoje
-      </div>
+        </fieldset>
+
+        <label>Checklist de ações
+          <textarea name="checklist_text" rows="8" maxlength="4000" placeholder="Uma ação por linha. Podes escrever à mão ou usar o botão Gerar checklist sugerida."></textarea>
+        </label>
+        <label>Notas
+          <textarea name="notes" rows="3" maxlength="1200" placeholder="Contexto, ideias, compras, orçamento, pessoas envolvidas..."></textarea>
+        </label>
+        <label class="check-line"><input name="all_day" type="checkbox" /> Evento de dia inteiro</label>
+        <p id="event-feedback" class="form-feedback" aria-live="polite"></p>
+        <button id="event-submit-btn" type="submit" class="primary-btn">Guardar evento</button>
+      </form>
     </div>
+  </section>
 
-    <!-- CABELO & BELEZA -->
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--lav-d)"></div> 💇 Cabelo & Beleza</div>
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Próximos cuidados</div>
-      <div id="cabelo-list"></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="cabelo-inp" class="form-input" placeholder="Ex: Hidratação, corte, coloração..." onkeydown="if(event.key==='Enter')addCabelo()"/>
-        <button onclick="addCabelo()" class="btn-add" style="padding:8px 12px">+</button>
-      </div>
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Produtos que uso / quero testar</div>
-        <textarea class="note-area" id="cabelo-produtos" placeholder="Shampoo, máscara, óleo..." style="min-height:60px;background:var(--lav)" oninput="debounceSave('cabelo_produtos',this.value)"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- TREINO -->
-  <div class="card" style="background:var(--mint);border:none">
-    <div class="card-title" style="color:var(--mint-t)"><div class="pill" style="background:var(--mint-d)"></div> 🏃 Movimento & Treino</div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px" id="treino-semana"></div>
-    <div style="font-size:11px;font-weight:600;color:var(--mint-t);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">O meu plano de treino</div>
-    <div class="grid-2" style="gap:8px">
-      <div>
-        <textarea class="note-area" id="treino-plano" placeholder="Ex: 2ª e 4ª caminhada 30min&#10;3ª e 5ª pilates&#10;Fim de semana alongamento..." style="background:rgba(255,255,255,0.6);min-height:100px" oninput="debounceSave('treino_plano',this.value)"></textarea>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:600;color:var(--mint-t);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Como me sinto após treinar</div>
-        <textarea class="note-area" id="treino-sentir" placeholder="Regista como te sentes após cada treino..." style="background:rgba(255,255,255,0.6);min-height:100px" oninput="debounceSave('treino_sentir',this.value)"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- ESTILO -->
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> 👗 Estilo & Guarda-roupa</div>
-    <div class="grid-2" style="gap:12px">
-      <div>
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">✨ Quero comprar / adquirir</div>
-        <div id="estilo-quero"></div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="estilo-quero-inp" class="form-input" placeholder="Peça, acessório..." style="font-size:12px" onkeydown="if(event.key==='Enter')addEstiloQuero()"/>
-          <button onclick="addEstiloQuero()" class="btn-add" style="padding:7px 10px;font-size:12px">+</button>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">💭 O meu estilo / inspiração</div>
-        <textarea class="note-area" id="estilo-inspo" placeholder="Como me quero sentir com as minhas roupas?&#10;Palavras que descrevem o meu estilo..." style="min-height:100px" oninput="debounceSave('estilo_inspo',this.value)"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- DESENVOLVIMENTO PESSOAL -->
-  <div class="card" style="background:var(--lav);border:none">
-    <div class="card-title" style="color:var(--lav-t)"><div class="pill" style="background:var(--lav-d)"></div> 🌱 Desenvolvimento Pessoal</div>
-    <div class="grid-2" style="gap:12px">
-      <div>
-        <div style="font-size:11px;font-weight:600;color:var(--lav-t);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Estou a trabalhar em mim</div>
-        <div id="desenvolv-list"></div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <input id="desenvolv-inp" class="form-input" placeholder="Ex: Terapia, curso, leitura..." style="background:rgba(255,255,255,0.7);font-size:12px" onkeydown="if(event.key==='Enter')addDesenv()"/>
-          <button onclick="addDesenv()" class="btn-add" style="padding:7px 10px;font-size:12px">+</button>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:600;color:var(--lav-t);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">A minha melhor versão é...</div>
-        <textarea class="note-area" id="melhor-versao" placeholder="Como te describes quando és a tua melhor versão?&#10;O que sentes, como ages, como te cuidas..." style="background:rgba(255,255,255,0.6);min-height:110px" oninput="debounceSave('melhor_versao',this.value)"></textarea>
-      </div>
-    </div>
-  </div>
-
-  <!-- BANHO PREMIUM -->
-  <div class="card" style="background:var(--golden);border:none">
-    <div class="card-title" style="color:var(--cocoa)"><div class="pill" style="background:var(--caramel)"></div> 🛁 Ritual do Banho Premium</div>
-    <div style="font-size:12px;color:var(--cocoa-l);margin-bottom:12px;font-style:italic">O banho não é só higiene — é um momento teu. Marca o que fizeste hoje.</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="banho-list"></div>
-    <div style="display:flex;gap:6px;margin-top:10px">
-      <input id="banho-inp" class="form-input" placeholder="Ex: Esfoliação, máscara de cabelo..." style="background:rgba(255,255,255,0.7)" onkeydown="if(event.key==='Enter')addBanho()"/>
-      <button onclick="addBanho()" class="btn-add">+</button>
-    </div>
-  </div>
-
-  <!-- CORPO & UNHAS -->
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--caramel)"></div> 🧴 Corpo & Hidratação</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic">Cuidados diários e semanais com o corpo</div>
-      <div id="corpo-list"></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="corpo-inp" class="form-input" placeholder="Ex: Hidratante corporal, protetor solar..." onkeydown="if(event.key==='Enter')addCorpo()"/>
-        <button onclick="addCorpo()" class="btn-add" style="padding:8px 12px">+</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--wine)"></div> 💅 Unhas & Sobrancelhas</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic">Agenda de manutenção</div>
-      <div id="unhas-list"></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <select id="unhas-freq" class="form-input" style="max-width:120px">
-          <option value="semanal">Semanal</option>
-          <option value="quinzenal">Quinzenal</option>
-          <option value="mensal">Mensal</option>
-        </select>
-        <input id="unhas-inp" class="form-input" placeholder="Ex: Verniz, cutículas, sobrancelhas..." onkeydown="if(event.key==='Enter')addUnhas()"/>
-        <button onclick="addUnhas()" class="btn-add" style="padding:8px 12px">+</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SUPLEMENTOS + DESAFIO -->
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--olive)"></div> 💊 Suplementos & Vitaminas</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic">Regista o que tomas diariamente</div>
-      <div id="suplem-list"></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="suplem-inp" class="form-input" placeholder="Ex: Vitamina D, colágeno, ferro..." onkeydown="if(event.key==='Enter')addSuplem()"/>
-        <button onclick="addSuplem()" class="btn-add" style="padding:8px 12px">+</button>
-      </div>
-    </div>
-    <div class="card" style="background:var(--wine);border:none">
-      <div class="card-title" style="color:#fdf9f4"><div class="pill" style="background:rgba(255,255,255,0.4)"></div> 🎯 Desafio Glow Up</div>
-      <div style="font-size:12px;color:rgba(253,249,244,0.75);margin-bottom:12px">Quantos dias consecutivos a cuidares de ti?</div>
-      <div style="text-align:center;margin-bottom:12px">
-        <div style="font-family:'Playfair Display',serif;font-size:52px;color:#fdf9f4;line-height:1" id="desafio-count">0</div>
-        <div style="font-size:12px;color:rgba(253,249,244,0.7);margin-top:4px">dias seguidos ✨</div>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button onclick="addDesafioDia()" style="padding:9px 20px;border-radius:10px;border:none;cursor:pointer;background:rgba(255,255,255,0.2);color:#fdf9f4;font-family:inherit;font-size:13px;font-weight:500">+ Marcar hoje</button>
-        <button onclick="resetDesafio()" style="padding:9px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.3);cursor:pointer;background:none;color:rgba(253,249,244,0.7);font-family:inherit;font-size:12px">Reset</button>
-      </div>
-      <div style="font-size:11px;color:rgba(253,249,244,0.6);text-align:center;margin-top:8px;font-style:italic" id="desafio-ultima"></div>
-    </div>
-  </div>
-
-  <!-- ROTINA NOTURNA BELEZA -->
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--cocoa)"></div> 🌙 Rotina Noturna de Beleza</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">O que fazes antes de dormir para acordares radiante</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px" id="night-beauty-list"></div>
-    <div style="display:flex;gap:6px;margin-top:10px">
-      <input id="night-inp" class="form-input" placeholder="Ex: Dupla limpeza, creme contorno de olhos..." onkeydown="if(event.key==='Enter')addNightBeauty()"/>
-      <button onclick="addNightBeauty()" class="btn-add">+</button>
-    </div>
-  </div>
-
-</div>
-<div id="page-casa" class="page">
-  <div style="background:linear-gradient(135deg,var(--sand),var(--peach));border-radius:20px;padding:28px 32px;margin-bottom:20px">
-    <div style="font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:var(--sand-t)">🏡 A Minha Casa</div>
-    <div style="font-size:13px;color:var(--sand-d);margin-top:6px;font-weight:300">Um lar organizado é uma mente em paz</div>
-  </div>
-
-  <!-- CHECKLIST DIÁRIA -->
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> ☀️ Tarefas diárias da casa</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">Marca o que fizeste hoje — reset automático cada dia</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="casa-diaria-list"></div>
-    <div style="display:flex;gap:6px;margin-top:12px">
-      <input id="casa-diaria-inp" class="form-input" placeholder="Nova tarefa diária..." onkeydown="if(event.key==='Enter')addCasaDiaria()"/>
-      <button onclick="addCasaDiaria()" class="btn-add">+ Adicionar</button>
-    </div>
-  </div>
-
-  <!-- ROTINA MANHÃ + NOITE -->
-  <div class="grid-2">
-    <div class="card" style="background:var(--yellow);border:none">
-      <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> 🌅 Rotina da manhã em casa</div>
-      <div id="rotina-manha-casa"></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="rotina-manha-casa-inp" class="form-input" placeholder="Ex: Fazer a cama..." style="font-size:12px;background:rgba(255,255,255,0.6)" onkeydown="if(event.key==='Enter')addRotinaCasa('manha')"/>
-        <button onclick="addRotinaCasa('manha')" class="btn-add" style="padding:7px 10px;background:var(--yellow-d);color:white">+</button>
-      </div>
-    </div>
-    <div class="card" style="background:var(--lav);border:none">
-      <div class="card-title" style="color:var(--lav-t)"><div class="pill" style="background:var(--lav-d)"></div> 🌙 Rotina da noite em casa</div>
-      <div id="rotina-noite-casa"></div>
-      <div style="display:flex;gap:6px;margin-top:8px">
-        <input id="rotina-noite-casa-inp" class="form-input" placeholder="Ex: Arrumar a cozinha..." style="font-size:12px;background:rgba(255,255,255,0.6)" onkeydown="if(event.key==='Enter')addRotinaCasa('noite')"/>
-        <button onclick="addRotinaCasa('noite')" class="btn-add" style="padding:7px 10px;background:var(--lav-d);color:white">+</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CRONOGRAMA SEMANAL DE LIMPEZA -->
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--mint-d)"></div> 🧹 Cronograma semanal de limpeza</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">Distribui as tarefas pelos dias — assim não acumulas tudo</div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px" id="limpeza-semana"></div>
-    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-      <select id="limpeza-dia" class="form-input" style="max-width:120px">
-        <option value="0">Segunda</option><option value="1">Terça</option><option value="2">Quarta</option>
-        <option value="3">Quinta</option><option value="4">Sexta</option><option value="5">Sábado</option><option value="6">Domingo</option>
-      </select>
-      <input id="limpeza-tarefa" class="form-input" placeholder="Ex: Limpar casas de banho..." onkeydown="if(event.key==='Enter')addLimpezaSemanal()"/>
-      <button onclick="addLimpezaSemanal()" class="btn-add">+ Adicionar</button>
-    </div>
-  </div>
-
-  <!-- LIMPEZA PROFUNDA -->
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title"><div class="pill" style="background:var(--sky-d)"></div> 📅 Limpeza mensal / trimestral</div>
-      <div id="limpeza-mensal-list"></div>
-      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-        <select id="limpeza-freq" class="form-input" style="max-width:130px">
-          <option value="mensal">📅 Mensal</option>
-          <option value="trimestral">🗓 Trimestral</option>
-          <option value="semestral">📆 Semestral</option>
-          <option value="anual">🎯 Anual</option>
-        </select>
-        <input id="limpeza-mensal-inp" class="form-input" placeholder="Ex: Lavar cortinas..." onkeydown="if(event.key==='Enter')addLimpezaMensal()"/>
-        <button onclick="addLimpezaMensal()" class="btn-add">+</button>
-      </div>
-    </div>
-    <div class="card" style="background:var(--peach);border:none">
-      <div class="card-title" style="color:var(--peach-t)"><div class="pill" style="background:var(--peach-d)"></div> 💡 Notas da casa</div>
-      <textarea class="note-area" id="casa-notas" placeholder="Coisas para arranjar, comprar para a casa, ideias de decoração..." style="background:rgba(255,255,255,0.6);min-height:140px" oninput="debounceSave('casa_notas',this.value)"></textarea>
-    </div>
-  </div>
-</div>
-
-<!-- SONHOS & VISÃO -->
-<div id="page-sonhos" class="page">
-  <div class="card" style="background:linear-gradient(135deg,var(--lav),var(--peach));border:none;margin-bottom:16px">
-    <div style="font-family:'Playfair Display',serif;font-size:22px;font-style:italic;color:var(--lav-t)">🌠 Sonhos & Visão de Vida</div>
-    <div style="font-size:13px;color:var(--lav-d);margin-top:4px;font-weight:300">O teu espaço para sonhar grande e criar a vida que queres</div>
-  </div>
-
-  <!-- CARTA DA VIDA DOS SONHOS -->
-  <div class="card" style="background:var(--yellow);border:none">
-    <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> ✉️ Carta da vida dos sonhos</div>
-    <div style="font-size:12px;color:var(--yellow-d);margin-bottom:10px;font-style:italic">Escreve como seria a tua vida perfeita — sem limites, sem filtros</div>
-    <textarea class="note-area" id="carta-sonhos" style="background:rgba(255,255,255,0.6);min-height:180px" placeholder="Querida eu do futuro...&#10;&#10;A minha vida dos sonhos parece-se com isto:&#10;Eu acordo todas as manhãs e...&#10;&#10;O meu trabalho é...&#10;A minha casa é...&#10;As minhas relações são...&#10;Eu sinto-me..." oninput="debounceSave('carta_sonhos',this.value)"></textarea>
-  </div>
-
-  <!-- BUCKET LIST -->
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--rose-d)"></div> 🪣 Bucket List</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">Tudo o que queres fazer antes de... já não lembrar de fazer 🌸</div>
-    <div id="bucket-list"></div>
-    <div style="display:flex;gap:8px;margin-top:10px">
-      <select id="bucket-cat" class="form-input" style="max-width:130px">
-        <option value="viagem">✈️ Viagem</option>
-        <option value="experiencia">🎢 Experiência</option>
-        <option value="aprender">📚 Aprender</option>
-        <option value="conquistar">🏆 Conquistar</option>
-        <option value="dar">💝 Dar/Ajudar</option>
-        <option value="outro">🌸 Outro</option>
-      </select>
-      <input id="bucket-input" class="form-input" placeholder="Algo que quero fazer na vida..." onkeydown="if(event.key==='Enter')addBucket()"/>
-      <button class="btn-add" onclick="addBucket()">+</button>
-    </div>
-  </div>
-
-  <!-- VISÃO ANUAL -->
-  <div class="card" style="background:var(--lav);border:none">
-    <div class="card-title" style="color:var(--lav-t)"><div class="pill" style="background:var(--lav-d)"></div> 📅 Grandes momentos do ano</div>
-    <div style="font-size:12px;color:var(--lav-d);margin-bottom:12px;font-style:italic">Datas, eventos e marcos importantes que queres registar</div>
-    <div id="visao-anual-list"></div>
-    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-      <input type="date" id="visao-data" class="form-input" style="max-width:140px"/>
-      <input id="visao-evento" class="form-input" placeholder="Evento ou marco importante..."/>
-      <button class="btn-add" onclick="addVisaoAnual()">+</button>
-    </div>
-  </div>
-
-  <!-- PALAVRAS DO ANO / INTENÇÕES -->
-  <div class="card">
-    <div class="card-title"><div class="pill" style="background:var(--peach-d)"></div> 💫 As minhas palavras do ano</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-style:italic">3 palavras que guiam o teu ano — o teu norte</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px" id="palavras-ano"></div>
-    <div style="display:flex;gap:6px;margin-top:10px">
-      <input id="palavra-input" class="form-input" placeholder="Uma palavra (ex: Coragem, Leveza, Foco...)" onkeydown="if(event.key==='Enter')addPalavra()"/>
-      <button class="btn-add" onclick="addPalavra()">+</button>
-    </div>
-  </div>
-
-  <!-- NOTAS SECÇÃO -->
-  <div class="grid-2">
-    <div class="card" style="background:var(--lav);border:none">
-      <div class="card-title" style="color:var(--lav-t)"><div class="pill" style="background:var(--lav-d)"></div> Gratidão</div>
-      <textarea class="note-area" id="gratidao" style="background:rgba(255,255,255,0.6);min-height:160px" placeholder="Hoje sou grata por...&#10;&#10;1.&#10;2.&#10;3." oninput="debounceSave('gratidao',this.value)"></textarea>
-    </div>
-    <div class="card" style="background:var(--yellow);border:none">
-      <div class="card-title" style="color:var(--yellow-t)"><div class="pill" style="background:var(--yellow-d)"></div> Diário livre</div>
-      <textarea class="note-area" id="diario" style="background:rgba(255,255,255,0.6);min-height:160px" placeholder="Escreve livremente... ✨" oninput="debounceSave('diario',this.value)"></textarea>
-    </div>
-  </div>
-</div>
-
-</div>
-
-<script>
-const SUPABASE_URL='https://uoaokjxojqhrhugqfgpe.supabase.co';
-const SUPABASE_KEY='sb_publishable_UfUQmGlYUihxQJZGEa585Q_btnEzYGG';
-const USER_ID='utilizador_principal';
-const H={'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'return=representation'};
-const API=SUPABASE_URL+'/rest/v1/';
-async function dbGet(t,f={}){let q=API+t+'?select=*';for(const[k,v]of Object.entries(f))q+=`&${k}=eq.${encodeURIComponent(v)}`;q+='&order=created_at.asc';const r=await fetch(q,{headers:H});return r.ok?r.json():[];}
-async function dbInsert(t,row){const r=await fetch(API+t,{method:'POST',headers:H,body:JSON.stringify(row)});const d=await r.json();return Array.isArray(d)?d[0]:d;}
-async function dbUpdate(t,id,row){await fetch(API+t+'?id=eq.'+id,{method:'PATCH',headers:H,body:JSON.stringify(row)});}
-async function dbDelete(t,f={}){let q=API+t+'?';q+=Object.entries(f).map(([k,v])=>`${k}=eq.${encodeURIComponent(v)}`).join('&');await fetch(q,{method:'DELETE',headers:H});}
-async function dbUpsert(t,row,c){const r=await fetch(API+t+'?on_conflict='+c,{method:'POST',headers:{...H,'Prefer':'resolution=merge-duplicates,return=representation'},body:JSON.stringify(row)});const d=await r.json();return Array.isArray(d)?d[0]:d;}
-
-const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const WDAYS=['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
-const QUOTES=['Cada dia é uma nova página 🌸','Pequenos passos, grandes conquistas ✨','Acredita em ti 🌿','Hoje é sempre o melhor dia 💛','Vai ao teu ritmo, mas vai 🌊','O progresso não para 🌺','A tua vida é a tua obra de arte 🎨'];
-const AFIRM0=['Sou capaz 🌸','Mereço o melhor ✨','Estou a crescer 🌿','Sou amada 💛','O meu tempo virá 🌊'];
-const AREAS=[
-  {key:'saude',    icon:'💚',label:'Saúde',           color:'#7a9860',light:'#d4e4c8',desc:'O teu corpo, energia, sono, alimentação e bem-estar físico e mental.'},
-  {key:'carreira', icon:'💼',label:'Carreira',        color:'#743014',light:'#e4c0a8',desc:'O teu trabalho, estudos, propósito profissional e satisfação no que fazes.'},
-  {key:'dinheiro', icon:'💛',label:'Finanças',        color:'#84592B',light:'#e8d0a8',desc:'A tua relação com o dinheiro, poupanças, dívidas e segurança financeira.'},
-  {key:'relac',    icon:'💗',label:'Relacionamentos', color:'#9D7050',light:'#e0c8a8',desc:'Os teus relacionamentos afetivos, amor próprio e vida amorosa.'},
-  {key:'familia',  icon:'🏡',label:'Família',         color:'#442D1C',light:'#c4a882',desc:'A qualidade das tuas relações familiares, harmonia e suporte familiar.'},
-  {key:'lazer',    icon:'🌸',label:'Lazer & Alegria', color:'#9D9167',light:'#e0d8c4',desc:'O tempo que dedicas ao que te alegra, hobbies, descanso e diversão.'},
-  {key:'desenvolv',icon:'🌱',label:'Desenvolvimento', color:'#5a7840',light:'#c8dca8',desc:'O teu crescimento pessoal, aprendizagem, hábitos e autoconhecimento.'},
-  {key:'espirito', icon:'✨',label:'Espiritualidade', color:'#6888a0',light:'#c4d4e4',desc:'A tua paz interior, propósito de vida, fé, meditação ou conexão contigo.'},
-];
-const DEEP_QS={
-  saude:['Como está o teu nível de energia ao longo do dia? (1=exausto, 10=cheio de vitalidade)','Estás a dormir bem e o suficiente? (1=muito mal, 10=muito bem)','Como avalias a tua alimentação e hidratação? (1=muito má, 10=excelente)','Praticas atividade física com regularidade? (1=nunca, 10=sempre)','Como está o teu bem-estar emocional e mental? (1=muito mal, 10=excelente)'],
-  carreira:['Sentes-te realizada com o teu trabalho ou estudos? (1=nada, 10=completamente)','O teu trabalho está alinhado com os teus valores e propósito? (1=nada, 10=totalmente)','Sentes que estás a crescer e aprender na tua área? (1=nada, 10=muito)','Como é o ambiente e relações no teu trabalho? (1=muito mau, 10=excelente)','Tens equilíbrio entre vida profissional e pessoal? (1=nenhum, 10=total)'],
-  dinheiro:['Consegues pagar as tuas despesas sem stress? (1=nunca, 10=sempre)','Tens poupanças ou reserva de emergência? (1=nenhuma, 10=sólida)','Sentes controlo sobre os teus gastos? (1=nenhum, 10=total)','Invistes no teu futuro financeiro? (1=nunca, 10=regularmente)','A tua relação emocional com o dinheiro é saudável? (1=muito má, 10=excelente)'],
-  relac:['Sentes-te amada e valorizada na tua vida amorosa? (1=nada, 10=completamente)','A comunicação no teu relacionamento é saudável? (1=muito má, 10=excelente)','Tens tempo de qualidade com as pessoas que amas? (1=nunca, 10=sempre)','Como está o teu amor próprio e autoestima? (1=muito baixo, 10=muito alto)','Sentes-te emocionalmente segura nas tuas relações? (1=nada, 10=completamente)'],
-  familia:['Como é a harmonia nas tuas relações familiares? (1=muito má, 10=excelente)','Tens apoio da tua família quando precisas? (1=nenhum, 10=total)','Passas tempo de qualidade com a tua família? (1=nunca, 10=regularmente)','Consegues estabelecer limites saudáveis com a família? (1=nunca, 10=sempre)','Sentes-te aceite e amada pela tua família? (1=nada, 10=completamente)'],
-  lazer:['Tens tempo para hobbies e atividades que te alegram? (1=nunca, 10=regularmente)','Consegues desligar do trabalho e das obrigações? (1=nunca, 10=sempre)','Vives momentos de alegria e leveza no dia a dia? (1=raramente, 10=frequentemente)','Tens aventuras, viagens ou experiências novas? (1=nunca, 10=regularmente)','Sentes-te a viver plenamente e não apenas a sobreviver? (1=nada, 10=totalmente)'],
-  desenvolv:['Estás a aprender algo novo que te entusiasma? (1=nada, 10=muito)','Tens hábitos positivos e consistentes? (1=nenhuns, 10=muitos e sólidos)','Trabalhas o teu autoconhecimento? (1=nada, 10=muito)','Tens objetivos claros de crescimento pessoal? (1=nenhuns, 10=muito claros)','Sentes que estás a tornar-te a melhor versão de ti? (1=nada, 10=muito)'],
-  espirito:['Sentes paz interior e equilíbrio emocional? (1=nunca, 10=sempre)','Tens um sentido de propósito e significado na tua vida? (1=nenhum, 10=muito claro)','Praticas meditação, gratidão ou outra prática espiritual? (1=nunca, 10=diariamente)','Sentes conexão contigo mesma e com o que realmente importa? (1=nada, 10=profundamente)','A tua vida está alinhada com os teus valores mais profundos? (1=nada, 10=completamente)'],
-};
-const AREA_TIPS={
-  saude:['Dormir 7-8h por noite','Beber 2L de água por dia','Caminhar 30min ao dia','Cozinhar refeições saudáveis','Reduzir o açúcar','Meditar 10min por dia','Fazer streching pela manhã','Check-up médico anual'],
-  carreira:['Definir 1 meta profissional este mês','Aprender 1 skill nova','Pedir feedback','Actualizar o CV','Networking com 1 pessoa nova','Dizer não a 1 tarefa extra','Criar rotina de trabalho focada','Explorar nova área de interesse'],
-  dinheiro:['Criar orçamento mensal','Poupar 10% do rendimento','Cancelar 1 subscrição','Criar fundo de emergência','Aprender sobre investimentos','Registar todos os gastos 1 mês','Liquidar 1 dívida pequena','Aumentar 1 fonte de rendimento'],
-  relac:['Planejar 1 date especial','Expressar gratidão ao parceiro','Ter 1 conversa honesta profunda','Praticar escuta ativa','Trabalhar o amor próprio','Escrever o que adoro na relação','Pedir o que preciso diretamente','Marcar tempo a sós contigo'],
-  familia:['Telefonar a 1 familiar esta semana','Planejar jantar em família','Escrever carta de gratidão','Estabelecer 1 limite saudável','Criar ritual familiar semanal','Partilhar uma memória boa','Mostrar amor de forma ativa','Perdoar algo pequeno guardado'],
-  lazer:['Fazer 1 coisa por prazer hoje','Planear viagem (mesmo pequena)','Retomar 1 hobby abandonado','1 tarde sem ecrãs','Ler livro que quero há tempo','Experimentar atividade nova','Dançar ou criar algo','Sair com amigas sem agenda'],
-  desenvolv:['Ler 20 páginas por dia','Fazer 1 curso online','Escrever no diário diariamente','Criar 1 hábito positivo novo','Ouvir 1 podcast de crescimento','Fazer terapia ou coaching','Identificar 1 crença limitante','Celebrar 1 conquista pequena'],
-  espirito:['Meditar 5min pela manhã','Escrever 3 gratidões por dia','Passar tempo na natureza','Praticar silêncio intencional','Ler sobre espiritualidade','Fazer 1 oração ou intenção diária','Ajudar alguém sem esperar nada','Praticar o desapego'],
-};
-const CM={
-  rose:{bg:'#e8d0b8',text:'#442D1C',dark:'#84592B'},
-  lav:{bg:'#d4c4b0',text:'#3a2818',dark:'#7a5c40'},
-  mint:{bg:'#c8d4b8',text:'#283818',dark:'#5a7840'},
-  sky:{bg:'#c4d0d8',text:'#1c3040',dark:'#6888a0'},
-  peach:{bg:'#e4c4a0',text:'#442D1C',dark:'#84592B'},
-  gold:{bg:'#E8D1A7',text:'#5a3e18',dark:'#a07030'},
-  yellow:{bg:'#E8D1A7',text:'#5a3e18',dark:'#a07030'},
-};
-
-let S={
-  calYear:0,calMonth:0,selDate:null,selColor:'rose',wColor:'rose',mColor:'rose',
-  events:{},tasks:{manha:[],tarde:[],noite:[]},weekTasks:[[],[],[],[],[],[],[]],
-  habits:[],metas:[],afirm:[],
-  wheel:{saude:5,carreira:5,dinheiro:5,relac:5,familia:5,lazer:5,desenvolv:5,espirito:5},
-  wheelHist:[],qAns:{},planoActions:{},
-};
-let timers={};
-function showSaved(){const e=document.getElementById('save-indicator');e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
-function debounceSave(k,v){clearTimeout(timers[k]);timers[k]=setTimeout(()=>saveNote(k,v),1000);}
-
-async function loadAll(){
-  const today=new Date().toISOString().split('T')[0];
-  const timeout=(p,ms=4000)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms))]);
-  
-  const[notes,events,tasks,wt,habits,metas,afirm,wh]=await Promise.all([
-    timeout(dbGet('notes',{user_id:USER_ID})).catch(()=>[]),
-    timeout(dbGet('events',{user_id:USER_ID})).catch(()=>[]),
-    timeout(dbGet('tasks',{user_id:USER_ID,date:today})).catch(()=>[]),
-    timeout(dbGet('week_tasks',{user_id:USER_ID,week_key:getWK()})).catch(()=>[]),
-    timeout(dbGet('habits',{user_id:USER_ID})).catch(()=>[]),
-    timeout(dbGet('metas',{user_id:USER_ID})).catch(()=>[]),
-    timeout(dbGet('afirmacoes',{user_id:USER_ID})).catch(()=>[]),
-    timeout(dbGet('wheel_history',{user_id:USER_ID})).catch(()=>[]),
-  ]);
-
-  (notes||[]).forEach(n=>{
-    const el=document.getElementById(n.key.replace(/_/g,'-'));
-    if(el)el.value=n.value||'';
-    if(n.key==='wheel_scores'){try{S.wheel=JSON.parse(n.value);}catch(e){}}
-    if(n.key==='plano_actions'){try{S.planoActions=JSON.parse(n.value);}catch(e){}}
-  });
-  (events||[]).forEach(e=>{if(!S.events[e.date])S.events[e.date]=[];S.events[e.date].push({id:e.id,name:e.name,time:e.time,color:e.color});});
-  (tasks||[]).forEach(t=>{if(S.tasks[t.period])S.tasks[t.period].push({id:t.id,text:t.text,done:t.done});});
-  (wt||[]).forEach(t=>{if(!S.weekTasks[t.day_index])S.weekTasks[t.day_index]=[];S.weekTasks[t.day_index].push({id:t.id,text:t.text,color:t.color});});
-
-  // Load habit days in parallel (not sequential)
-  const habitDayResults=await Promise.all(
-    (habits||[]).map(h=>timeout(dbGet('habit_days',{habit_id:h.id})).catch(()=>[]))
-  );
-  (habits||[]).forEach((h,i)=>{
-    const days={};(habitDayResults[i]||[]).forEach(d=>days[d.day]=true);
-    S.habits.push({id:h.id,name:h.name,color:h.color,days});
-  });
-
-  if(metas)S.metas=metas.map(m=>({id:m.id,emoji:m.emoji,titulo:m.titulo,prazo:m.prazo,progress:m.progress,color:m.color}));
-  if(afirm&&afirm.length>0)S.afirm=afirm.map(a=>({id:a.id,text:a.text,color:a.color}));
-  else{const c=['rose','lav','mint','peach','sky'];S.afirm=AFIRM0.map((t,i)=>({text:t,color:c[i]}));}
-  S.wheelHist=(wh||[]).map(w=>({id:w.id,date:w.date,scores:JSON.parse(w.scores||'{}')}));
-  return notes||[];
-}
-async function saveNote(k,v){await dbUpsert('notes',{user_id:USER_ID,key:k,value:v},'user_id,key');showSaved();}
-
-function showPage(id,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item,.mob-btn').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  if(id==='dashboard')updateDash();
-}
-
-// DASHBOARD
-function updateDash(){
-  const now=new Date();
-  const ds=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-  document.getElementById('dash-date').textContent=ds[now.getDay()]+', '+now.getDate()+' de '+MONTHS[now.getMonth()]+' '+now.getFullYear();
-  const h=now.getHours();document.getElementById('dash-greeting').textContent=h<12?'Bom dia ☀️':h<18?'Boa tarde 🌤️':'Boa noite 🌙';
-  document.getElementById('dash-quote').textContent=QUOTES[now.getDate()%QUOTES.length];
-  document.getElementById('stat-habits').textContent=S.habits.reduce((a,h)=>a+Object.keys(h.days).length,0);
-  document.getElementById('stat-tasks').textContent=[...S.tasks.manha,...S.tasks.tarde,...S.tasks.noite].filter(t=>t.done).length;
-  document.getElementById('stat-wheel').textContent=(AREAS.reduce((a,ar)=>a+(S.wheel[ar.key]||5),0)/8).toFixed(1);
-  document.getElementById('stat-metas').textContent=S.metas.length;
-  const todayK=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
-  const evts=S.events[todayK]||[];
-  document.getElementById('dash-events').innerHTML=evts.length?evts.map(e=>{const c=CM[e.color]||CM.rose;return`<div class="upcoming-item"><div class="upcoming-dot" style="background:${c.dark}"></div><span style="font-size:13px">${e.name}</span>${e.time?`<span style="font-size:11px;color:var(--muted);margin-left:auto">${e.time}</span>`:''}</div>`;}).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic">Sem eventos hoje</div>';
-  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-  document.getElementById('dash-habits').innerHTML=S.habits.length?S.habits.slice(0,5).map(h=>{const pct=Math.round(Object.keys(h.days).length/dim*100);const c=CM[h.color]||CM.mint;return`<div class="habit-mini"><span style="font-size:13px;flex:1">${h.name}</span><div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;background:${c.dark};height:100%;border-radius:2px"></div></div><span style="font-size:12px;font-weight:500;color:${c.dark}">${pct}%</span></div>`;}).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic">Sem hábitos ainda</div>';
-}
-
-// WHEEL TABS
-function showRTab(id,btn){
-  document.querySelectorAll('.rtab-content').forEach(t=>t.style.display='none');
-  document.getElementById('rtab-'+id).style.display='block';
-  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  else document.querySelectorAll('.rtab').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
-  if(id==='historico')renderHist();
-  if(id==='plano')renderPlano();
-}
-
-// WHEEL RENDER
-function renderSliders(){
-  document.getElementById('wheel-sliders').innerHTML=AREAS.map(a=>`
-    <div class="area-slider" style="border-left:3px solid ${a.color}">
-      <div class="area-top">
-        <span class="area-name" style="color:${a.color}">${a.icon} ${a.label}</span>
-        <span class="area-score" style="color:${a.color}" id="sc-${a.key}">${S.wheel[a.key]||5}</span>
-      </div>
-      <input type="range" min="1" max="10" value="${S.wheel[a.key]||5}" style="accent-color:${a.color}" oninput="updArea('${a.key}',+this.value)"/>
-      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:2px"><span>1 crítico</span><span>5 ok</span><span>10 excelente</span></div>
-    </div>`).join('');
-}
-function updArea(k,v){S.wheel[k]=v;document.getElementById('sc-'+k).textContent=v;drawWheel();updInsight();debounceSave('wheel_scores',JSON.stringify(S.wheel));}
-function drawWheel(){
-  const cv=document.getElementById('wheelCanvas');if(!cv)return;
-  const ctx=cv.getContext('2d');const cx=150,cy=150,r=115,n=8;ctx.clearRect(0,0,300,300);
-  for(let i=10;i>=1;i--){ctx.beginPath();AREAS.forEach((a,j)=>{const ang=(j/n)*Math.PI*2-Math.PI/2,rr=(i/10)*r;j===0?ctx.moveTo(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr):ctx.lineTo(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr);});ctx.closePath();ctx.strokeStyle=i%2===0?'rgba(0,0,0,0.05)':'rgba(0,0,0,0.02)';ctx.lineWidth=1;ctx.stroke();}
-  AREAS.forEach((a,j)=>{const ang=(j/n)*Math.PI*2-Math.PI/2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(ang)*r,cy+Math.sin(ang)*r);ctx.strokeStyle=a.color+'44';ctx.lineWidth=1.5;ctx.stroke();});
-  AREAS.forEach((a,j)=>{
-    const ang1=(j/n)*Math.PI*2-Math.PI/2,ang2=((j+1)/n)*Math.PI*2-Math.PI/2;
-    const rr=((S.wheel[a.key]||5)/10)*r,nr=((S.wheel[AREAS[(j+1)%n].key]||5)/10)*r;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(ang1)*rr,cy+Math.sin(ang1)*rr);
-    const steps=8;for(let s=0;s<=steps;s++){const ang=ang1+(ang2-ang1)*s/steps,r2=rr+(nr-rr)*s/steps;ctx.lineTo(cx+Math.cos(ang)*r2,cy+Math.sin(ang)*r2);}
-    ctx.closePath();ctx.fillStyle=a.color+'40';ctx.fill();ctx.strokeStyle=a.color+'99';ctx.lineWidth=1.5;ctx.stroke();
-  });
-  AREAS.forEach((a,j)=>{const ang=(j/n)*Math.PI*2-Math.PI/2,rr=((S.wheel[a.key]||5)/10)*r;ctx.beginPath();ctx.arc(cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr,6,0,Math.PI*2);ctx.fillStyle=a.color;ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=2;ctx.stroke();if(rr>18){ctx.fillStyle='white';ctx.font='bold 10px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(S.wheel[a.key]||5,cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr);}});
-  ctx.textAlign='center';ctx.textBaseline='middle';
-  AREAS.forEach((a,j)=>{const ang=(j/n)*Math.PI*2-Math.PI/2,lr=r+26;ctx.fillStyle=a.color;ctx.font='500 11px Inter,sans-serif';ctx.fillText(a.icon,cx+Math.cos(ang)*lr,cy+Math.sin(ang)*lr-7);ctx.font='500 9px Inter,sans-serif';ctx.fillText(a.label,cx+Math.cos(ang)*lr,cy+Math.sin(ang)*lr+6);});
-  const avg=AREAS.reduce((s,a)=>s+(S.wheel[a.key]||5),0)/8;document.getElementById('wheel-avg').textContent=avg.toFixed(1);
-}
-function updInsight(){
-  const sorted=[...AREAS].sort((a,b)=>(S.wheel[a.key]||5)-(S.wheel[b.key]||5));
-  const lo=sorted[0],lo2=sorted[1],hi=sorted[sorted.length-1];
-  const avg=AREAS.reduce((s,a)=>s+(S.wheel[a.key]||5),0)/8;
-  let emoji,color,msg,action;
-  if(avg>=8){emoji='🌟';color='var(--mint)';msg=`A tua vida está muito equilibrada! O teu ponto mais forte é <strong>${hi.icon} ${hi.label}</strong>.`;action='Mantém este equilíbrio incrível com consistência. ✨';}
-  else if(avg>=6){emoji='🌱';color='var(--lav)';msg=`Estás num bom caminho! As áreas que merecem mais atenção são <strong>${lo.icon} ${lo.label}</strong> (${S.wheel[lo.key]}/10) e <strong>${lo2.icon} ${lo2.label}</strong> (${S.wheel[lo2.key]}/10).`;action='Uma ação pequena por dia nessas áreas transforma tudo. 🌸';}
-  else{emoji='💪';color='var(--peach)';msg=`A área mais desafiante agora é <strong>${lo.icon} ${lo.label}</strong> (${S.wheel[lo.key]}/10). É um ponto de partida, não um fracasso.`;action='Foca em 1-2 áreas de cada vez. Um passo de cada vez. 🌸';}
-  const stars=AREAS.map(a=>{const v=S.wheel[a.key]||5,pct=(v/10)*100,col=v<=3?'var(--rose-d)':v<=6?'var(--yellow-d)':'var(--mint-d)';return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:13px;min-width:22px">${a.icon}</span><span style="font-size:12px;min-width:100px;color:var(--text)">${a.label}</span><div style="flex:1;height:6px;border-radius:3px;background:var(--border);overflow:hidden"><div style="width:${pct}%;height:100%;background:${col};border-radius:3px;transition:width 0.4s"></div></div><span style="font-size:12px;font-weight:600;color:${col};min-width:20px">${v}</span></div>`;}).join('');
-  document.getElementById('wheel-insight').innerHTML=`<div style="background:${color};border-radius:16px;padding:20px;border:1px solid rgba(0,0,0,0.06)"><div style="font-size:22px;margin-bottom:8px">${emoji}</div><div style="font-size:14px;color:var(--text);line-height:1.6;margin-bottom:4px">${msg}</div><div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:16px">${action}</div><div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:14px">${stars}</div><button onclick="showRTab('plano',null)" style="margin-top:14px;padding:8px 16px;border-radius:10px;border:none;cursor:pointer;background:white;color:var(--text);font-family:inherit;font-size:12px;font-weight:500">📋 Criar plano de ação →</button></div>`;
-}
-async function saveWheel(){
-  const date=new Date().toISOString().split('T')[0],scores=JSON.stringify(S.wheel);
-  const row=await dbInsert('wheel_history',{user_id:USER_ID,date,scores});
-  if(row&&row.id)S.wheelHist.push({id:row.id,date,scores:S.wheel});
-  await dbUpsert('notes',{user_id:USER_ID,key:'wheel_scores',value:scores},'user_id,key');
-  showSaved();alert(`Registo guardado! ✨\nMédia: ${(AREAS.reduce((s,a)=>s+(S.wheel[a.key]||5),0)/8).toFixed(1)}/10\n\nVê a tua evolução no separador Histórico.`);
-}
-function renderHist(){
-  const g=document.getElementById('hist-grid');
-  if(!S.wheelHist.length){g.innerHTML='<div style="font-size:13px;color:var(--muted);font-style:italic;padding:20px 0">Sem registos ainda. Guarda a tua primeira roda no separador Visão Geral!</div>';return;}
-  g.innerHTML=[...S.wheelHist].reverse().map((h,i)=>{
-    const sc=typeof h.scores==='string'?JSON.parse(h.scores):h.scores;
-    const avg=(AREAS.reduce((s,a)=>s+(sc[a.key]||5),0)/8).toFixed(1);
-    const sorted=[...AREAS].sort((a,b)=>(sc[b.key]||5)-(sc[a.key]||5));
-    const top3=sorted.slice(0,3),bot3=sorted.slice(-3).reverse();
-    const ss=JSON.stringify(sc).replace(/"/g,'&quot;');
-    const prevIdx=S.wheelHist.length-1-i-1;
-    return`<div class="hist-card" onclick='loadHist(${ss},${prevIdx})'><div class="hist-date">📅 ${h.date}</div><div class="hist-avg">${avg}<span style="font-size:12px;color:var(--muted)"> / 10</span></div><div style="margin-top:8px"><div style="font-size:10px;color:var(--mint-d);margin-bottom:3px">↑ mais altas</div><div class="hist-tags">${top3.map(a=>`<span class="hist-tag" style="background:${a.light};color:${a.color}">${a.icon} ${a.label}: ${sc[a.key]||5}</span>`).join('')}</div><div style="font-size:10px;color:var(--rose-d);margin-bottom:3px;margin-top:6px">↓ mais baixas</div><div class="hist-tags">${bot3.map(a=>`<span class="hist-tag" style="background:var(--rose);color:var(--rose-t)">${a.icon} ${sc[a.key]||5}</span>`).join('')}</div></div></div>`;
-  }).join('');
-  renderHistChart();
-}
-function loadHist(sc,prevIdx){
-  S.wheel=sc;renderSliders();drawWheel();updInsight();
-  if(prevIdx>=0&&S.wheelHist[prevIdx]){
-    const prev=typeof S.wheelHist[prevIdx].scores==='string'?JSON.parse(S.wheelHist[prevIdx].scores):S.wheelHist[prevIdx].scores;
-    const cmp=AREAS.map(a=>{const diff=(sc[a.key]||5)-(prev[a.key]||5);const arrow=diff>0?'↑':diff<0?'↓':'=';const col=diff>0?'var(--mint-d)':diff<0?'var(--rose-d)':'var(--muted)';return`<span style="font-size:12px;margin-right:10px;color:${col}">${a.icon} ${arrow}${Math.abs(diff)||''}</span>`;}).join('');
-    document.getElementById('hist-compare-body').innerHTML=cmp;document.getElementById('hist-compare').style.display='block';
-  }
-  showRTab('visao',null);
-}
-function renderHistChart(){
-  const cv=document.getElementById('histChart');if(!cv||!S.wheelHist.length)return;
-  const ctx=cv.getContext('2d');const w=cv.parentElement.offsetWidth-32||600,h=120;cv.width=w;cv.height=h;ctx.clearRect(0,0,w,h);
-  const data=[...S.wheelHist].slice(-12);const avgs=data.map(h=>{const sc=typeof h.scores==='string'?JSON.parse(h.scores):h.scores;return AREAS.reduce((s,a)=>s+(sc[a.key]||5),0)/8;});
-  const padX=30,padY=16,plotW=w-padX*2,plotH=h-padY*2;
-  [2,4,6,8,10].forEach(v=>{const y=padY+plotH-(v/10)*plotH;ctx.beginPath();ctx.moveTo(padX,y);ctx.lineTo(w-padX,y);ctx.strokeStyle='rgba(0,0,0,0.05)';ctx.lineWidth=1;ctx.stroke();ctx.fillStyle='#9a8c85';ctx.font='9px Inter';ctx.textAlign='right';ctx.fillText(v,padX-4,y+3);});
-  if(avgs.length>1){ctx.beginPath();avgs.forEach((v,i)=>{const x=padX+(i/(avgs.length-1))*plotW,y=padY+plotH-(v/10)*plotH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.strokeStyle='#9a72c0';ctx.lineWidth=2.5;ctx.stroke();ctx.lineTo(padX+plotW,padY+plotH);ctx.lineTo(padX,padY+plotH);ctx.closePath();ctx.fillStyle='rgba(154,114,192,0.1)';ctx.fill();avgs.forEach((v,i)=>{const x=padX+(i/(avgs.length-1))*plotW,y=padY+plotH-(v/10)*plotH;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#9a72c0';ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#2c2420';ctx.font='bold 9px Inter';ctx.textAlign='center';ctx.fillText(v.toFixed(1),x,y-9);});data.forEach((h,i)=>{const x=padX+(i/(avgs.length-1))*plotW;ctx.fillStyle='#9a8c85';ctx.font='8px Inter';ctx.textAlign='center';ctx.fillText(h.date.slice(5),x,padY+plotH+12);});}
-}
-
-// PLANO DE AÇÃO
-function renderPlano(){
-  const sorted=[...AREAS].sort((a,b)=>(S.wheel[a.key]||5)-(S.wheel[b.key]||5));
-  document.getElementById('plano-body').innerHTML=sorted.map(a=>{
-    const v=S.wheel[a.key]||5;
-    const priority=v<=3?'🔴 Urgente':v<=5?'🟡 Importante':v<=7?'🟢 Manter':'✨ Excelente';
-    const tips=AREA_TIPS[a.key]||[];
-    const saved=(S.planoActions&&S.planoActions[a.key])||[];
-    const acts=saved.map((ac,ai)=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border-radius:8px;margin-bottom:4px;font-size:13px"><span style="flex:1;${ac.done?'text-decoration:line-through;opacity:0.5':''}">${ac.text}</span>${!ac.done?`<button onclick="doneAction('${a.key}',${ai})" style="border:none;background:none;cursor:pointer;font-size:14px">☑️</button>`:'✅'}<button onclick="rmAction('${a.key}',${ai})" style="border:none;background:none;cursor:pointer;font-size:12px;color:var(--muted)">×</button></div>`).join('');
-    return`<div class="card" style="border-left:4px solid ${a.color};margin-bottom:14px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span style="font-size:26px">${a.icon}</span><div style="flex:1"><div style="font-size:15px;font-weight:600;color:${a.color}">${a.label}</div><div style="font-size:12px;color:var(--muted)">${priority} — nota: ${v}/10</div></div><div style="font-family:'Playfair Display',serif;font-size:30px;color:${a.color}">${v}</div></div><div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:10px;line-height:1.5">${a.desc}</div><div style="margin-bottom:10px"><div style="font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">💡 Sugestões</div><div style="display:flex;flex-wrap:wrap;gap:5px">${tips.map((t,ti)=>`<button onclick="addTipAction('${a.key}','${t.replace(/'/g,"\\'")}',this)" style="font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid ${a.color}40;background:${a.light};color:${a.color};cursor:pointer;font-family:inherit">+ ${t}</button>`).join('')}</div></div><div style="font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">As minhas ações</div><div id="acts-${a.key}">${acts}</div><div style="display:flex;gap:6px;margin-top:8px"><input id="act-inp-${a.key}" class="form-input" placeholder="Escreve uma ação concreta..." style="font-size:12px" onkeydown="if(event.key==='Enter')addAction('${a.key}')"/><button onclick="addAction('${a.key}')" class="btn-add" style="padding:8px 12px">+</button></div></div>`;
-  }).join('');
-}
-function addTipAction(key,tip,btn){if(!S.planoActions)S.planoActions={};if(!S.planoActions[key])S.planoActions[key]=[];S.planoActions[key].push({text:tip,done:false});btn.style.opacity='0.4';btn.disabled=true;savePlano();renderPlano();}
-function addAction(key){const inp=document.getElementById('act-inp-'+key);const text=inp.value.trim();if(!text)return;if(!S.planoActions)S.planoActions={};if(!S.planoActions[key])S.planoActions[key]=[];S.planoActions[key].push({text,done:false});inp.value='';savePlano();renderPlano();}
-function doneAction(key,i){S.planoActions[key][i].done=true;savePlano();renderPlano();}
-function rmAction(key,i){S.planoActions[key].splice(i,1);savePlano();renderPlano();}
-function savePlano(){debounceSave('plano_actions',JSON.stringify(S.planoActions||{}));}
-
-// DEEP QUESTIONNAIRE
-function renderQ(){
-  document.getElementById('q-body').innerHTML=AREAS.map(a=>`
-    <div style="background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:16px;border-left:4px solid ${a.color}">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><span style="font-size:24px">${a.icon}</span><div><div style="font-size:15px;font-weight:600;color:${a.color}">${a.label}</div><div style="font-size:12px;color:var(--muted);font-style:italic">${a.desc}</div></div></div>
-      ${DEEP_QS[a.key].map((q,qi)=>`<div style="margin-bottom:14px"><div style="font-size:13px;color:var(--text);margin-bottom:8px;font-style:italic;line-height:1.4">🔸 ${q}</div><div style="display:flex;gap:4px;flex-wrap:wrap">${[1,2,3,4,5,6,7,8,9,10].map(v=>`<button onclick="selQ(this,'${a.key}',${qi},${v})" style="width:30px;height:30px;border-radius:50%;border:1.5px solid ${a.color}40;background:var(--bg);cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);font-family:inherit;transition:all 0.15s" data-area="${a.key}" data-qi="${qi}">${v}</button>`).join('')}</div></div>`).join('')}
-    </div>`).join('');
-}
-function selQ(el,area,qi,score){document.querySelectorAll(`button[data-area="${area}"][data-qi="${qi}"]`).forEach(b=>{b.style.background='var(--bg)';b.style.color='var(--muted)';b.style.borderColor=AREAS.find(a=>a.key===area).color+'40';});el.style.background=AREAS.find(a=>a.key===area).color;el.style.color='white';if(!S.qAns[area])S.qAns[area]=[];S.qAns[area][qi]=score;}
-function applyQ(){let n=0;AREAS.forEach(a=>{const ans=S.qAns[a.key];if(!ans||!ans.length)return;const filled=ans.filter(v=>v!=null);if(!filled.length)return;S.wheel[a.key]=Math.round(filled.reduce((s,v)=>s+v,0)/filled.length);n++;});if(!n){alert('Responde pelo menos a uma pergunta!');return;}renderSliders();drawWheel();updInsight();debounceSave('wheel_scores',JSON.stringify(S.wheel));alert(`${n} área(s) atualizada(s) ✨\nVai ao separador Visão Geral para ver a tua roda!`);showRTab('visao',null);}
-
-// ═══════════════════════════════════════
-// CALENDÁRIO — Grade tipo Google Calendar
-// ═══════════════════════════════════════
-const EVT_COLORS={
-  wine:{bg:'#743014',text:'#fdf9f4'},caramel:{bg:'#84592B',text:'#fdf9f4'},
-  mint:{bg:'#7a9860',text:'#fdf9f4'},sky:{bg:'#6888a0',text:'#fdf9f4'},
-  olive:{bg:'#9D9167',text:'#fdf9f4'},rose:{bg:'#84592B',text:'#fdf9f4'},
-  lav:{bg:'#9D9167',text:'#fdf9f4'},peach:{bg:'#743014',text:'#fdf9f4'},gold:{bg:'#a07030',text:'#fdf9f4'},
-};
-
-function renderCal(){
-  const{calYear:y,calMonth:m}=S;
-  document.getElementById('cal-month-label').textContent=MONTHS[m]+' '+y;
-  const first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),prevDim=new Date(y,m,0).getDate();
-  const now=new Date(),todayKey=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
-  let cells=[];
-  for(let i=first-1;i>=0;i--)cells.push({day:prevDim-i,month:'prev'});
-  for(let d=1;d<=dim;d++)cells.push({day:d,month:'cur'});
-  let nd=1;while(cells.length%7!==0)cells.push({day:nd++,month:'next'});
-  while(cells.length<42)cells.push({day:nd++,month:'next'});
-
-  const body=document.getElementById('cal-grid-body');
-  body.innerHTML=cells.map((c,idx)=>{
-    let dateKey;
-    if(c.month==='cur')dateKey=y+'-'+m+'-'+c.day;
-    else if(c.month==='prev'){const pm=m-1<0?11:m-1,py=m-1<0?y-1:y;dateKey=py+'-'+pm+'-'+c.day;}
-    else{const nm=m+1>11?0:m+1,ny=m+1>11?y+1:y;dateKey=ny+'-'+nm+'-'+c.day;}
-    const isOther=c.month!=='cur',isToday=dateKey===todayKey,isSel=S.selDate===dateKey;
-    const evts=S.events[dateKey]||[];
-    const isLastInRow=(idx+1)%7===0,isLastRow=idx>=cells.length-7;
-    return`<div onclick="selDate2('${dateKey}')" style="min-height:90px;padding:6px 5px;cursor:pointer;border-right:${!isLastInRow?'1px solid var(--border)':'none'};border-bottom:${!isLastRow?'1px solid var(--border)':'none'};background:${isSel?'rgba(116,48,20,0.06)':isOther?'rgba(0,0,0,0.018)':'transparent'};transition:background 0.15s">
-      <div style="margin-bottom:3px"><span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:12px;font-weight:${isToday?'700':'400'};background:${isToday?'var(--wine)':'transparent'};color:${isToday?'#fdf9f4':isOther?'var(--muted)':'var(--text)'}">${c.day}</span></div>
-      ${evts.slice(0,3).map(e=>{const ec=EVT_COLORS[e.color]||EVT_COLORS.wine;return`<div style="font-size:10px;padding:2px 5px;border-radius:3px;margin-bottom:2px;background:${ec.bg};color:${ec.text};overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${e.time?e.time.slice(0,5)+' ':''} ${e.name}</div>`;}).join('')}
-      ${evts.length>3?`<div style="font-size:10px;color:var(--muted);padding-left:4px">+${evts.length-3}</div>`:''}
-    </div>`;
-  }).join('');
-  if(S.selDate)updatePanel();
-}
-
-function selDate2(dateKey){
-  S.selDate=dateKey;
-  renderCal();
-  const panel=document.getElementById('cal-day-panel');
-  panel.style.display='block';
-  updatePanel();
-  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
-}
-
-function updatePanel(){
-  if(!S.selDate)return;
-  const parts=S.selDate.split('-');
-  const y=parseInt(parts[0]),m=parseInt(parts[1]),d=parseInt(parts[2]);
-  const date=new Date(y,m,d);
-  const dayNames=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-  document.getElementById('panel-date-label').textContent=d+' de '+MONTHS[m]+' '+y;
-  document.getElementById('panel-day-name').textContent=dayNames[date.getDay()];
-  const evts=S.events[S.selDate]||[];
-  document.getElementById('panel-events-list').innerHTML=evts.length
-    ?evts.map((e,i)=>{const ec=EVT_COLORS[e.color]||EVT_COLORS.wine;return`
-      <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;background:${ec.bg}18;border-left:3px solid ${ec.bg};margin-bottom:6px">
-        <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">${e.name}</div>${e.time?`<div style="font-size:11px;color:var(--muted)">⏰ ${e.time}</div>`:''}</div>
-        <button onclick="rmEvent('${e.id}','${S.selDate}',${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:18px">×</button>
-      </div>`;}).join('')
-    :'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:4px 0">Sem eventos neste dia — adiciona um abaixo ✨</div>';
-  // tasks preview (today only)
-  const todayStr=new Date().toISOString().split('T')[0];
-  const [ty,tm,td2]=[new Date().getFullYear(),new Date().getMonth(),new Date().getDate()];
-  const tasksPrev=document.getElementById('panel-tasks-preview');
-  if(y===ty&&m===tm&&d===td2){
-    const allTasks=[...S.tasks.manha,...S.tasks.tarde,...S.tasks.noite];
-    tasksPrev.innerHTML=allTasks.length?`<div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;margin-top:4px">Tarefas de hoje</div>`+allTasks.map(t=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;padding:3px 0"><span>${t.done?'✅':'⬜'}</span><span style="${t.done?'text-decoration:line-through;opacity:0.5':''}">${t.text}</span></div>`).join(''):'';
-  }else tasksPrev.innerHTML='';
-}
-
-function goToday(){const now=new Date();S.calYear=now.getFullYear();S.calMonth=now.getMonth();S.selDate=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();renderCal();document.getElementById('cal-day-panel').style.display='block';updatePanel();}
-function goToDiaDia(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-diadia').classList.add('active');document.querySelectorAll('.nav-item,.mob-btn').forEach(b=>{b.classList.remove('active');if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('diadia'))b.classList.add('active');});}
-function changeMonth(dir){S.calMonth+=dir;if(S.calMonth>11){S.calMonth=0;S.calYear++;}if(S.calMonth<0){S.calMonth=11;S.calYear--;}renderCal();}
-function selectColor(el,c){document.querySelectorAll('#color-pick .color-dot').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');S.selColor=c;}
-async function addEvent(){
-  const name=document.getElementById('evt-name').value.trim(),time=document.getElementById('evt-time').value;
-  if(!name||!S.selDate)return;
-  const data=await dbInsert('events',{user_id:USER_ID,date:S.selDate,name,time,color:S.selColor||'wine'});
-  if(!S.events[S.selDate])S.events[S.selDate]=[];
-  S.events[S.selDate].push({id:data.id,name,time,color:S.selColor||'wine'});
-  document.getElementById('evt-name').value='';showSaved();renderCal();updatePanel();
-}
-async function rmEvent(id,date,i){await dbDelete('events',{id});S.events[date].splice(i,1);showSaved();renderCal();updatePanel();}
-function renderEvts(){if(S.selDate)updatePanel();}
-
-// ═══════════════════════════════════════
-// DIA A DIA — integrado com calendário
-// ═══════════════════════════════════════
-let currentDiaDate = new Date();
-
-function renderDay(){
-  const d=currentDiaDate;
-  const dayNames=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-  document.getElementById('diadia-date-label').textContent=d.getDate()+' de '+MONTHS[d.getMonth()]+' '+d.getFullYear();
-  document.getElementById('diadia-day-name').textContent=dayNames[d.getDay()]+' · '+QUOTES[d.getDate()%QUOTES.length];
-
-  // Mostrar eventos do calendário para este dia
-  const dateKey=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
-  const evts=S.events[dateKey]||[];
-  const strip=document.getElementById('diadia-events-strip');
-  if(evts.length){
-    strip.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px">
-      ${evts.map(e=>{const ec=EVT_COLORS[e.color]||EVT_COLORS.wine;return`<div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;background:${ec.bg};color:${ec.text};font-size:12px;font-weight:500">${e.time?'⏰ '+e.time+' ':'📌 '} ${e.name}</div>`;}).join('')}
-    </div>`;
-  }else{
-    strip.innerHTML='';
-  }
-
-  // Timeline (rotina com horários)
-  renderTimeline();
-  ['manha','tarde','noite'].forEach(renderTasks);
-}
-
-function renderTimeline(){
-  const r=S.rotina||[];
-  const el=document.getElementById('timeline-blocks');
-  if(!r.length){
-    el.innerHTML='<div style="padding:20px;text-align:center;font-size:13px;color:var(--muted);font-style:italic">Adiciona tarefas com horário para planear o teu dia</div>';
-    return;
-  }
-  const catColors={trabalho:'#6888a0',saude:'#7a9860',casa:'#84592B',pessoal:'#743014',lazer:'#9D9167'};
-  const sorted=[...r].sort((a,b)=>a.hora.localeCompare(b.hora));
-  el.innerHTML=sorted.map((item,i)=>{
-    const col=catColors[item.cat]||catColors.pessoal;
-    return`<div style="display:flex;align-items:stretch;border-bottom:1px solid var(--border)">
-      <div style="width:52px;padding:12px 8px;text-align:right;font-size:11px;font-weight:600;color:var(--muted);flex-shrink:0;border-right:2px solid ${col}">${item.hora}</div>
-      <div style="flex:1;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+  <section id="detail-modal" class="modal is-hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-detail></div>
+    <div class="modal-panel detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+      <div class="modal-header">
         <div>
-          <div style="font-size:13px;color:var(--text)">${item.text}</div>
-          <div style="font-size:10px;color:${col};margin-top:1px;font-weight:500">${item.cat}</div>
+          <p class="eyebrow" id="detail-type">Evento</p>
+          <h3 id="detail-title">Detalhe do evento</h3>
         </div>
-        <button onclick="rmRotina(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:16px">×</button>
+        <button class="icon-btn" type="button" data-close-detail aria-label="Fechar">×</button>
       </div>
-    </div>`;
-  }).join('');
-}
+      <div id="detail-content"></div>
+      <p id="detail-feedback" class="form-feedback" aria-live="polite"></p>
+    </div>
+  </section>
 
-function changeDay(dir){
-  currentDiaDate=new Date(currentDiaDate);
-  currentDiaDate.setDate(currentDiaDate.getDate()+dir);
-  renderDay();
-}
-function goTodayDia(){currentDiaDate=new Date();renderDay();}
+  <section id="auth-screen" class="auth-screen">
+    <div class="auth-panel">
+      <p class="eyebrow">Vida de Mãe Leve</p>
+      <h2>Entra no teu sistema pessoal</h2>
+      <p>Autentica-te para manter os teus dados protegidos e sincronizados.</p>
+      <form id="auth-form" class="form">
+        <label>Email
+          <input type="email" name="email" required autocomplete="email" />
+        </label>
+        <label>Palavra-passe
+          <input type="password" name="password" minlength="6" required autocomplete="current-password" />
+        </label>
+        <div class="auth-actions">
+          <button type="submit" data-mode="login" class="primary-btn">Entrar</button>
+          <button type="submit" data-mode="signup" class="text-btn">Criar conta</button>
+        </div>
+      </form>
+      <p id="auth-feedback" class="muted"></p>
+    </div>
+  </section>
 
-function renderTasks(p){
-  const taskColors={manha:{bg:'#e8d8c8',text:'#442D1C',dark:'#84592B'},tarde:{bg:'#d8e4d0',text:'#283818',dark:'#5a7840'},noite:{bg:'#c8d4e0',text:'#1c3040',dark:'#6888a0'}};
-  const c=taskColors[p];
-  document.getElementById(p+'-tasks').innerHTML=S.tasks[p].map((t,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:${c.bg};margin-bottom:5px">
-      <button class="check-btn${t.done?' done':''}" style="color:${c.dark};border-color:${c.dark}" onclick="togTask('${p}',${i},'${t.id}',${!t.done})"></button>
-      <span class="task-text${t.done?' done':''}" style="flex:1;font-size:13px;color:${c.text}">${t.text}</span>
-      <button onclick="rmTask('${p}',${i},'${t.id}')" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:14px">×</button>
-    </div>`).join('')||`<div style="font-size:12px;color:var(--muted);font-style:italic;padding:4px 0">Sem tarefas</div>`;
-}
-async function addTask(p){const inp=document.getElementById(p+'-input'),text=inp.value.trim();if(!text)return;const today=new Date().toISOString().split('T')[0];const data=await dbInsert('tasks',{user_id:USER_ID,date:today,period:p,text,done:false});S.tasks[p].push({id:data.id,text,done:false});inp.value='';showSaved();renderTasks(p);}
-async function togTask(p,i,id,done){await dbUpdate('tasks',id,{done});S.tasks[p][i].done=done;showSaved();renderTasks(p);}
-async function rmTask(p,i,id){await dbDelete('tasks',{id});S.tasks[p].splice(i,1);showSaved();renderTasks(p);}
-async function setMood(btn,mood){
-  document.querySelectorAll('#diadia-mood-strip .mood-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const today=new Date().toISOString().split('T')[0];
-  await dbUpsert('notes',{user_id:USER_ID,key:'mood_'+today,value:mood},'user_id,key');
-  showSaved();
-}
-
-// ═══════════════════════════════════════
-// SEMANA — integrada com calendário
-// ═══════════════════════════════════════
-let weekOffset=0;
-
-function getWeekStart(offset=0){
-  const now=new Date();now.setDate(now.getDate()+offset*7);
-  const day=now.getDay(),mon=new Date(now);
-  mon.setDate(now.getDate()-(day===0?6:day-1));
-  mon.setHours(0,0,0,0);return mon;
-}
-function getWK(){return getWeekStart(weekOffset).toISOString().split('T')[0];}
-
-function renderWeek(){
-  const mon=getWeekStart(weekOffset);
-  const now=new Date();
-  const end=new Date(mon);end.setDate(mon.getDate()+6);
-  document.getElementById('week-label').textContent=mon.getDate()+' '+MONTHS[mon.getMonth()].slice(0,3)+' – '+end.getDate()+' '+MONTHS[end.getMonth()].slice(0,3)+' '+end.getFullYear();
-
-  const grid=document.getElementById('week-grid-full');
-  // Header row
-  let headerHtml='<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:2px solid var(--border)">';
-  for(let i=0;i<7;i++){
-    const d=new Date(mon);d.setDate(mon.getDate()+i);
-    const isToday=d.toDateString()===now.toDateString();
-    headerHtml+=`<div style="padding:10px 8px;text-align:center;border-right:${i<6?'1px solid var(--border)':'none'};background:${isToday?'var(--wine)':'transparent'}">
-      <div style="font-size:10px;font-weight:600;color:${isToday?'rgba(253,249,244,0.7)':'var(--muted)'};letter-spacing:0.05em">${WDAYS[i].toUpperCase().slice(0,3)}</div>
-      <div style="font-size:18px;font-weight:${isToday?'700':'400'};color:${isToday?'#fdf9f4':'var(--text)'};margin-top:2px">${d.getDate()}</div>
-    </div>`;
-  }
-  headerHtml+='</div>';
-
-  // Events + tasks row
-  let bodyHtml='<div style="display:grid;grid-template-columns:repeat(7,1fr);min-height:200px">';
-  for(let i=0;i<7;i++){
-    const d=new Date(mon);d.setDate(mon.getDate()+i);
-    const isToday=d.toDateString()===now.toDateString();
-    const dateKey=d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
-    const evts=S.events[dateKey]||[];
-    const wTasks=S.weekTasks[i]||[];
-
-    bodyHtml+=`<div style="padding:8px 6px;border-right:${i<6?'1px solid var(--border)':'none'};background:${isToday?'rgba(116,48,20,0.04)':'transparent'};cursor:pointer" onclick="openDayFromWeek('${dateKey}')">`;
-
-    // Calendar events
-    evts.forEach(e=>{
-      const ec=EVT_COLORS[e.color]||EVT_COLORS.wine;
-      bodyHtml+=`<div style="font-size:10px;padding:3px 6px;border-radius:4px;margin-bottom:3px;background:${ec.bg};color:${ec.text};overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${e.time?e.time.slice(0,5)+' ':''} ${e.name}</div>`;
-    });
-
-    // Week tasks
-    wTasks.forEach((t,ti)=>{
-      const ec=EVT_COLORS[t.color]||EVT_COLORS.caramel;
-      bodyHtml+=`<div style="font-size:10px;padding:3px 6px;border-radius:4px;margin-bottom:3px;background:${ec.bg}25;border-left:2px solid ${ec.bg};color:var(--text);overflow:hidden;white-space:nowrap;text-overflow:ellipsis" onclick="event.stopPropagation();rmWTask(${i},${ti},'${t.id}')">${t.text} ×</div>`;
-    });
-
-    bodyHtml+='</div>';
-  }
-  bodyHtml+='</div>';
-
-  grid.innerHTML=headerHtml+bodyHtml;
-}
-
-function openDayFromWeek(dateKey){
-  const parts=dateKey.split('-');
-  currentDiaDate=new Date(parseInt(parts[0]),parseInt(parts[1]),parseInt(parts[2]));
-  showPage('diadia',null);
-  document.querySelectorAll('.nav-item').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('diadia'))b.classList.add('active');});
-}
-
-function changeWeek(dir){weekOffset+=dir;renderWeek();}
-function goThisWeek(){weekOffset=0;renderWeek();}
-function selWCol(el,c){document.querySelectorAll('#week-color-pick .color-dot').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');S.wColor=c;}
-async function addWeekTask(){
-  const dayIdx=parseInt(document.getElementById('week-day-sel').value),text=document.getElementById('week-task-input').value.trim();if(!text)return;
-  const data=await dbInsert('week_tasks',{user_id:USER_ID,week_key:getWK(),day_index:dayIdx,text,color:S.wColor||'wine'});
-  if(!S.weekTasks[dayIdx])S.weekTasks[dayIdx]=[];S.weekTasks[dayIdx].push({id:data.id,text,color:S.wColor||'wine'});
-  document.getElementById('week-task-input').value='';showSaved();renderWeek();
-}
-async function rmWTask(di,ti,id){await dbDelete('week_tasks',{id});S.weekTasks[di].splice(ti,1);showSaved();renderWeek();}
-
-// HABITS
-function renderHabits(){
-  const now=new Date(),dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-  document.getElementById('habit-month-label').textContent=MONTHS[now.getMonth()];
-  document.getElementById('habits-container').innerHTML=S.habits.map((h,hi)=>{const c=CM[h.color]||CM.mint;let dots='';for(let d=1;d<=dim;d++){const done=h.days[d];dots+=`<button class="habit-dot" style="border-color:${c.dark};color:${c.text};background:${done?c.bg:'transparent'}" onclick="togHabit(${hi},${d})">${done?'✓':d}</button>`;}return`<div class="habit-row"><div class="habit-nm" style="color:${c.text}"><em>${h.name}</em></div><div class="habit-dots">${dots}</div><button onclick="rmHabit(${hi},'${h.id}')" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:16px">×</button></div>`;}).join('');
-  document.getElementById('habit-progress').innerHTML=S.habits.map(h=>{const dim2=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate(),pct=Math.round(Object.keys(h.days).length/dim2*100),c=CM[h.color]||CM.mint;return`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="font-style:italic;color:${c.text}">${h.name}</span><span style="font-weight:500;color:${c.text}">${pct}%</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${c.dark}"></div></div></div>`;}).join('');
-}
-async function togHabit(hi,d){const h=S.habits[hi];if(h.days[d]){await dbDelete('habit_days',{habit_id:h.id,day:d});delete h.days[d];}else{await dbInsert('habit_days',{habit_id:h.id,day:d});h.days[d]=true;}showSaved();renderHabits();}
-async function addHabit(){const name=document.getElementById('habit-input').value.trim();if(!name)return;const cols=['mint','lav','rose','sky','peach'],color=cols[S.habits.length%cols.length];const data=await dbInsert('habits',{user_id:USER_ID,name,color});S.habits.push({id:data.id,name,color,days:{}});document.getElementById('habit-input').value='';showSaved();renderHabits();}
-async function rmHabit(hi,id){await dbDelete('habit_days',{habit_id:id});await dbDelete('habits',{id});S.habits.splice(hi,1);showSaved();renderHabits();}
-
-// METAS
-function renderMetas(){document.getElementById('metas-list').innerHTML=S.metas.map((m,i)=>{const c=CM[m.color]||CM.lav;return`<div class="meta-card" style="background:${c.bg}"><div style="font-size:22px">${m.emoji}</div><div style="flex:1"><div style="font-weight:500;font-size:14px;color:${c.text}">${m.titulo}</div><div style="font-size:11px;font-style:italic;color:${c.dark}">${m.prazo}</div><div class="progress-bar" style="margin-top:6px"><div class="progress-fill" style="width:${m.progress}%;background:${c.dark}"></div></div><div style="font-size:10px;color:${c.text};margin-top:2px">${m.progress}% concluído</div></div><button onclick="rmMeta(${i},'${m.id}')" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:18px">×</button></div>`;}).join('');}
-function selMCol(el,c){document.querySelectorAll('#meta-color-pick .color-dot').forEach(d=>d.classList.remove('selected'));el.classList.add('selected');S.mColor=c;}
-async function addMeta(){const emoji=document.getElementById('meta-emoji').value.trim()||'🌟',titulo=document.getElementById('meta-titulo').value.trim();if(!titulo)return;const prazo=document.getElementById('meta-prazo').value.trim()||'',progress=parseInt(document.getElementById('meta-progress').value);const data=await dbInsert('metas',{user_id:USER_ID,emoji,titulo,prazo,progress,color:S.mColor});S.metas.push({id:data.id,emoji,titulo,prazo,progress,color:S.mColor});document.getElementById('meta-emoji').value='';document.getElementById('meta-titulo').value='';document.getElementById('meta-prazo').value='';document.getElementById('meta-progress').value=0;document.getElementById('mpv').textContent='0%';showSaved();renderMetas();}
-async function rmMeta(i,id){await dbDelete('metas',{id});S.metas.splice(i,1);showSaved();renderMetas();}
-
-// AFIRMAÇÕES
-function renderAfirm(){const c=['rose','lav','mint','peach','sky'];document.getElementById('afirmacoes').innerHTML=S.afirm.map((a,i)=>{const cm=CM[a.color||c[i%c.length]];return`<span class="badge" style="background:${cm.bg};color:${cm.text};cursor:pointer" onclick="rmAfirm(${i},'${a.id||''}')">${a.text} ×</span>`;}).join('');}
-async function addAfirmacao(){const text=document.getElementById('afirm-input').value.trim();if(!text)return;const c=['rose','lav','mint','peach','sky'],color=c[S.afirm.length%c.length];const data=await dbInsert('afirmacoes',{user_id:USER_ID,text,color});S.afirm.push({id:data.id,text,color});document.getElementById('afirm-input').value='';showSaved();renderAfirm();}
-async function rmAfirm(i,id){if(id)await dbDelete('afirmacoes',{id});S.afirm.splice(i,1);showSaved();renderAfirm();}
-
-// ═══════════════════════════════════════
-// BEM-ESTAR — ÁGUA
-// ═══════════════════════════════════════
-const AUTOCUIDADO_ITEMS=['🧴 Cuidar da pele','💊 Tomar vitaminas','🧘 Meditar','🚶 Caminhar','📵 Tempo sem ecrãs','📖 Ler algo bom','🛁 Banho relaxante','🌿 Tempo na natureza','💤 Dormir cedo','🎵 Ouvir música','✍️ Escrever no diário','🌸 Fazer algo por prazer'];
-
-function renderWater(){
-  const n=S.water||0;
-  document.getElementById('water-count').textContent=n;
-  const pct=Math.round((n/8)*100);
-  document.getElementById('water-pct').textContent=`${Math.min(pct,100)}% do objetivo (8 copos)`;
-  document.getElementById('water-cups').innerHTML=Array.from({length:8},(_,i)=>`<div style="font-size:22px;cursor:pointer;opacity:${i<n?1:0.25}" onclick="setWater(${i+1})">💧</div>`).join('');
-}
-function addWater(){S.water=(S.water||0)+1;if(S.water>8)S.water=8;renderWater();debounceSave('water_today',String(S.water));}
-function setWater(n){S.water=n;renderWater();debounceSave('water_today',String(S.water));}
-function resetWater(){S.water=0;renderWater();debounceSave('water_today','0');}
-
-function calcSleep(){
-  const bed=document.getElementById('sleep-bed').value;
-  const wake=document.getElementById('sleep-wake').value;
-  if(!bed||!wake)return;
-  let [bh,bm]=bed.split(':').map(Number);
-  let [wh,wm]=wake.split(':').map(Number);
-  let mins=(wh*60+wm)-(bh*60+bm);
-  if(mins<0)mins+=24*60;
-  const hrs=(mins/60).toFixed(1);
-  const quality=mins>=480?'😴 Excelente (8h+)':mins>=420?'😊 Boa (7h)':mins>=360?'😐 Razoável (6h)':'😔 Insuficiente';
-  document.getElementById('sleep-hours').textContent=hrs+'h';
-  document.getElementById('sleep-quality').textContent=quality;
-  debounceSave('sleep_bed',bed);debounceSave('sleep_wake',wake);
-}
-
-function renderAutocuidado(){
-  const done=S.autocuidado||[];
-  document.getElementById('autocuidado-list').innerHTML=AUTOCUIDADO_ITEMS.map((item,i)=>{
-    const isDone=done.includes(i);
-    return`<div onclick="togAutocuidado(${i})" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;background:${isDone?'var(--mint)':'var(--bg)'};transition:all 0.2s">
-      <span style="font-size:18px;${isDone?'':'filter:grayscale(1);opacity:0.5'}">${item.split(' ')[0]}</span>
-      <span style="font-size:12px;color:${isDone?'var(--mint-t)':'var(--muted)'};${isDone?'font-weight:500':''}">${item.slice(item.indexOf(' ')+1)}</span>
-      ${isDone?'<span style="margin-left:auto;font-size:14px">✓</span>':''}
-    </div>`;
-  }).join('');
-}
-function togAutocuidado(i){
-  if(!S.autocuidado)S.autocuidado=[];
-  const idx=S.autocuidado.indexOf(i);
-  if(idx>=0)S.autocuidado.splice(idx,1);else S.autocuidado.push(i);
-  renderAutocuidado();debounceSave('autocuidado',JSON.stringify(S.autocuidado));
-}
-
-// ROTINA COM HORÁRIOS
-function renderRotina(){
-  const r=S.rotina||[];
-  const catColors={trabalho:'sky',saude:'mint',casa:'peach',pessoal:'rose',lazer:'lav'};
-  document.getElementById('rotina-blocks').innerHTML=r.length?[...r].sort((a,b)=>a.hora.localeCompare(b.hora)).map((item,i)=>{
-    const c=CM[catColors[item.cat]||'sand'];
-    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:${c.bg};margin-bottom:6px">
-      <span style="font-size:12px;font-weight:600;color:${c.dark};min-width:40px">${item.hora}</span>
-      <span style="font-size:13px;color:${c.text};flex:1">${item.text}</span>
-      <button onclick="rmRotina(${i})" style="border:none;background:none;cursor:pointer;color:${c.dark};font-size:14px">×</button>
-    </div>`;
-  }).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:8px 0">Adiciona tarefas com horário para planeares o teu dia</div>';
-}
-function addRotina(){
-  const hora=document.getElementById('rotina-hora').value;
-  const text=document.getElementById('rotina-task').value.trim();
-  const cat=document.getElementById('rotina-cat').value;
-  if(!text||!hora)return;
-  if(!S.rotina)S.rotina=[];
-  S.rotina.push({hora,text,cat});
-  document.getElementById('rotina-task').value='';
-  renderRotina();debounceSave('rotina',JSON.stringify(S.rotina));
-}
-function rmRotina(i){S.rotina.splice(i,1);renderRotina();debounceSave('rotina',JSON.stringify(S.rotina));}
-
-// LEITURAS E FILMES
-function renderLivros(){
-  const list=S.livros||[];
-  document.getElementById('livros-list').innerHTML=list.map((l,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:14px;cursor:pointer" onclick="togLivro(${i})">${l.done?'✅':'📖'}</span>
-      <span style="font-size:13px;flex:1;${l.done?'text-decoration:line-through;opacity:0.5':''}">${l.text}</span>
-      <button onclick="rmLivro(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:13px">×</button>
-    </div>`).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona livros que queres ler</div>';
-}
-function addLivro(){const text=document.getElementById('livro-input').value.trim();if(!text)return;if(!S.livros)S.livros=[];S.livros.push({text,done:false});document.getElementById('livro-input').value='';renderLivros();debounceSave('livros',JSON.stringify(S.livros));}
-function togLivro(i){S.livros[i].done=!S.livros[i].done;renderLivros();debounceSave('livros',JSON.stringify(S.livros));}
-function rmLivro(i){S.livros.splice(i,1);renderLivros();debounceSave('livros',JSON.stringify(S.livros));}
-
-function renderFilmes(){
-  const list=S.filmes||[];
-  document.getElementById('filmes-list').innerHTML=list.map((f,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:14px;cursor:pointer" onclick="togFilme(${i})">${f.done?'✅':'🎬'}</span>
-      <span style="font-size:13px;flex:1;${f.done?'text-decoration:line-through;opacity:0.5':''}">${f.text}</span>
-      <button onclick="rmFilme(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:13px">×</button>
-    </div>`).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona filmes e séries</div>';
-}
-function addFilme(){const text=document.getElementById('filme-input').value.trim();if(!text)return;if(!S.filmes)S.filmes=[];S.filmes.push({text,done:false});document.getElementById('filme-input').value='';renderFilmes();debounceSave('filmes',JSON.stringify(S.filmes));}
-function togFilme(i){S.filmes[i].done=!S.filmes[i].done;renderFilmes();debounceSave('filmes',JSON.stringify(S.filmes));}
-function rmFilme(i){S.filmes.splice(i,1);renderFilmes();debounceSave('filmes',JSON.stringify(S.filmes));}
-
-// ═══════════════════════════════════════
-// GLOW UP
-// ═══════════════════════════════════════
-const WDAYS_SHORT=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
-
-function renderSkincare(){
-  ['manha','noite'].forEach(period=>{
-    const list=S.skin&&S.skin[period]||[];
-    const today=new Date().toISOString().split('T')[0];
-    const done=S.skinDone&&S.skinDone[today]&&S.skinDone[today][period]||[];
-    document.getElementById('skin-'+period+'-list').innerHTML=list.map((item,i)=>{
-      const isDone=done.includes(i);
-      return`<div onclick="togSkin('${period}',${i})" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;background:${isDone?'var(--mint)':'var(--bg)'};margin-bottom:4px;transition:all 0.2s">
-        <span style="font-size:14px">${isDone?'✅':'⬜'}</span>
-        <span style="font-size:12px;${isDone?'text-decoration:line-through;opacity:0.6':''}">${item}</span>
-        <button onclick="event.stopPropagation();rmSkin('${period}',${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px;margin-left:auto">×</button>
-      </div>`;
-    }).join('')||`<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona os teus passos de skincare</div>`;
-  });
-}
-function addSkin(period){const inp=document.getElementById('skin-'+period+'-inp');const text=inp.value.trim();if(!text)return;if(!S.skin)S.skin={};if(!S.skin[period])S.skin[period]=[];S.skin[period].push(text);inp.value='';debounceSave('skin',JSON.stringify(S.skin));renderSkincare();}
-function rmSkin(period,i){S.skin[period].splice(i,1);debounceSave('skin',JSON.stringify(S.skin));renderSkincare();}
-function togSkin(period,i){
-  const today=new Date().toISOString().split('T')[0];
-  if(!S.skinDone)S.skinDone={};if(!S.skinDone[today])S.skinDone[today]={};if(!S.skinDone[today][period])S.skinDone[today][period]=[];
-  const idx=S.skinDone[today][period].indexOf(i);
-  if(idx>=0)S.skinDone[today][period].splice(idx,1);else S.skinDone[today][period].push(i);
-  debounceSave('skin_done',JSON.stringify(S.skinDone));renderSkincare();
-}
-
-function renderCabelo(){
-  const list=S.cabelo||[];
-  document.getElementById('cabelo-list').innerHTML=list.map((c,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:${c.done?'var(--lav)':'var(--bg)'};margin-bottom:5px;cursor:pointer" onclick="togCabelo(${i})">
-      <span style="font-size:14px">${c.done?'✅':'💇'}</span>
-      <span style="font-size:12px;flex:1;${c.done?'text-decoration:line-through;opacity:0.5':''}">${c.text}</span>
-      <button onclick="event.stopPropagation();rmCabelo(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px">×</button>
-    </div>`).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona os teus próximos cuidados</div>';
-}
-function addCabelo(){const text=document.getElementById('cabelo-inp').value.trim();if(!text)return;if(!S.cabelo)S.cabelo=[];S.cabelo.push({text,done:false});document.getElementById('cabelo-inp').value='';debounceSave('cabelo',JSON.stringify(S.cabelo));renderCabelo();}
-function togCabelo(i){S.cabelo[i].done=!S.cabelo[i].done;debounceSave('cabelo',JSON.stringify(S.cabelo));renderCabelo();}
-function rmCabelo(i){S.cabelo.splice(i,1);debounceSave('cabelo',JSON.stringify(S.cabelo));renderCabelo();}
-
-function renderTreinoSemana(){
-  const today=new Date().getDay();
-  const adj=(today===0?6:today-1);
-  document.getElementById('treino-semana').innerHTML=WDAYS_SHORT.map((d,i)=>{
-    const isToday=i===adj;
-    const done=(S.treinoFeito||[]).includes(new Date().toISOString().split('T')[0].slice(0,7)+'-w'+i);
-    return`<div onclick="togTreino(${i})" style="border-radius:10px;padding:8px 4px;text-align:center;cursor:pointer;background:${done?'var(--mint)':isToday?'var(--sage)':'var(--bg)'};border:${isToday?'2px solid var(--mint-d)':'1px solid var(--border)'};transition:all 0.2s">
-      <div style="font-size:10px;font-weight:600;color:var(--muted)">${d}</div>
-      <div style="font-size:18px;margin-top:2px">${done?'💪':'○'}</div>
-    </div>`;
-  }).join('');
-}
-function togTreino(i){
-  const key=new Date().toISOString().split('T')[0].slice(0,7)+'-w'+i;
-  if(!S.treinoFeito)S.treinoFeito=[];
-  const idx=S.treinoFeito.indexOf(key);
-  if(idx>=0)S.treinoFeito.splice(idx,1);else S.treinoFeito.push(key);
-  debounceSave('treino_feito',JSON.stringify(S.treinoFeito));renderTreinoSemana();
-}
-
-function renderEstiloQuero(){
-  const list=S.estiloQuero||[];
-  document.getElementById('estilo-quero').innerHTML=list.map((e,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:13px;flex:1;${e.done?'text-decoration:line-through;opacity:0.4':''}">${e.text}</span>
-      <button onclick="togEstilo(${i})" style="border:none;background:none;cursor:pointer;font-size:14px">${e.done?'✅':'⬜'}</button>
-      <button onclick="rmEstilo(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px">×</button>
-    </div>`).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">A tua lista de desejos de moda</div>';
-}
-function addEstiloQuero(){const text=document.getElementById('estilo-quero-inp').value.trim();if(!text)return;if(!S.estiloQuero)S.estiloQuero=[];S.estiloQuero.push({text,done:false});document.getElementById('estilo-quero-inp').value='';debounceSave('estilo_quero',JSON.stringify(S.estiloQuero));renderEstiloQuero();}
-function togEstilo(i){S.estiloQuero[i].done=!S.estiloQuero[i].done;debounceSave('estilo_quero',JSON.stringify(S.estiloQuero));renderEstiloQuero();}
-function rmEstilo(i){S.estiloQuero.splice(i,1);debounceSave('estilo_quero',JSON.stringify(S.estiloQuero));renderEstiloQuero();}
-
-function renderDesenv(){
-  const list=S.desenvolv2||[];
-  document.getElementById('desenvolv-list').innerHTML=list.map((d,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.5);margin-bottom:5px">
-      <span style="font-size:13px;flex:1">${d}</span>
-      <button onclick="rmDesenv(${i})" style="border:none;background:none;cursor:pointer;color:var(--lav-d);font-size:13px">×</button>
-    </div>`).join('')||'<div style="font-size:12px;color:var(--lav-d);font-style:italic">Adiciona o que estás a trabalhar em ti</div>';
-}
-function addDesenv(){const text=document.getElementById('desenvolv-inp').value.trim();if(!text)return;if(!S.desenvolv2)S.desenvolv2=[];S.desenvolv2.push(text);document.getElementById('desenvolv-inp').value='';debounceSave('desenvolv2',JSON.stringify(S.desenvolv2));renderDesenv();}
-function rmDesenv(i){S.desenvolv2.splice(i,1);debounceSave('desenvolv2',JSON.stringify(S.desenvolv2));renderDesenv();}
-
-// ═══════════════════════════════════════
-// A MINHA CASA
-// ═══════════════════════════════════════
-const CASA_DIARIA_DEFAULT=['🛏 Fazer a cama','🍽 Lavar a loiça','🧹 Varrer / aspirar','🌿 Arejar a casa','🪣 Tirar o lixo','🧺 Uma máquina de roupa','🪞 Arrumar bancadas'];
-
-function renderCasaDiaria(){
-  const today=new Date().toISOString().split('T')[0];
-  const items=S.casaDiaria||CASA_DIARIA_DEFAULT;
-  const done=S.casaDiariaFeita&&S.casaDiariaFeita[today]||[];
-  document.getElementById('casa-diaria-list').innerHTML=items.map((item,i)=>{
-    const isDone=done.includes(i);
-    return`<div onclick="togCasaDiaria(${i})" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;cursor:pointer;background:${isDone?'var(--mint)':'var(--bg)'};transition:all 0.2s;border:1px solid ${isDone?'var(--mint-d)':'var(--border)'}">
-      <span style="font-size:16px">${isDone?'✅':'⬜'}</span>
-      <span style="font-size:13px;${isDone?'text-decoration:line-through;opacity:0.5':''}">${item}</span>
-      <button onclick="event.stopPropagation();rmCasaDiaria(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px;margin-left:auto">×</button>
-    </div>`;
-  }).join('');
-}
-function togCasaDiaria(i){
-  const today=new Date().toISOString().split('T')[0];
-  if(!S.casaDiariaFeita)S.casaDiariaFeita={};if(!S.casaDiariaFeita[today])S.casaDiariaFeita[today]=[];
-  const idx=S.casaDiariaFeita[today].indexOf(i);
-  if(idx>=0)S.casaDiariaFeita[today].splice(idx,1);else S.casaDiariaFeita[today].push(i);
-  debounceSave('casa_diaria_feita',JSON.stringify(S.casaDiariaFeita));renderCasaDiaria();
-}
-function addCasaDiaria(){const text=document.getElementById('casa-diaria-inp').value.trim();if(!text)return;if(!S.casaDiaria)S.casaDiaria=[...CASA_DIARIA_DEFAULT];S.casaDiaria.push(text);document.getElementById('casa-diaria-inp').value='';debounceSave('casa_diaria',JSON.stringify(S.casaDiaria));renderCasaDiaria();}
-function rmCasaDiaria(i){if(!S.casaDiaria)S.casaDiaria=[...CASA_DIARIA_DEFAULT];S.casaDiaria.splice(i,1);debounceSave('casa_diaria',JSON.stringify(S.casaDiaria));renderCasaDiaria();}
-
-function renderRotinaCasa(){
-  ['manha','noite'].forEach(period=>{
-    const list=S.rotinaCasa&&S.rotinaCasa[period]||[];
-    const bg=period==='manha'?'var(--yellow)':'var(--lav)';
-    const col=period==='manha'?'var(--yellow-t)':'var(--lav-t)';
-    document.getElementById('rotina-'+period+'-casa').innerHTML=list.map((item,i)=>`
-      <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.06)">
-        <span style="font-size:13px;flex:1">${item}</span>
-        <button onclick="rmRotinaCasa('${period}',${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:13px">×</button>
-      </div>`).join('')||`<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona a tua rotina</div>`;
-  });
-}
-function addRotinaCasa(period){const inp=document.getElementById('rotina-'+period+'-casa-inp');const text=inp.value.trim();if(!text)return;if(!S.rotinaCasa)S.rotinaCasa={};if(!S.rotinaCasa[period])S.rotinaCasa[period]=[];S.rotinaCasa[period].push(text);inp.value='';debounceSave('rotina_casa',JSON.stringify(S.rotinaCasa));renderRotinaCasa();}
-function rmRotinaCasa(period,i){S.rotinaCasa[period].splice(i,1);debounceSave('rotina_casa',JSON.stringify(S.rotinaCasa));renderRotinaCasa();}
-
-function renderLimpezaSemana(){
-  const tasks=S.limpezaSemanal||[];
-  const colors=['rose','lav','mint','peach','sky','yellow','lav'];
-  document.getElementById('limpeza-semana').innerHTML=WDAYS_SHORT.map((d,i)=>{
-    const c=CM[colors[i]];
-    const dayTasks=tasks.filter(t=>t.dia===i);
-    return`<div style="border-radius:12px;overflow:hidden;background:${c.bg}">
-      <div style="padding:6px;text-align:center;font-size:10px;font-weight:600;color:${c.text};border-bottom:1px solid rgba(0,0,0,0.05)">${d}</div>
-      <div style="padding:6px;min-height:60px">${dayTasks.map((t,ti)=>`<div style="font-size:10px;padding:3px 6px;border-radius:6px;background:white;margin-bottom:3px;cursor:pointer;display:flex;align-items:center;gap:4px" onclick="rmLimpezaDia(${tasks.indexOf(t)})"><span style="flex:1">${t.text}</span><span style="color:${c.dark};font-size:10px">×</span></div>`).join('')}</div>
-    </div>`;
-  }).join('');
-}
-function addLimpezaSemanal(){const dia=parseInt(document.getElementById('limpeza-dia').value);const text=document.getElementById('limpeza-tarefa').value.trim();if(!text)return;if(!S.limpezaSemanal)S.limpezaSemanal=[];S.limpezaSemanal.push({dia,text});document.getElementById('limpeza-tarefa').value='';debounceSave('limpeza_semanal',JSON.stringify(S.limpezaSemanal));renderLimpezaSemana();}
-function rmLimpezaDia(i){S.limpezaSemanal.splice(i,1);debounceSave('limpeza_semanal',JSON.stringify(S.limpezaSemanal));renderLimpezaSemana();}
-
-function renderLimpezaMensal(){
-  const list=S.limpezaMensal||[];
-  const freqColors={mensal:'sky',trimestral:'mint',semestral:'peach',anual:'gold'};
-  const freqLabels={mensal:'Mensal',trimestral:'Trimestral',semestral:'Semestral',anual:'Anual'};
-  document.getElementById('limpeza-mensal-list').innerHTML=list.length?list.map((item,i)=>{
-    const c=CM[freqColors[item.freq]||'sky'];
-    return`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:${c.bg};color:${c.text};font-weight:500;white-space:nowrap">${freqLabels[item.freq]}</span>
-      <span style="font-size:13px;flex:1">${item.text}</span>
-      <button onclick="togLimpezaMensal(${i})" style="border:none;background:none;cursor:pointer;font-size:14px">${item.done?'✅':'⬜'}</button>
-      <button onclick="rmLimpezaMensal(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:13px">×</button>
-    </div>`;
-  }).join(''):'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona tarefas de limpeza profunda</div>';
-}
-function addLimpezaMensal(){const freq=document.getElementById('limpeza-freq').value;const text=document.getElementById('limpeza-mensal-inp').value.trim();if(!text)return;if(!S.limpezaMensal)S.limpezaMensal=[];S.limpezaMensal.push({freq,text,done:false});document.getElementById('limpeza-mensal-inp').value='';debounceSave('limpeza_mensal',JSON.stringify(S.limpezaMensal));renderLimpezaMensal();}
-function togLimpezaMensal(i){S.limpezaMensal[i].done=!S.limpezaMensal[i].done;debounceSave('limpeza_mensal',JSON.stringify(S.limpezaMensal));renderLimpezaMensal();}
-function rmLimpezaMensal(i){S.limpezaMensal.splice(i,1);debounceSave('limpeza_mensal',JSON.stringify(S.limpezaMensal));renderLimpezaMensal();}
-
-// ═══════════════════════════════════════
-// BANHO PREMIUM
-// ═══════════════════════════════════════
-const BANHO_DEFAULT=['🧼 Esfoliação do corpo','💆 Máscara de cabelo','🪥 Lavar bem o couro cabeludo','🧴 Condicionador','💅 Cuidar das cutículas','🦵 Raspar/depilar','🌸 Aromaterapia/vela'];
-function renderBanho(){
-  const today=new Date().toISOString().split('T')[0];
-  const items=S.banho||BANHO_DEFAULT;
-  const done=S.banhoDone&&S.banhoDone[today]||[];
-  document.getElementById('banho-list').innerHTML=items.map((item,i)=>{
-    const isDone=done.includes(i);
-    return`<div onclick="togBanho(${i})" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;background:${isDone?'var(--caramel)':'rgba(255,255,255,0.5)'};transition:all 0.2s">
-      <span style="font-size:15px">${isDone?'✅':'⬜'}</span>
-      <span style="font-size:12px;${isDone?'color:#fdf9f4;text-decoration:line-through;opacity:0.8':''}">${item}</span>
-      <button onclick="event.stopPropagation();rmBanho(${i})" style="border:none;background:none;cursor:pointer;color:var(--cocoa-l);font-size:11px;margin-left:auto">×</button>
-    </div>`;
-  }).join('');
-}
-function togBanho(i){const today=new Date().toISOString().split('T')[0];if(!S.banhoDone)S.banhoDone={};if(!S.banhoDone[today])S.banhoDone[today]=[];const idx=S.banhoDone[today].indexOf(i);if(idx>=0)S.banhoDone[today].splice(idx,1);else S.banhoDone[today].push(i);debounceSave('banho_done',JSON.stringify(S.banhoDone));renderBanho();}
-function addBanho(){const text=document.getElementById('banho-inp').value.trim();if(!text)return;if(!S.banho)S.banho=[...BANHO_DEFAULT];S.banho.push(text);document.getElementById('banho-inp').value='';debounceSave('banho',JSON.stringify(S.banho));renderBanho();}
-function rmBanho(i){if(!S.banho)S.banho=[...BANHO_DEFAULT];S.banho.splice(i,1);debounceSave('banho',JSON.stringify(S.banho));renderBanho();}
-
-// CORPO
-const CORPO_DEFAULT=['🧴 Hidratante corporal (corpo inteiro)','☀️ Protetor solar nos braços e decote','💆 Massagem anti-celulite','🌿 Óleo seco nas pernas'];
-function renderCorpo(){
-  const list=S.corpo||CORPO_DEFAULT;
-  const today=new Date().toISOString().split('T')[0];
-  const done=S.corpoDone&&S.corpoDone[today]||[];
-  document.getElementById('corpo-list').innerHTML=list.map((item,i)=>{
-    const isDone=done.includes(i);
-    return`<div onclick="togCorpo(${i})" style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer">
-      <span style="font-size:14px">${isDone?'✅':'⬜'}</span>
-      <span style="font-size:12px;flex:1;${isDone?'text-decoration:line-through;opacity:0.5':''}">${item}</span>
-      <button onclick="event.stopPropagation();rmCorpo(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:11px">×</button>
-    </div>`;
-  }).join('');
-}
-function togCorpo(i){const today=new Date().toISOString().split('T')[0];if(!S.corpoDone)S.corpoDone={};if(!S.corpoDone[today])S.corpoDone[today]=[];const idx=S.corpoDone[today].indexOf(i);if(idx>=0)S.corpoDone[today].splice(idx,1);else S.corpoDone[today].push(i);debounceSave('corpo_done',JSON.stringify(S.corpoDone));renderCorpo();}
-function addCorpo(){const text=document.getElementById('corpo-inp').value.trim();if(!text)return;if(!S.corpo)S.corpo=[...CORPO_DEFAULT];S.corpo.push(text);document.getElementById('corpo-inp').value='';debounceSave('corpo',JSON.stringify(S.corpo));renderCorpo();}
-function rmCorpo(i){if(!S.corpo)S.corpo=[...CORPO_DEFAULT];S.corpo.splice(i,1);debounceSave('corpo',JSON.stringify(S.corpo));renderCorpo();}
-
-// UNHAS
-function renderUnhas(){
-  const list=S.unhas||[];
-  const freqColors={semanal:'#7a9860',quinzenal:'#84592B',mensal:'#743014'};
-  document.getElementById('unhas-list').innerHTML=list.map((u,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:10px;padding:2px 8px;border-radius:10px;color:white;background:${freqColors[u.freq]||'#84592B'};font-weight:500">${u.freq}</span>
-      <span style="font-size:12px;flex:1">${u.text}</span>
-      <button onclick="togUnha(${i})" style="border:none;background:none;cursor:pointer;font-size:14px">${u.done?'✅':'⬜'}</button>
-      <button onclick="rmUnha(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px">×</button>
-    </div>`).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona os teus cuidados de unhas e sobrancelhas</div>';
-}
-function addUnhas(){const freq=document.getElementById('unhas-freq').value,text=document.getElementById('unhas-inp').value.trim();if(!text)return;if(!S.unhas)S.unhas=[];S.unhas.push({freq,text,done:false});document.getElementById('unhas-inp').value='';debounceSave('unhas',JSON.stringify(S.unhas));renderUnhas();}
-function togUnha(i){S.unhas[i].done=!S.unhas[i].done;debounceSave('unhas',JSON.stringify(S.unhas));renderUnhas();}
-function rmUnha(i){S.unhas.splice(i,1);debounceSave('unhas',JSON.stringify(S.unhas));renderUnhas();}
-
-// SUPLEMENTOS
-function renderSuplem(){
-  const list=S.suplem||[];
-  const today=new Date().toISOString().split('T')[0];
-  const done=S.suplemDone&&S.suplemDone[today]||[];
-  document.getElementById('suplem-list').innerHTML=list.map((s,i)=>{
-    const isDone=done.includes(i);
-    return`<div onclick="togSuplem(${i})" style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer">
-      <span style="font-size:14px">${isDone?'✅':'⬜'}</span>
-      <span style="font-size:12px;flex:1;${isDone?'text-decoration:line-through;opacity:0.5':''}">${s}</span>
-      <button onclick="event.stopPropagation();rmSuplem(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px">×</button>
-    </div>`;
-  }).join('')||'<div style="font-size:12px;color:var(--muted);font-style:italic">Adiciona os teus suplementos diários</div>';
-}
-function togSuplem(i){const today=new Date().toISOString().split('T')[0];if(!S.suplemDone)S.suplemDone={};if(!S.suplemDone[today])S.suplemDone[today]=[];const idx=S.suplemDone[today].indexOf(i);if(idx>=0)S.suplemDone[today].splice(idx,1);else S.suplemDone[today].push(i);debounceSave('suplem_done',JSON.stringify(S.suplemDone));renderSuplem();}
-function addSuplem(){const text=document.getElementById('suplem-inp').value.trim();if(!text)return;if(!S.suplem)S.suplem=[];S.suplem.push(text);document.getElementById('suplem-inp').value='';debounceSave('suplem',JSON.stringify(S.suplem));renderSuplem();}
-function rmSuplem(i){S.suplem.splice(i,1);debounceSave('suplem',JSON.stringify(S.suplem));renderSuplem();}
-
-// DESAFIO GLOW UP
-function renderDesafio(){
-  document.getElementById('desafio-count').textContent=S.desafioDias||0;
-  if(S.desafioUltima){const d=new Date(S.desafioUltima);document.getElementById('desafio-ultima').textContent='Último registo: '+d.getDate()+'/'+(d.getMonth()+1);}
-}
-function addDesafioDia(){
-  const today=new Date().toISOString().split('T')[0];
-  if(S.desafioUltima===today){alert('Já marcaste hoje! Volta amanhã ✨');return;}
-  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
-  const yStr=yesterday.toISOString().split('T')[0];
-  if(S.desafioUltima!==yStr&&S.desafioDias>0){
-    if(!confirm('Perdeste a sequência! Queres recomeçar do zero?'))return;
-    S.desafioDias=0;
-  }
-  S.desafioDias=(S.desafioDias||0)+1;S.desafioUltima=today;
-  debounceSave('desafio',JSON.stringify({dias:S.desafioDias,ultima:S.desafioUltima}));renderDesafio();showSaved();
-}
-function resetDesafio(){if(!confirm('Tens a certeza que queres resetar o desafio?'))return;S.desafioDias=0;S.desafioUltima=null;debounceSave('desafio',JSON.stringify({dias:0,ultima:null}));renderDesafio();}
-
-// ROTINA NOTURNA DE BELEZA
-const NIGHT_DEFAULT=['🧼 Dupla limpeza','💧 Tónico','🌙 Sérum de noite','👁️ Creme contorno de olhos','🧴 Hidratante noturno','💋 Bálsamo de lábios','🦷 Fio dentário'];
-function renderNightBeauty(){
-  const today=new Date().toISOString().split('T')[0];
-  const items=S.nightBeauty||NIGHT_DEFAULT;
-  const done=S.nightDone&&S.nightDone[today]||[];
-  document.getElementById('night-beauty-list').innerHTML=items.map((item,i)=>{
-    const isDone=done.includes(i);
-    return`<div onclick="togNight(${i})" style="display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:10px;cursor:pointer;background:${isDone?'var(--cocoa)':'var(--bg)'};transition:all 0.2s">
-      <span style="font-size:14px">${isDone?'✅':'⬜'}</span>
-      <span style="font-size:11px;${isDone?'color:#fdf9f4;text-decoration:line-through;opacity:0.7':''}">${item}</span>
-      <button onclick="event.stopPropagation();rmNight(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:10px;margin-left:auto">×</button>
-    </div>`;
-  }).join('');
-}
-function togNight(i){const today=new Date().toISOString().split('T')[0];if(!S.nightDone)S.nightDone={};if(!S.nightDone[today])S.nightDone[today]=[];const idx=S.nightDone[today].indexOf(i);if(idx>=0)S.nightDone[today].splice(idx,1);else S.nightDone[today].push(i);debounceSave('night_done',JSON.stringify(S.nightDone));renderNightBeauty();}
-function addNightBeauty(){const text=document.getElementById('night-inp').value.trim();if(!text)return;if(!S.nightBeauty)S.nightBeauty=[...NIGHT_DEFAULT];S.nightBeauty.push(text);document.getElementById('night-inp').value='';debounceSave('night_beauty',JSON.stringify(S.nightBeauty));renderNightBeauty();}
-function rmNight(i){if(!S.nightBeauty)S.nightBeauty=[...NIGHT_DEFAULT];S.nightBeauty.splice(i,1);debounceSave('night_beauty',JSON.stringify(S.nightBeauty));renderNightBeauty();}
-const BUCKET_ICONS={viagem:'✈️',experiencia:'🎢',aprender:'📚',conquistar:'🏆',dar:'💝',outro:'🌸'};
-function renderBucket(){
-  const list=S.bucket||[];
-  document.getElementById('bucket-list').innerHTML=list.length?list.map((b,i)=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:${b.done?'var(--mint)':'var(--bg)'};margin-bottom:6px;transition:all 0.2s">
-      <span style="font-size:18px;cursor:pointer" onclick="togBucket(${i})">${b.done?'✅':BUCKET_ICONS[b.cat]||'🌸'}</span>
-      <span style="font-size:13px;flex:1;${b.done?'text-decoration:line-through;opacity:0.5;color:var(--mint-t)':''}">${b.text}</span>
-      <button onclick="rmBucket(${i})" style="border:none;background:none;cursor:pointer;color:var(--muted);font-size:14px">×</button>
-    </div>`).join(''):'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:8px 0">A tua bucket list está vazia — sonha grande! 🌸</div>';
-}
-function addBucket(){const text=document.getElementById('bucket-input').value.trim(),cat=document.getElementById('bucket-cat').value;if(!text)return;if(!S.bucket)S.bucket=[];S.bucket.push({text,cat,done:false});document.getElementById('bucket-input').value='';renderBucket();debounceSave('bucket',JSON.stringify(S.bucket));}
-function togBucket(i){S.bucket[i].done=!S.bucket[i].done;renderBucket();debounceSave('bucket',JSON.stringify(S.bucket));}
-function rmBucket(i){S.bucket.splice(i,1);renderBucket();debounceSave('bucket',JSON.stringify(S.bucket));}
-
-function renderVisaoAnual(){
-  const list=(S.visaoAnual||[]).sort((a,b)=>a.data.localeCompare(b.data));
-  document.getElementById('visao-anual-list').innerHTML=list.length?list.map((v,i)=>{
-    const d=new Date(v.data);const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(154,114,192,0.2)">
-      <div style="text-align:center;background:var(--lav-d);color:white;border-radius:8px;padding:4px 8px;min-width:44px"><div style="font-size:10px">${months[d.getMonth()]}</div><div style="font-size:16px;font-weight:600">${d.getDate()}</div></div>
-      <span style="font-size:13px;flex:1">${v.evento}</span>
-      <button onclick="rmVisao(${i})" style="border:none;background:none;cursor:pointer;color:var(--lav-d);font-size:14px">×</button>
-    </div>`;
-  }).join(''):'<div style="font-size:13px;color:var(--lav-d);font-style:italic;padding:8px 0">Adiciona os teus marcos e eventos do ano</div>';
-}
-function addVisaoAnual(){const data=document.getElementById('visao-data').value,evento=document.getElementById('visao-evento').value.trim();if(!data||!evento)return;if(!S.visaoAnual)S.visaoAnual=[];S.visaoAnual.push({data,evento});document.getElementById('visao-evento').value='';renderVisaoAnual();debounceSave('visao_anual',JSON.stringify(S.visaoAnual));}
-function rmVisao(i){S.visaoAnual.splice(i,1);renderVisaoAnual();debounceSave('visao_anual',JSON.stringify(S.visaoAnual));}
-
-function renderPalavras(){
-  const list=S.palavras||[];
-  const cols=['rose','lav','mint','peach','sky','gold'];
-  document.getElementById('palavras-ano').innerHTML=list.map((p,i)=>{const c=CM[cols[i%cols.length]];return`<div style="padding:12px 20px;border-radius:20px;background:${c.bg};cursor:pointer;text-align:center" onclick="rmPalavra(${i})"><div style="font-family:'Playfair Display',serif;font-size:18px;font-style:italic;color:${c.text}">${p}</div><div style="font-size:10px;color:${c.dark};margin-top:2px">clica para remover</div></div>`;}).join('')||'<div style="font-size:13px;color:var(--muted);font-style:italic">Escolhe até 3 palavras que guiam o teu ano</div>';
-}
-function addPalavra(){const text=document.getElementById('palavra-input').value.trim();if(!text)return;if(!S.palavras)S.palavras=[];if(S.palavras.length>=3){alert('Máximo de 3 palavras — escolhe com cuidado! 🌸');return;}S.palavras.push(text);document.getElementById('palavra-input').value='';renderPalavras();debounceSave('palavras_ano',JSON.stringify(S.palavras));}
-function rmPalavra(i){S.palavras.splice(i,1);renderPalavras();debounceSave('palavras_ano',JSON.stringify(S.palavras));}
-
-// ═══════════════════════════════════════
-// LOAD LOCAL EXTRAS FROM NOTES
-// ═══════════════════════════════════════
-function loadLocalExtras(notes){
-  const keys={
-    water_today:'water',autocuidado:'autocuidado',rotina:'rotina',
-    livros:'livros',filmes:'filmes',bucket:'bucket',
-    visao_anual:'visaoAnual',palavras_ano:'palavras',
-    skin:'skin',skin_done:'skinDone',cabelo:'cabelo',
-    treino_feito:'treinoFeito',estilo_quero:'estiloQuero',desenvolv2:'desenvolv2',
-    casa_diaria:'casaDiaria',casa_diaria_feita:'casaDiariaFeita',
-    rotina_casa:'rotinaCasa',limpeza_semanal:'limpezaSemanal',limpeza_mensal:'limpezaMensal',
-    banho:'banho',banho_done:'banhoDone',corpo:'corpo',corpo_done:'corpoDone',
-    unhas:'unhas',suplem:'suplem',suplem_done:'suplemDone',
-    night_beauty:'nightBeauty',night_done:'nightDone',
-  };
-  (notes||[]).forEach(n=>{
-    if(keys[n.key]){try{S[keys[n.key]]=JSON.parse(n.value);}catch(e){if(n.key==='water_today')S.water=parseInt(n.value)||0;}}
-    if(n.key==='desafio'){try{const d=JSON.parse(n.value);S.desafioDias=d.dias;S.desafioUltima=d.ultima;}catch(e){}}
-    if(n.key==='sleep_bed'&&document.getElementById('sleep-bed'))document.getElementById('sleep-bed').value=n.value||'';
-    if(n.key==='sleep_wake'&&document.getElementById('sleep-wake'))document.getElementById('sleep-wake').value=n.value||'';
-  });
-}
-
-// INIT
-async function init(){
-  const now=new Date();
-  S.calYear=now.getFullYear();S.calMonth=now.getMonth();
-  S.selDate=now.getFullYear()+'-'+now.getMonth()+'-'+now.getDate();
-  const sdEl=document.getElementById('selected-date-label');
-  if(sdEl)sdEl.textContent=now.getDate()+' de '+MONTHS[now.getMonth()];
-
-  // Always hide loading after 5s max, even if Supabase is slow
-  const hideLoading=()=>{
-    const el=document.getElementById('loading');
-    if(el){el.style.opacity='0';setTimeout(()=>el.style.display='none',400);}
-  };
-  const safetyTimer=setTimeout(hideLoading,5000);
-
-  try{
-    const notes=await loadAll();
-    loadLocalExtras(notes||[]);
-  }catch(e){
-    console.error('Load error:',e);
-    loadLocalExtras([]);
-  }
-
-  clearTimeout(safetyTimer);
-  hideLoading();
-
-  renderCal();renderDay();renderWeek();renderHabits();renderMetas();renderAfirm();
-  renderSliders();drawWheel();updInsight();renderQ();updateDash();
-  renderWater();renderAutocuidado();renderRotina();renderLivros();renderFilmes();
-  renderBucket();renderVisaoAnual();renderPalavras();
-  renderSkincare();renderCabelo();renderTreinoSemana();renderEstiloQuero();renderDesenv();
-  renderCasaDiaria();renderRotinaCasa();renderLimpezaSemana();renderLimpezaMensal();
-  renderBanho();renderCorpo();renderUnhas();renderSuplem();renderDesafio();renderNightBeauty();
-  try{if(document.getElementById('sleep-bed').value)calcSleep();}catch(e){}
-}
-init();
-</script>
+  <script src="./public-config.js"></script>
+  <script type="module" src="./js/app.js"></script>
+  <script type="module" src="./js/interaction-patch.js"></script>
+  <script type="module" src="./js/phase-05-06.js"></script>
+  <script type="module" src="./js/phase-06-agent.js"></script>
+  <script type="module" src="./js/stability-patch.js"></script>
+  <script type="module" src="./js/phase-07-10.js"></script>
 </body>
 </html>
