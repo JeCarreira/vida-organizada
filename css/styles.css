@@ -241,9 +241,8 @@ body {
 .kids-school-card{background:#f1f8f1}
 .kids-document-card{background:#f8f6f0}
 .kids-dossier ul{margin:.6rem 0 1rem;padding-left:1.1rem;line-height:1.5}
+.home-system [aria-label],.kids-dossier [aria-label]{display:block}
 
 @media (max-width: 900px){
   .kids-therapy-grid{grid-template-columns:1fr}
 }
-
-/* fase 5 limpa: manutenção de estrutura Casa/Kids sem mudança funcional */
