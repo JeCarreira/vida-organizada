@@ -178,7 +178,8 @@ body {
   .modal-panel { width: 100vw; max-height: 90vh; border-radius: 18px 18px 0 0; }
 }
 
-.life-page{display:grid;gap:12px;background:var(--paper,#f8f2e9);border-radius:14px;padding:16px;border:1px solid #e6d9ca}
+.life-page{gap:12px;background:var(--paper,#f8f2e9);border-radius:14px;padding:16px;border:1px solid #e6d9ca}
+.page.life-page.is-active{display:grid}
 .inline-actions{display:flex;flex-wrap:wrap;gap:8px}
 .page-tone-dashboard{border-left:6px solid #d7b978}
 .page-tone-home{border-left:6px solid #b9936a}
@@ -203,3 +204,26 @@ body {
 .inline-actions .text-btn:hover,.inline-actions .primary-btn:hover{filter:brightness(.98)}
 #dashboard-priority-board .day-plan-card,#today-events .day-plan-card{border-radius:12px;background:#fffaf4}
 #prep-summary .stat,#dashboard-stats .stat{border-radius:12px;box-shadow:0 8px 20px rgba(47,39,32,.05)}
+
+.home-system{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.home-reset-card,.home-minimum-card,.kids-child-card,.kids-school-card,.kids-document-card{border:1px solid var(--line);background:#fffaf3;padding:12px;border-radius:12px;display:grid;gap:8px}
+.home-minimum-card{background:linear-gradient(135deg,#fffdf8,#f5ebdc)}
+.home-routine-list{margin:0;padding-left:18px;color:var(--soft-ink);display:grid;gap:4px;font-size:.9rem}
+.kids-dossier{display:grid;gap:10px}
+.kids-zone-badge{display:inline-block;width:fit-content;border:1px solid #8aaac0;background:#e8f1f7;color:#35556d;padding:6px 10px;border-radius:999px;font-size:.8rem;font-weight:700;letter-spacing:.02em}
+.kids-therapy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.home-system,.kids-therapy-grid{grid-template-columns:1fr}}
+
+.home-page{gap:16px}
+.home-hero,.home-reset-card,.home-laundry-board,.home-process-board,.home-review-board,.home-ritual-card{border:1px solid var(--line);background:linear-gradient(180deg,#fffdf8,#f8efe2);padding:14px;border-radius:12px}
+.home-main-actions{margin-top:10px}
+.home-main-actions .primary-btn,.home-main-actions .text-btn{font-weight:600}
+.home-today-strip{border-top:1px dashed #c9b7a1;padding-top:8px}
+.home-system{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.home-feature-card,.home-routine-card,.home-zone-card{border:1px solid #decfbc;background:#fffaf2;padding:12px;border-radius:12px;display:grid;gap:8px}
+.home-zone-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.home-zone-card h5,.home-feature-card h5,.home-routine-card h5{margin:0}
+.home-routine-list{margin:0;padding-left:18px;display:grid;gap:4px;color:#574b3f}
+.home-review-board .home-system{grid-template-columns:repeat(2,minmax(0,1fr))}
+.home-ritual-card{border-left:6px solid #b9936a}
+@media (max-width:900px){.home-system,.home-zone-grid,.home-review-board .home-system{grid-template-columns:1fr}}
