@@ -178,7 +178,8 @@ body {
   .modal-panel { width: 100vw; max-height: 90vh; border-radius: 18px 18px 0 0; }
 }
 
-.life-page{display:grid;gap:12px;background:var(--paper,#f8f2e9);border-radius:14px;padding:16px;border:1px solid #e6d9ca}
+.life-page{gap:12px;background:var(--paper,#f8f2e9);border-radius:14px;padding:16px;border:1px solid #e6d9ca}
+.page.life-page.is-active{display:grid}
 .inline-actions{display:flex;flex-wrap:wrap;gap:8px}
 .page-tone-dashboard{border-left:6px solid #d7b978}
 .page-tone-home{border-left:6px solid #b9936a}
